@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "754613247534",
+    "firebase_url": "https://navigaze-448413-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "navigaze-448413",
+    "storage_bucket": "navigaze-448413.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754613247534:android:8096f04ac92f742be149bf",
+        "android_client_info": {
+          "package_name": "com.csgamestudio.navigaze"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754613247534-2c9a98m2rr6tphi9blg20e93jql2p7qm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.csgamestudio.navigaze",
+            "certificate_hash": "f11390ff2b0d13672e4bc5b4b240ff5d19e819b2"
+          }
+        },
+        {
+          "client_id": "754613247534-gcommev8bu0htsj1r8pafnsj2ud56pu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoYf9Zb9HA3sghuOQimLN6Opwv5jkkqdw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754613247534-6fs4ueotgooi3u21nlp19frdqv2t3hmh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,6 +8,45 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/LandingPage.unity
+    guid: 14e65d3cfa103c3418e34e28993b191e
+  - enabled: 1
+    path: Assets/Scenes/StudentLogin.unity
+    guid: 124c8df4fb423e542a5ad5055802d35e
+  - enabled: 1
+    path: Assets/Scenes/RegistrationPage.unity
+    guid: 4da7b5be75f73134fb547f8565f4b126
+  - enabled: 1
+    path: Assets/Scenes/AddSchedulePage.unity
+    guid: 0083606a9a911b545835d608cb631be6
+  - enabled: 1
+    path: Assets/Scenes/DashboardPage.unity
+    guid: 5922610d4ae3c494e981e888a29aa838
+  - enabled: 1
+    path: Assets/Scenes/GuestLanding.unity
+    guid: 721f2f5b4c5ea9a41aaeaaa0d78e3691
+  - enabled: 1
+    path: Assets/Scenes/StorePage.unity
+    guid: 974573cef8884e848b4b807d2f7a1d8f
+  - enabled: 1
+    path: Assets/Scenes/SettingsPage.unity
+    guid: 2366345bdca31504b89b8fe005e02dd4
+  - enabled: 1
+    path: Assets/Scenes/CollectionPage.unity
+    guid: 529a1246948c3de46a6beffa1989bc8c
+  - enabled: 1
+    path: Assets/Scenes/HistoryPage.unity
+    guid: 6a69b116e09f7b043a99e4aac6496187
+  - enabled: 1
+    path: Assets/Scenes/LocationPage.unity
+    guid: 2a002e2ad3119ce479a75cf84ad632f3
+  - enabled: 1
+    path: Assets/Scenes/OfflineMapPage.unity
+    guid: 647fce1ecc82d2a4fabe30e2e95f9763
+  - enabled: 1
+    path: Assets/Scenes/ProfilePage.unity
+    guid: 938584c05989ea546836ecf13c1caaaa
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 614cd14b325cb0942b0952eda5dd1c9f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
