@@ -87,6 +87,9 @@ public class NewIndoorNav : MonoBehaviour {
    private void PopulateDropdown() {
     dropdown.options.Clear();
 
+    // Sort navigationTargets alphabetically by their names
+    navigationTargets = navigationTargets.OrderBy(target => target.name).ToList();
+
     foreach (var target in navigationTargets) {
         if (target != null) {
             dropdown.options.Add(new TMP_Dropdown.OptionData(target.name));
@@ -105,6 +108,7 @@ public class NewIndoorNav : MonoBehaviour {
         Debug.LogWarning("No navigation targets found to populate dropdown!");
     }
 }
+
 
 private void UpdateLineRenderer() {
     if (dropdown.options.Count == 0) {
