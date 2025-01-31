@@ -1,0 +1,2 @@
+C:\Users\Guest user\Downloads\NaviGaze-Indoor-Navigation\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+C:\Users\Guest user\Downloads\NaviGaze-Indoor-Navigation\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt

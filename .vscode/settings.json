@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "NaviGaze Indoor Navigation.sln"
+    "dotnet.defaultSolution": "NaviGaze-Indoor-Navigation.sln"
 }

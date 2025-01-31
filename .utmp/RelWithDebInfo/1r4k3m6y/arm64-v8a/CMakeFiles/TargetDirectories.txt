@@ -1,0 +1,5 @@
+C:/Users/Guest user/Downloads/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/1r4k3m6y/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Guest user/Downloads/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/1r4k3m6y/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/Guest user/Downloads/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/1r4k3m6y/arm64-v8a/GameActivity/CMakeFiles/game.dir
+C:/Users/Guest user/Downloads/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/1r4k3m6y/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+C:/Users/Guest user/Downloads/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/1r4k3m6y/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir
