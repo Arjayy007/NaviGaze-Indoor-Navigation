@@ -1,0 +1,5 @@
+C:/Users/RAYMOND/OneDrive/Documents/GitHub/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/26t432m6/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/RAYMOND/OneDrive/Documents/GitHub/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/26t432m6/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/RAYMOND/OneDrive/Documents/GitHub/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/26t432m6/arm64-v8a/GameActivity/CMakeFiles/game.dir
+C:/Users/RAYMOND/OneDrive/Documents/GitHub/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/26t432m6/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+C:/Users/RAYMOND/OneDrive/Documents/GitHub/NaviGaze-Indoor-Navigation/.utmp/RelWithDebInfo/26t432m6/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir

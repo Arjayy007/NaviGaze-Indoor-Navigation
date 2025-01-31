@@ -17,6 +17,7 @@ public class StudentLoginController : MonoBehaviour
     public InputField passwordInputField;
     private DatabaseReference dbReference;
     public UserData userData;
+    public UIErrorHandler errorHandler;
 
     public bool switchScene = false;
     
@@ -51,7 +52,7 @@ public class StudentLoginController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(usernameInputField.text.Trim()) || string.IsNullOrEmpty(passwordInputField.text))
         {
-            Debug.LogError("Email or Password cannot be empty!");
+            errorHandler.ShowError("Please input email and password");
             return;
         }
 
@@ -100,7 +101,7 @@ public class StudentLoginController : MonoBehaviour
 
                 if (!loginSuccess)
                 {
-                    Debug.LogError("Invalid email or password!");
+                    errorHandler.ShowError("Invalid Email or password");
                 }
             }
             else

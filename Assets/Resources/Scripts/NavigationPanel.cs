@@ -43,4 +43,7 @@ public class NavigationPanel : MonoBehaviour
     {
         SceneManager.LoadScene("LocationPage");
     }
+    public void LoadNavigationScene(){
+        SceneManager.LoadScene("NavigationCongress");
+    }
 }
