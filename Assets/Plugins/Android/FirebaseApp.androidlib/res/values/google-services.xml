@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_android_client_id,@string/default_web_client_id">
+  <string name="firebase_database_url" translatable="false">https://navigaze-448413-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+  <string name="gcm_defaultSenderId" translatable="false">754613247534</string>
+  <string name="google_storage_bucket" translatable="false">navigaze-448413.firebasestorage.app</string>
+  <string name="project_id" translatable="false">navigaze-448413</string>
+  <string name="google_api_key" translatable="false">AIzaSyAoYf9Zb9HA3sghuOQimLN6Opwv5jkkqdw</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAoYf9Zb9HA3sghuOQimLN6Opwv5jkkqdw</string>
+  <string name="google_app_id" translatable="false">1:754613247534:android:8096f04ac92f742be149bf</string>
+  <string name="default_android_client_id" translatable="false">754613247534-2c9a98m2rr6tphi9blg20e93jql2p7qm.apps.googleusercontent.com</string>
+  <string name="default_web_client_id" translatable="false">754613247534-gcommev8bu0htsj1r8pafnsj2ud56pu5.apps.googleusercontent.com</string>
+</resources>
