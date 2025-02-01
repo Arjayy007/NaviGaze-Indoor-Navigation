@@ -76,11 +76,25 @@ public class NewIndoorNav : MonoBehaviour {
         }
 
         foreach (var updatedImage in args.updated) {
-            if (navigationBase != null)
+            if (navigationBase != null) {
                 navigationBase.transform.SetPositionAndRotation(
                     updatedImage.transform.position,
                     Quaternion.Euler(0, updatedImage.transform.rotation.eulerAngles.y, 0)
                 );
+
+                // **Set Player Position Based on QR Code**
+                SetPlayerPositionFromQRCode(updatedImage.referenceImage.name);
+            }
+        }
+    }
+
+    private void SetPlayerPositionFromQRCode(string qrCodeName) {
+        GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
+        if (targetCube != null) {
+            player.position = targetCube.transform.position;
+            Debug.Log($"Recentered player to {qrCodeName}");
+        } else {
+            Debug.LogWarning($"No matching target cube found for QR Code: {qrCodeName}");
         }
     }
 
@@ -109,7 +123,6 @@ public class NewIndoorNav : MonoBehaviour {
     }
 }
 
-
 private void UpdateLineRenderer() {
     if (dropdown.options.Count == 0) {
         Debug.LogWarning("No options available in the dropdown!");
@@ -137,11 +150,8 @@ private void UpdateLineRenderer() {
     }
 }
 
-
     private void OnDropdownValueChanged(int index) {
         // Triggered when a dropdown selection changes
         UpdateLineRenderer();
     }
-
-    
 }

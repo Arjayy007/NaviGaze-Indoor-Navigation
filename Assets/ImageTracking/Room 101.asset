@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 848409ee8ba454f42a5ddff137688a27, type: 3}
-  m_Name: ReferenceImageLibrary
+  m_Name: Room 101
   m_EditorClassIdentifier: 
-  m_GuidLow: 5677136011764966980
-  m_GuidHigh: 8629972392714317732
+  m_GuidLow: 5484454525055896420
+  m_GuidHigh: 7851808367197683900
   m_DataStore:
     m_Storage: []
   m_Images:
   - m_SerializedGuid:
-      m_GuidLow: 4785013326224612800
-      m_GuidHigh: 14651082969436410776
+      m_GuidLow: 5282275062433376066
+      m_GuidHigh: 9478619804376101516
     m_SerializedTextureGuid:
       m_GuidLow: 12228513714578862494
       m_GuidHigh: 6854828581104821208
     m_Size: {x: 0.1, y: 0.1}
     m_SpecifySize: 1
-    m_Name: qr
+    m_Name: Room 101
     m_Texture: {fileID: 0}
