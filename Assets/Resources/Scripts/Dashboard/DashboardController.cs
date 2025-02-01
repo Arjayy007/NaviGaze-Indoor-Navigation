@@ -3,21 +3,17 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
-public class HamburgerMenu : MonoBehaviour
+public class DashboardController : MonoBehaviour
 {
-    public SceneManagerScript sceneManager;
-    public GameObject menuPanel;
-    public Text Fullname;
-
+    public Text UsernameText;   
+    public Text CoinsText;      
     private DatabaseReference dbReference;
-    private bool isMenuVisible = false;
     private string userId;
 
     private void Start()
     {
-        userId = UserSession.UserId;
+        userId = UserSession.UserId; 
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             if (task.Result == DependencyStatus.Available)
@@ -35,9 +31,10 @@ public class HamburgerMenu : MonoBehaviour
         });
     }
 
+    // Function to load user data from Firebase
     void LoadUserData()
     {
-        string userPath = $"users/{userId}"; 
+        string userPath = $"users/{UserSession.UserId}"; 
 
         dbReference.Child(userPath).GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -47,13 +44,13 @@ public class HamburgerMenu : MonoBehaviour
 
                 if (snapshot.Exists)
                 {
-                    string firstName = snapshot.Child("firstName").Value.ToString();
-                    string lastName = snapshot.Child("lastName").Value.ToString();
-
-                    string fullName = firstName + " " + lastName;
+                    string userName = snapshot.Child("firstName").Value.ToString();
+                    string userCoins = snapshot.Child("userCoins").Value.ToString();
 
 
-                    Fullname.text = fullName;  
+                    UsernameText.text = userName;  
+                    CoinsText.text = userCoins + "Coins";
+
                 }
                 else
                 {
@@ -66,36 +63,4 @@ public class HamburgerMenu : MonoBehaviour
             }
         });
     }
-
-
-
-    public void ToggleMenu()
-    {
-        isMenuVisible = !isMenuVisible;  
-        menuPanel.SetActive(isMenuVisible);  
-    }
-
-    public void LoadOfflineMap() 
-    {
-        SceneManager.LoadScene("OfflineMapPage");
-    }
-
-    public void LoadAchievementMap() 
-    {
-        SceneManager.LoadScene("CollectionPage");
-    }
-
-    public void LoadHistoryMap() 
-    {
-        SceneManager.LoadScene("HistoryPage");
-    }
-
-    public void LoadSettingMap() 
-    {
-        SceneManager.LoadScene("SettingsPage");
-    }
-
-
 }
-
-

@@ -1321,6 +1321,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HamburgerMenuPanel 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5854692697100274361, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1329,6 +1333,22 @@ PrefabInstance:
 --- !u!224 &1098874991 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3694470114303090161, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
+  m_PrefabInstance: {fileID: 1098874990}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1098874992 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 10622017141599191, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
+  m_PrefabInstance: {fileID: 1098874990}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1098874993 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5854692697100274361, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
   m_PrefabInstance: {fileID: 1098874990}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1159812848
@@ -1821,6 +1841,7 @@ GameObject:
   - component: {fileID: 1789858757}
   - component: {fileID: 1789858756}
   - component: {fileID: 1789858755}
+  - component: {fileID: 1789858758}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -1868,6 +1889,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1789858758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789858754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae8b9377357d2f42b7a87552b98763f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1789858755}
+  menuPanel: {fileID: 1098874993}
+  Fullname: {fileID: 1098874992}
 --- !u!1 &1854083173
 GameObject:
   m_ObjectHideFlags: 0

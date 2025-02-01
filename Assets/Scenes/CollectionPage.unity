@@ -1398,6 +1398,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HamburgerMenuPanel 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5854692697100274361, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6024607226475687640, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1423,6 +1427,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
+--- !u!114 &1035160547 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 10622017141599191, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
+  m_PrefabInstance: {fileID: 1035160546}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1056207039
 GameObject:
   m_ObjectHideFlags: 0
@@ -4141,6 +4156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneManager: {fileID: 2060299512}
   menuPanel: {fileID: 1574403919}
+  Fullname: {fileID: 1035160547}
 --- !u!114 &2060299511
 MonoBehaviour:
   m_ObjectHideFlags: 0
