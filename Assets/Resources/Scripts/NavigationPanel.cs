@@ -46,4 +46,7 @@ public class NavigationPanel : MonoBehaviour
     public void LoadNavigationScene(){
         SceneManager.LoadScene("NavigationCongress");
     }
+    public void CloseNavigationScene(){
+        SceneManager.LoadScene("DashboardPage");
+    }
 }

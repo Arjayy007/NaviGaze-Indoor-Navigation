@@ -12,6 +12,8 @@ public class NewIndoorNav : MonoBehaviour {
     [SerializeField] private GameObject trackedImagePrefab;
     [SerializeField] private LineRenderer line; // Line Renderer component
     [SerializeField] private TMP_Dropdown dropdown; // TextMeshPro Dropdown for selecting targets
+    [SerializeField] private GameObject infoPanel; // Reference to the UI panel
+
 
     private List<GameObject> navigationTargets = new List<GameObject>(); // All target cubes
     private NavMeshSurface navMeshSurface;
@@ -88,15 +90,31 @@ public class NewIndoorNav : MonoBehaviour {
         }
     }
 
-    private void SetPlayerPositionFromQRCode(string qrCodeName) {
-        GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
-        if (targetCube != null) {
-            player.position = targetCube.transform.position;
-            Debug.Log($"Recentered player to {qrCodeName}");
+private void SetPlayerPositionFromQRCode(string qrCodeName) {
+    GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
+    
+    if (targetCube != null) {
+        player.position = targetCube.transform.position;
+        Debug.Log($"Recentered player to {qrCodeName}");
+
+        // Get the currently selected target from the dropdown
+        string selectedTargetName = dropdown.options[dropdown.value].text;
+
+        //pag iniscan yung qr nung destination lalabas panel saying you reached your destination
+        if (qrCodeName == selectedTargetName) {
+            infoPanel.SetActive(true);  // Show panel
+            line.positionCount = 0;     // Hide LineRenderer (navigation complete)
+            Debug.Log($"Arrived at {qrCodeName}. Navigation complete!");
         } else {
-            Debug.LogWarning($"No matching target cube found for QR Code: {qrCodeName}");
+            // If QR is not the destination, update path normally
+            UpdateLineRenderer();
         }
+    } else {
+        Debug.LogWarning($"No matching target cube found for QR Code: {qrCodeName}");
     }
+}
+
+
 
    private void PopulateDropdown() {
     dropdown.options.Clear();
