@@ -5,10 +5,12 @@ using Firebase.Extensions;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
 public class HamburgerMenu : MonoBehaviour
 {
     public SceneManagerScript sceneManager;
     public GameObject menuPanel;
+    public GameObject invinsibleButton;
     public Text Fullname;
 
     private DatabaseReference dbReference;
@@ -33,6 +35,7 @@ public class HamburgerMenu : MonoBehaviour
                 Debug.LogError("Firebase not initialized: " + task.Result);
             }
         });
+        invinsibleButton.SetActive(false); 
     }
 
     void LoadUserData()
@@ -72,7 +75,8 @@ public class HamburgerMenu : MonoBehaviour
     public void ToggleMenu()
     {
         isMenuVisible = !isMenuVisible;  
-        menuPanel.SetActive(isMenuVisible);  
+        menuPanel.SetActive(isMenuVisible);
+        invinsibleButton.SetActive(isMenuVisible); // Show/hide overlay
     }
 
     public void LoadOfflineMap() 
