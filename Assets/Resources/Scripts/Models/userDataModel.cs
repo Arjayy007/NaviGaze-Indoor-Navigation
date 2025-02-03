@@ -15,6 +15,7 @@ namespace userDataModel.Models
         public string role;
         public int userCoins;
         public int exp;
+        public Dictionary<string, bool> rewardsClaimed;
 
         public UserData(string firstName, string lastName, string email, string password, string department, string program, string yearSection, string role)
         {
@@ -29,6 +30,7 @@ namespace userDataModel.Models
 
             this.userCoins = 50;
             this.exp = 0;
+            this.rewardsClaimed = new Dictionary<string, bool>();
 
         }
     }

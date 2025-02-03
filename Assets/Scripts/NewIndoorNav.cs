@@ -18,8 +18,9 @@ public class NewIndoorNav : MonoBehaviour {
     private List<GameObject> navigationTargets = new List<GameObject>(); // All target cubes
     private NavMeshSurface navMeshSurface;
     private NavMeshPath navMeshPath;
-
     private GameObject navigationBase;
+    private bool playerHasScanned = false; // Track if the player has scanned a QR code
+    private CoinManager coinManager;    // Reference to the CoinManager script
 
     private void Start() {
         navMeshPath = new NavMeshPath();
@@ -39,11 +40,13 @@ public class NewIndoorNav : MonoBehaviour {
 
         // Listen to dropdown selection changes
         dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+        
+        coinManager = FindAnyObjectByType<CoinManager>();
     }
 
     private void Update() {
-        // Continuously update navigation when a target is selected
-        if (navigationTargets.Count > 0 && dropdown.options.Count > 0) {
+        // Only update navigation if the player has scanned a QR and a valid target is selected
+        if (playerHasScanned && navigationTargets.Count > 0 && dropdown.options.Count > 0 && dropdown.value != 0) {
             GameObject selectedTarget = navigationTargets.FirstOrDefault(
                 target => target.name == dropdown.options[dropdown.value].text
             );
@@ -58,6 +61,8 @@ public class NewIndoorNav : MonoBehaviour {
                     line.positionCount = 0; // Clear the line if no valid path
                 }
             }
+        } else {
+            line.positionCount = 0; // Hide line if no valid selection
         }
     }
 
@@ -90,86 +95,94 @@ public class NewIndoorNav : MonoBehaviour {
         }
     }
 
-private void SetPlayerPositionFromQRCode(string qrCodeName) {
-    GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
+    private void SetPlayerPositionFromQRCode(string qrCodeName) {
+        GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
     
-    if (targetCube != null) {
-        player.position = targetCube.transform.position;
-        Debug.Log($"Recentered player to {qrCodeName}");
+        if (targetCube != null) {
+            player.position = targetCube.transform.position;
+            playerHasScanned = true; // Mark that the player has scanned a QR code
+            Debug.Log($"Recentered player to {qrCodeName}");
 
-        // Get the currently selected target from the dropdown
-        string selectedTargetName = dropdown.options[dropdown.value].text;
+            // Get the currently selected target from the dropdown
+            string selectedTargetName = dropdown.options[dropdown.value].text;
 
-        //pag iniscan yung qr nung destination lalabas panel saying you reached your destination
-        if (qrCodeName == selectedTargetName) {
-            infoPanel.SetActive(true);  // Show panel
-            line.positionCount = 0;     // Hide LineRenderer (navigation complete)
-            Debug.Log($"Arrived at {qrCodeName}. Navigation complete!");
+            // If scanned QR matches the selected target, show panel
+            if (qrCodeName == selectedTargetName) {
+                infoPanel.SetActive(true);  // Show panel
+                line.positionCount = 0;     // Hide LineRenderer (navigation complete)
+                Debug.Log($"Arrived at {qrCodeName}. Navigation complete!");
+
+                 // Call AddCoinsToUser from CoinManager
+                if (coinManager != null)
+                {
+                    coinManager.AddCoinsToUser(50, "onTimeReward");
+                }
+            } else {
+                // If QR is not the destination, update path normally
+                UpdateLineRenderer();
+            }
         } else {
-            // If QR is not the destination, update path normally
-            UpdateLineRenderer();
-        }
-    } else {
-        Debug.LogWarning($"No matching target cube found for QR Code: {qrCodeName}");
-    }
-}
-
-
-
-   private void PopulateDropdown() {
-    dropdown.options.Clear();
-
-    // Sort navigationTargets alphabetically by their names
-    navigationTargets = navigationTargets.OrderBy(target => target.name).ToList();
-
-    foreach (var target in navigationTargets) {
-        if (target != null) {
-            dropdown.options.Add(new TMP_Dropdown.OptionData(target.name));
-            Debug.Log($"Added to dropdown: {target.name}");
+            Debug.LogWarning($"No matching target cube found for QR Code: {qrCodeName}");
         }
     }
 
-    dropdown.RefreshShownValue();
+    private void PopulateDropdown() {
+        dropdown.options.Clear();
 
-    if (navigationTargets.Count > 0) {
-        dropdown.value = 0;
+        // Add default option
+        dropdown.options.Add(new TMP_Dropdown.OptionData("-Select Destination-"));
+
+        // Sort navigationTargets alphabetically by their names
+        navigationTargets = navigationTargets.OrderBy(target => target.name).ToList();
+
+        foreach (var target in navigationTargets) {
+            if (target != null) {
+                dropdown.options.Add(new TMP_Dropdown.OptionData(target.name));
+                Debug.Log($"Added to dropdown: {target.name}");
+            }
+        }
+
+        dropdown.RefreshShownValue();
+        dropdown.value = 0; // Default to "-Select Destination-"
         dropdown.captionText.text = dropdown.options[0].text;
-        Debug.Log($"Default selection: {dropdown.options[0].text}");
-        UpdateLineRenderer();
-    } else {
-        Debug.LogWarning("No navigation targets found to populate dropdown!");
-    }
-}
 
-private void UpdateLineRenderer() {
-    if (dropdown.options.Count == 0) {
-        Debug.LogWarning("No options available in the dropdown!");
-        line.positionCount = 0;
-        return;
+        Debug.Log("Dropdown initialized with '-Select Destination-' as default.");
     }
 
-    string selectedTargetName = dropdown.options[dropdown.value].text;
-    GameObject selectedTarget = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
+    private void UpdateLineRenderer() {
+        if (dropdown.value == 0 || !playerHasScanned) { 
+            // If "-Select Destination-" is selected or player hasn't scanned a QR, hide the line
+            line.positionCount = 0;
+            return;
+        }
 
-    if (selectedTarget != null) {
-        Debug.Log($"Selected target: {selectedTargetName}");
-        NavMesh.CalculatePath(player.position, selectedTarget.transform.position, NavMesh.AllAreas, navMeshPath);
+        string selectedTargetName = dropdown.options[dropdown.value].text;
+        GameObject selectedTarget = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
 
-        if (navMeshPath.status == NavMeshPathStatus.PathComplete) {
-            line.positionCount = navMeshPath.corners.Length;
-            line.SetPositions(navMeshPath.corners);
+        if (selectedTarget != null) {
+            Debug.Log($"Selected target: {selectedTargetName}");
+            NavMesh.CalculatePath(player.position, selectedTarget.transform.position, NavMesh.AllAreas, navMeshPath);
+
+            if (navMeshPath.status == NavMeshPathStatus.PathComplete) {
+                line.positionCount = navMeshPath.corners.Length;
+                line.SetPositions(navMeshPath.corners);
+            } else {
+                Debug.LogWarning("No valid path found to the selected target!");
+                line.positionCount = 0;
+            }
         } else {
-            Debug.LogWarning("No valid path found to the selected target!");
+            Debug.LogWarning($"No valid target found with the name: {selectedTargetName}");
             line.positionCount = 0;
         }
-    } else {
-        Debug.LogWarning($"No valid target found with the name: {selectedTargetName}");
-        line.positionCount = 0;
     }
-}
 
     private void OnDropdownValueChanged(int index) {
-        // Triggered when a dropdown selection changes
-        UpdateLineRenderer();
+        // Prevent rendering the line if the user selects "-Select Destination-"
+        if (index == 0 || !playerHasScanned) {
+            line.positionCount = 0;
+            Debug.Log("Navigation line hidden because '-Select Destination-' is selected or player has not scanned a QR code.");
+        } else {
+            UpdateLineRenderer();
+        }
     }
 }
