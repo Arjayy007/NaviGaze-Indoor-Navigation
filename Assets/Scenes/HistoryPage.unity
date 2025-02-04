@@ -388,6 +388,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneManager: {fileID: 278511596}
   menuPanel: {fileID: 1271592617}
+  invinsibleButton: {fileID: 0}
+  Fullname: {fileID: 0}
 --- !u!4 &278511595
 Transform:
   m_ObjectHideFlags: 0
@@ -909,6 +911,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HamburgerMenuPanel 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5854692697100274361, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6024607226475687640, guid: 8f579e34be5fdec46bc4e3b439526f2d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1127,6 +1133,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneManager: {fileID: 0}
   menuPanel: {fileID: 0}
+  invinsibleButton: {fileID: 0}
+  Fullname: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
