@@ -28,6 +28,7 @@ public class HamburgerMenu : MonoBehaviour
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 dbReference = FirebaseDatabase.DefaultInstance.RootReference;
 
+                invinsibleButton.SetActive(false);
                 LoadUserData(); 
             }
             else
@@ -35,7 +36,7 @@ public class HamburgerMenu : MonoBehaviour
                 Debug.LogError("Firebase not initialized: " + task.Result);
             }
         });
-        invinsibleButton.SetActive(false); 
+ 
     }
 
     void LoadUserData()
