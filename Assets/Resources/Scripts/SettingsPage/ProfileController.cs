@@ -20,12 +20,21 @@ public class ProfileController : MonoBehaviour
     public Dropdown programDropdown;
     public Button saveButton;
     public Button editButton;
+     public Text editButtonText;
 
     private string userId;
     private bool isEditing = false;
 
     void Start()
     {
+
+         if (editButtonText == null) 
+    {
+        editButtonText = editButton.GetComponentInChildren<Text>(); // Automatically assign the button's text
+    }
+
+    editButtonText.text = "Edit Profile";
+         
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
 
         // Disable editing at start
@@ -69,6 +78,16 @@ public class ProfileController : MonoBehaviour
     {
         isEditing = !isEditing;
         ToggleEditing(isEditing);
+
+    if (editButtonText != null)
+    {
+        editButtonText.text = isEditing ? "Cancel" : "Edit Profile  ";
+        Debug.Log("Button Text Changed to: " + editButtonText.text);
+    }
+    else
+    {
+        Debug.LogError("editButtonText is NULL! Make sure it is assigned in the Inspector.");
+    }
     }
 
     private void ToggleEditing(bool enable)
