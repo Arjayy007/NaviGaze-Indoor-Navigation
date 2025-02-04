@@ -13,6 +13,10 @@ public class NewIndoorNav : MonoBehaviour {
     [SerializeField] private LineRenderer line; // Line Renderer component
     [SerializeField] private TMP_Dropdown dropdown; // TextMeshPro Dropdown for selecting targets
     [SerializeField] private GameObject infoPanel; // Reference to the UI panel
+    [SerializeField] private SlideUpAnimation slideUpAnimation;
+    [SerializeField] private TMP_Text startingpoint;
+    [SerializeField] private TMP_Text destination;
+
 
 
     private List<GameObject> navigationTargets = new List<GameObject>(); // All target cubes
@@ -21,6 +25,9 @@ public class NewIndoorNav : MonoBehaviour {
     private GameObject navigationBase;
     private bool playerHasScanned = false; // Track if the player has scanned a QR code
     private CoinManager coinManager;    // Reference to the CoinManager script
+    private bool hasSetStartingPoint = false;
+
+    
 
     private void Start() {
         navMeshPath = new NavMeshPath();
@@ -96,12 +103,19 @@ public class NewIndoorNav : MonoBehaviour {
     }
 
     private void SetPlayerPositionFromQRCode(string qrCodeName) {
+
+        if (hasSetStartingPoint) return;
+
         GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
     
         if (targetCube != null) {
             player.position = targetCube.transform.position;
             playerHasScanned = true; // Mark that the player has scanned a QR code
             Debug.Log($"Recentered player to {qrCodeName}");
+
+            // Set the starting point text
+            startingpoint.text = qrCodeName;
+            hasSetStartingPoint = true;
 
             // Get the currently selected target from the dropdown
             string selectedTargetName = dropdown.options[dropdown.value].text;
@@ -182,7 +196,15 @@ public class NewIndoorNav : MonoBehaviour {
             line.positionCount = 0;
             Debug.Log("Navigation line hidden because '-Select Destination-' is selected or player has not scanned a QR code.");
         } else {
+            destination.text = dropdown.options[dropdown.value].text;
             UpdateLineRenderer();
+        }
+
+        if (index != 0) {
+            // Call the SlideUp method from SlideUpAnimation script
+            if (slideUpAnimation != null) {
+                slideUpAnimation.SlideUp();
+            }
         }
     }
 }
