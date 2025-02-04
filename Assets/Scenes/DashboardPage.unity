@@ -1908,7 +1908,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneManager: {fileID: 1924046383}
   menuPanel: {fileID: 1538233966}
-  invinsibleButton: {fileID: 0}
+  invinsibleButton: {fileID: 1980860581}
   Fullname: {fileID: 1298241003}
 --- !u!4 &1924046379
 Transform:

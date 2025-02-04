@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine.SceneManagement;
@@ -73,7 +72,7 @@ public class RegistrationPage : MonoBehaviour
             return;
         }
 
-    
+        // Get input values
         string firstName = firstNameInput.text.Trim();
         string lastName = lastNameInput.text.Trim();
         string email = emailInput.text.Trim();
@@ -84,27 +83,20 @@ public class RegistrationPage : MonoBehaviour
         string program = dropdownController.collegeProgram.options[dropdownController.collegeProgram.value].text;
         string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
 
+        // Use InputValidator to check all inputs at once
+        string validationError = Validation.ValidateRegistrationInputs(firstName, lastName, email, password, confirmPassword, yearSection, department, program);
 
-        if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || 
-            string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || 
-            string.IsNullOrEmpty(confirmPassword) || string.IsNullOrEmpty(yearSection) || 
-            department == "Select Department" || program == "Select Program")
+        if (validationError != null)
         {
-            Debug.LogError("Please fill in all required fields.");
+            Debug.LogError(validationError);
             return;
         }
 
-        if (password != confirmPassword)
-        {
-            Debug.LogError("Passwords do not match!");
-            return;
-        }
-
-
+        // Hash password before saving
         string hashedPassword = HashPassword(password);
 
+        // Create user data object
         userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection, selectedRole);
-
         string json = JsonUtility.ToJson(userData);
 
         string userId = dbReference.Child("users").Push().Key;
@@ -113,13 +105,12 @@ public class RegistrationPage : MonoBehaviour
             Debug.Log($"Generated User ID: {userId}");
             UserSession.UserId = userId;
 
-            // Save the user data to the database
             dbReference.Child("users").Child(userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
                     Debug.Log("User data saved to Firebase!");
-                    switchScene = true; 
+                    switchScene = true;
                 }
                 else
                 {
@@ -132,7 +123,6 @@ public class RegistrationPage : MonoBehaviour
             Debug.LogError("Failed to generate a unique ID for the user.");
         }
     }
-
 
 
     private string HashPassword(string password)
