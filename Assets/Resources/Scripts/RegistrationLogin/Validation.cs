@@ -61,4 +61,21 @@ public class Validation : MonoBehaviour
 
         return null; 
     }
+
+    public static string ValidateProfessorRegistrationInputs(string firstName, string lastName, string email, string password, string confirmPassword, string department) 
+    {
+        if (!IsValidName(firstName) || !IsValidName(lastName))
+            return "First name and last name must be at least 2 characters long.";
+
+        if (!IsValidEmail(email))
+            return "Invalid email format.";
+
+        if (!IsValidPassword(password))
+            return "Password must be at least 8 characters long, contain a number, and a special character.";
+
+        if (!IsMatchingPassword(password, confirmPassword))
+            return "Passwords do not match.";
+
+        return null;
+    }
 }
