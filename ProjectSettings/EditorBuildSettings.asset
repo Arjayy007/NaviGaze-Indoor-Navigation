@@ -53,6 +53,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NavigationBagongSilang.unity
     guid: 442a510eb4fd52c4d9581efa4913a735
+  - enabled: 1
+    path: Assets/Scenes/ProfessorRegistration.unity
+    guid: be2ba338841f0f04988e271c42c4847a
+  - enabled: 1
+    path: Assets/Scenes/ProfessorDashboard.unity
+    guid: f6d69812d85f6cc45b8fe96757f8ef83
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e271fcac138c7274f9133ff59b0f2282, type: 2}
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 614cd14b325cb0942b0952eda5dd1c9f, type: 2}

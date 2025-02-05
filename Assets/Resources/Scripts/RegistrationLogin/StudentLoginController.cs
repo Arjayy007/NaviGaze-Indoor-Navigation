@@ -7,6 +7,8 @@ using Firebase.Extensions;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine.SceneManagement;
+using UnityEditor.MPE;
+using System.Data;
 
 
 public class StudentLoginController : MonoBehaviour
@@ -128,7 +130,18 @@ public class StudentLoginController : MonoBehaviour
 
     public void OnRegisterButtonClicked()
     {
-        sceneManager.LoadSceneByName("RegistrationPage");
+        string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+
+        if (selectedRole == "Student")
+        {
+            SceneManager.LoadScene("RegistrationPage");
+        }
+        else if (selectedRole == "Professor")
+        {
+            SceneManager.LoadScene("ProfessorRegistration");
+        }
     }
+
+
     
 }

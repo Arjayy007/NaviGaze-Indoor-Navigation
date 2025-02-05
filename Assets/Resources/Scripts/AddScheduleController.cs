@@ -6,6 +6,7 @@ using Firebase.Database;
 using Firebase.Extensions;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using SchedulesModel.Models;
 
 
 public class AddScheduleController : MonoBehaviour
@@ -23,7 +24,7 @@ public class AddScheduleController : MonoBehaviour
 
     public GameObject rowTemplate;     
     public Transform tableContainer;
-
+    public ScheduleData schedulesModel;
     private bool switchScene = false;
 
     private List<ScheduleData> scheduleList = new List<ScheduleData>();
@@ -55,7 +56,16 @@ public class AddScheduleController : MonoBehaviour
         if (switchScene)
         {
             switchScene = false;
-            SceneManager.LoadScene("DashboardPage");
+            string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+
+            if (selectedRole == "Student")
+            {
+                SceneManager.LoadScene("DashboardPage");
+            }
+            else if (selectedRole == "Professor")
+            {
+                SceneManager.LoadScene("ProfessorDashboard");
+            }
         }
     }
 
@@ -175,7 +185,16 @@ private void SaveToDatabase(ScheduleData schedule)
 
     public void SkipButtonClicked()
     {
-        SceneManager.LoadScene("DashboardPage");
+        string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+
+        if (selectedRole == "Student")
+        {
+            SceneManager.LoadScene("DashboardPage");
+        }
+        else if (selectedRole == "Professor")
+        {
+            SceneManager.LoadScene("ProfessorDashboard");
+        }
     }
 
     private void ClearTable()
@@ -192,26 +211,4 @@ private void SaveToDatabase(ScheduleData schedule)
     }
 }
 
-// Class to hold schedule data (structure)
-[System.Serializable]
-public class ScheduleData
-{
-    public string subjectCode;
-    public string subjectName;
-    public string room;
-    public string dayOfTheWeek;
-    public string startTime;
-    public string endTime;
-    public string campus;
 
-    public ScheduleData(string subjectCode, string subjectName, string room, string dayOfTheWeek, string startTime, string endTime, string campus)
-    {
-        this.subjectCode = subjectCode;
-        this.subjectName = subjectName;
-        this.room = room;
-        this.dayOfTheWeek = dayOfTheWeek;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.campus = campus;
-    }
-}
