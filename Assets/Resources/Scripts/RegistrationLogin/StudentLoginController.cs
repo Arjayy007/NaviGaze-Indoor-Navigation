@@ -129,16 +129,7 @@ public class StudentLoginController : MonoBehaviour
 
     public void OnRegisterButtonClicked()
     {
-        string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
-
-        if (selectedRole == "Student")
-        {
-            SceneManager.LoadScene("RegistrationPage");
-        }
-        else if (selectedRole == "Professor")
-        {
-            SceneManager.LoadScene("ProfessorRegistration");
-        }
+        SceneManager.LoadScene("TermsAndCondition");
     }
 
 
