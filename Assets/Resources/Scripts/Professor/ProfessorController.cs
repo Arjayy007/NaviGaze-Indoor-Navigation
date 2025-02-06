@@ -1,23 +1,18 @@
 using UnityEngine;
-using Firebase;
+using UnityEngine.UI;
 using Firebase.Database;
 using Firebase.Extensions;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using Firebase;
 
-
-public class HamburgerMenu : MonoBehaviour
+public class ProfessorController : MonoBehaviour
 {
-    public SceneManagerScript sceneManager;
-    public GameObject menuPanel;
-    public GameObject invinsibleButton;
     public Text Fullname;
+    public Text Department;
 
     private DatabaseReference dbReference;
-    private bool isMenuVisible = false;
     private string userId;
 
-    private void Start()
+    void Start()
     {
         userId = UserSession.UserId;
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
@@ -28,20 +23,18 @@ public class HamburgerMenu : MonoBehaviour
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 dbReference = FirebaseDatabase.DefaultInstance.RootReference;
 
-                invinsibleButton.SetActive(false);
-                LoadUserData(); 
+                LoadUserData();
             }
             else
             {
                 Debug.LogError("Firebase not initialized: " + task.Result);
             }
         });
- 
     }
 
     public void LoadUserData()
     {
-        string userPath = $"users/{userId}"; 
+        string userPath = $"users/{userId}";
 
         dbReference.Child(userPath).GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -53,11 +46,12 @@ public class HamburgerMenu : MonoBehaviour
                 {
                     string firstName = snapshot.Child("firstName").Value.ToString();
                     string lastName = snapshot.Child("lastName").Value.ToString();
+                    string department = snapshot.Child("department").Value.ToString();
 
                     string fullName = firstName + " " + lastName;
 
-
-                    Fullname.text = fullName;  
+                    Department.text = department;
+                    Fullname.text = fullName;
                 }
                 else
                 {
@@ -70,37 +64,4 @@ public class HamburgerMenu : MonoBehaviour
             }
         });
     }
-
-
-
-    public void ToggleMenu()
-    {
-        isMenuVisible = !isMenuVisible;  
-        menuPanel.SetActive(isMenuVisible);
-        invinsibleButton.SetActive(isMenuVisible); // Show/hide overlay
-    }
-
-    public void LoadOfflineMap() 
-    {
-        SceneManager.LoadScene("OfflineMapPage");
-    }
-
-    public void LoadAchievementMap() 
-    {
-        SceneManager.LoadScene("CollectionPage");
-    }
-
-    public void LoadHistoryMap() 
-    {
-        SceneManager.LoadScene("HistoryPage");
-    }
-
-    public void LoadSettingMap() 
-    {
-        SceneManager.LoadScene("SettingsPage");
-    }
-
-
 }
-
-

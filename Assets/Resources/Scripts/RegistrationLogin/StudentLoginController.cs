@@ -45,7 +45,15 @@ public class StudentLoginController : MonoBehaviour
         if (switchScene)
         {
             switchScene = false;
-            SceneManager.LoadScene("DashboardPage");
+            string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+            if (selectedRole == "Student")
+            {
+                SceneManager.LoadScene("DashboardPage");
+            }
+            else if (selectedRole == "Professor")
+            {
+                SceneManager.LoadScene("ProfessorDashboard");
+            }
         }
     }
 
