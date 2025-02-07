@@ -832,6 +832,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -140.99997
       objectReference: {fileID: 0}
+    - target: {fileID: 7993581712521521029, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993581712521521029, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993581712521521029, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1799462864}
+    - target: {fileID: 7993581712521521029, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993581712521521029, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadOfflineMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993581712521521029, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HamburgerMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7993581712521521029, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8065124314457771962, guid: d3272f9a46076d449b3ee47c257670eb, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2005,6 +2033,30 @@ PrefabInstance:
     - target: {fileID: 5232504007524885320, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
       propertyPath: m_Name
       value: NavigationPanel 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016639462547377079, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1799462864}
+    - target: {fileID: 6016639462547377079, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadHistoryMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016639462547377079, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HamburgerMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284038249066434223, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1799462869}
+    - target: {fileID: 7284038249066434223, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadProfessorDashboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284038249066434223, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ProfessorController, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

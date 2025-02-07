@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Firebase.Database;
 using Firebase.Extensions;
 using Firebase;
@@ -63,5 +64,10 @@ public class ProfessorController : MonoBehaviour
                 Debug.LogError("Failed to retrieve user data.");
             }
         });
+    }
+
+    public void LoadProfessorDashboard() 
+    {
+        SceneManager.LoadScene("ProfessorDashboard");
     }
 }
