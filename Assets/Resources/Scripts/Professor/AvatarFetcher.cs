@@ -88,7 +88,6 @@ public class AvatarDisplay : MonoBehaviour
 
     void LoadAvatarImage(string avatarName)
     {
-        avatarName = avatarName.Replace(" ", "_"); // Format correctly
         string path = $"Avatars/{avatarName}";
 
         Debug.Log($"Attempting to load avatar from: {path}");
@@ -108,7 +107,6 @@ public class AvatarDisplay : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Avatar image for '{path}' NOT FOUND in Resources!");
             avatarImage.sprite = Resources.Load<Sprite>("Avatars/placeholder"); // Load fallback
         }
     }
