@@ -5,10 +5,9 @@ using Firebase.Database;
 using System.Threading.Tasks;
 using Firebase.Extensions;
 
-public class AvatarDisplay : MonoBehaviour
+public class ProfileAvatar : MonoBehaviour
 {
     public Image avatarImage; // Assign in Inspector
-    public Text Fullname;
     private DatabaseReference dbReference;
     private string userId; // Already declared in your script
 
@@ -16,7 +15,6 @@ public class AvatarDisplay : MonoBehaviour
     {
         userId = UserSession.UserId;
         InitializeFirebase();
-
     }
 
     private async Task InitializeFirebase()
@@ -29,7 +27,6 @@ public class AvatarDisplay : MonoBehaviour
 
             // Now it's safe to load avatar and user data
             LoadAvatarFromDatabase();
-            LoadUserData();
         }
         else
         {
@@ -69,38 +66,6 @@ public class AvatarDisplay : MonoBehaviour
             Debug.LogError($"Error fetching avatar: {e.Message}");
             return "Capybara Avatar";
         }
-    }
-
-    public void LoadUserData()
-    {
-        string userPath = $"users/{userId}";
-
-        dbReference.Child(userPath).GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-
-                if (snapshot.Exists)
-                {
-                    string firstName = snapshot.Child("firstName").Value.ToString();
-                    string lastName = snapshot.Child("lastName").Value.ToString();
-
-                    string fullName = firstName + " " + lastName;
-
-
-                    Fullname.text = fullName;
-                }
-                else
-                {
-                    Debug.LogError("User data not found!");
-                }
-            }
-            else
-            {
-                Debug.LogError("Failed to retrieve user data.");
-            }
-        });
     }
 
     void LoadAvatarImage(string avatarName)
