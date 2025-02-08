@@ -33,7 +33,7 @@ public class DashboardController : MonoBehaviour
     }
 
     // Function to load user data from Firebase
-    void LoadUserData()
+    public void LoadUserData()
     {
         string userPath = $"users/{UserSession.UserId}"; 
 

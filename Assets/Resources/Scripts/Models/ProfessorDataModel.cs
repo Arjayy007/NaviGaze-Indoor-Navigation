@@ -12,6 +12,8 @@ namespace ProfessorDataModel.Models
             public string password;
             public string department;
             public string role;
+            public string avatarName;
+            
 
             public ProfessorData(string firstName, string lastName, string email, string password, string department, string role)
             {
@@ -21,6 +23,8 @@ namespace ProfessorDataModel.Models
                 this.password = password;
                 this.department = department;
                 this.role = role;
+
+                this.avatarName = "Capybara Avatar";
             }
         }
 }

@@ -7,7 +7,6 @@ using Firebase.Extensions;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine.SceneManagement;
-using UnityEditor.MPE;
 using System.Data;
 
 
@@ -41,15 +40,6 @@ public class StudentLoginController : MonoBehaviour
         });
     }
 
-    void Update()
-    {
-        if (switchScene)
-        {
-            switchScene = false;
-            SceneManager.LoadScene("DashboardPage");
-        }
-    }
-
     public void OnLoginButtonClicked()
     {
         if (string.IsNullOrEmpty(usernameInputField.text.Trim()) || string.IsNullOrEmpty(passwordInputField.text))
@@ -79,6 +69,8 @@ public class StudentLoginController : MonoBehaviour
                 DataSnapshot snapshot = task.Result;
                 bool loginSuccess = false;
                 string userId = null; // Variable to store the UserID
+                string correctRole = null; // Variable to store the actual role from Firebase
+
 
                 foreach (DataSnapshot userSnapshot in snapshot.Children)
                 {
@@ -89,7 +81,8 @@ public class StudentLoginController : MonoBehaviour
                     {
                         loginSuccess = true;
                         userId = userSnapshot.Key; // Fetch the UserID (key)
-                        Debug.Log($"Login Success! UserID: {userId}");
+                        correctRole = user.role; // Get the actual role from the database
+                        Debug.Log($"Login Success! UserID: {userId}, Role: {correctRole}");
 
                         // Store the UserID for later use (e.g., using PlayerPrefs or a session manager)
                         PlayerPrefs.SetString("LoggedInUserID", userId);
@@ -98,6 +91,31 @@ public class StudentLoginController : MonoBehaviour
 
                         switchScene = true;
                         break;
+                    }
+                }
+
+                if (loginSuccess)
+                {
+                    // Get selected role from PlayerPrefs
+                    string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+
+                    // Compare with actual role from the database
+                    if (correctRole != selectedRole)
+                    {
+                        Debug.Log($"Role mismatch detected! Correcting role to {correctRole}");
+                        PlayerPrefs.SetString("SelectedRole", correctRole); // Update PlayerPrefs
+                        PlayerPrefs.Save();
+                    }
+
+                    // Load the correct scene based on the validated role
+                    switchScene = false; // Reset before switching
+                    if (correctRole == "Student")
+                    {
+                        SceneManager.LoadScene("DashboardPage");
+                    }
+                    else if (correctRole == "Professor")
+                    {
+                        SceneManager.LoadScene("ProfessorDashboard");
                     }
                 }
 
@@ -130,16 +148,7 @@ public class StudentLoginController : MonoBehaviour
 
     public void OnRegisterButtonClicked()
     {
-        string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
-
-        if (selectedRole == "Student")
-        {
-            SceneManager.LoadScene("RegistrationPage");
-        }
-        else if (selectedRole == "Professor")
-        {
-            SceneManager.LoadScene("ProfessorRegistration");
-        }
+        SceneManager.LoadScene("TermsAndCondition");
     }
 
 
