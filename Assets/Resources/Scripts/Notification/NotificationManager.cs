@@ -2,81 +2,113 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Firebase;
 using Firebase.Database;
-using System;
-using TMPro; // For TextMeshPro UI support
+using Firebase.Extensions;
+using TMPro;
 
 public class NotificationManager : MonoBehaviour
 {
-    public GameObject notificationCardPrefab; // Assign in Inspector
-    public Transform notificationContainer;  // Assign the Scroll View Content in Inspector
-
+    public GameObject notificationCardPrefab;  // Assign your prefab in Unity Inspector
+    public Transform notificationContainer;   // Assign the Scroll View's content panel
     private DatabaseReference dbReference;
-    private string userId;
 
     void Start()
     {
-        // Get User ID from UserSession instead of Firebase Auth
-        userId = UserSession.UserId;
-
-        if (!string.IsNullOrEmpty(userId))
-        {
-            dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-            LoadNotifications();
-        }
-        else
-        {
-            Debug.LogWarning("User ID is null! Make sure user is logged in.");
-        }
+        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        LoadNotifications();
+        
     }
 
     void LoadNotifications()
     {
-        dbReference.Child("notifications").Child(userId).GetValueAsync().ContinueWith(task =>
+        string userId = UserSession.UserId; // Assuming you have user authentication
+
+        Debug.Log($"[NotificationManager] Fetching notifications for user: {userId}");
+
+        dbReference.Child("notifications").Child(userId).GetValueAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompleted && task.Result.Exists)
+            if (task.IsFaulted)
+            {
+                Debug.LogError("[NotificationManager] Firebase Database Error: " + task.Exception);
+                return;
+            }
+
+            if (task.IsCompleted)
             {
                 DataSnapshot snapshot = task.Result;
 
-                // Clear existing UI notifications
+                if (!snapshot.Exists)
+                {
+                    Debug.LogWarning("[NotificationManager] No notifications found for this user.");
+                    return;
+                }
+
+                // Print the raw JSON retrieved
+                Debug.Log("[NotificationManager] Raw JSON from Firebase: " + snapshot.GetRawJsonValue());
+
+                // Clear previous notifications
                 foreach (Transform child in notificationContainer)
                 {
                     Destroy(child.gameObject);
                 }
 
-                // Loop through notifications in Firebase
-                foreach (var notif in snapshot.Children)
-                {
-                    string title = notif.Child("title").Value.ToString();
-                    string message = notif.Child("message").Value.ToString();
-                    string timestamp = notif.Child("timestamp").Value.ToString();
-                    bool isRead = Convert.ToBoolean(notif.Child("read").Value);
+                int count = 0; // To track number of notifications
 
-                    CreateNotificationCard(notif.Key, title, message, timestamp, isRead);
+                foreach (var child in snapshot.Children)
+                {
+                    if (child.HasChild("message") && child.HasChild("timestamp"))
+                    {
+                        string message = child.Child("message").Value.ToString();
+                        string timestamp = child.Child("timestamp").Value.ToString();
+
+                        Debug.Log($"[NotificationManager] Notification {count + 1}: {message} at {timestamp}");
+
+                        CreateNotificationCard(message, timestamp);
+                        count++;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[NotificationManager] Skipping invalid notification entry (missing fields).");
+                    }
                 }
-            }
-            else
-            {
-                Debug.LogWarning("No notifications found for user: " + userId);
+
+                Debug.Log($"[NotificationManager] Total Notifications Displayed: {count}");
             }
         });
     }
 
-    void CreateNotificationCard(string notifId, string title, string message, string timestamp, bool isRead)
+  void CreateNotificationCard(string message, string timestamp)
+{
+    if (notificationCardPrefab == null || notificationContainer == null)
     {
-        GameObject notifCard = Instantiate(notificationCardPrefab, notificationContainer);
-        notifCard.transform.Find("Title").GetComponent<TMP_Text>().text = title;
-        notifCard.transform.Find("Message").GetComponent<TMP_Text>().text = message;
-        notifCard.transform.Find("Timestamp").GetComponent<TMP_Text>().text = timestamp;
-
-        // Mark as Read button
-        Button markAsReadButton = notifCard.transform.Find("MarkAsReadButton").GetComponent<Button>();
-        markAsReadButton.onClick.AddListener(() => MarkAsRead(notifId, notifCard));
+        Debug.LogError("[NotificationManager] notificationCardPrefab or notificationContainer is NOT assigned!");
+        return;
     }
 
-    public void MarkAsRead(string notifId, GameObject notifCard)
+    GameObject newCard = Instantiate(notificationCardPrefab, notificationContainer);
+
+    // Ensure correct scaling
+    RectTransform rectTransform = newCard.GetComponent<RectTransform>();
+    rectTransform.SetParent(notificationContainer, false); // false = Keeps original prefab dimensions
+    rectTransform.localScale = Vector3.one; // Prevents Unity from shrinking the prefab
+    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, 150); // Force height to 150
+
+    Debug.Log($"[NotificationManager] Created new notification card: {newCard.name}");
+
+    // Assign text
+    TextMeshProUGUI messageText = newCard.transform.Find("Message")?.GetComponent<TextMeshProUGUI>();
+    TextMeshProUGUI timeText = newCard.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+
+    if (messageText == null || timeText == null)
     {
-        dbReference.Child("notifications").Child(userId).Child(notifId).Child("read").SetValueAsync(true);
-        Destroy(notifCard); // Remove from UI
+        Debug.LogError("[NotificationManager] MessageText or TimestampText NOT found in prefab!");
+        return;
     }
+
+    messageText.text = message;
+    timeText.text = timestamp.Split(' ')[1]; // Extract only the time part
+}
+
+
 }

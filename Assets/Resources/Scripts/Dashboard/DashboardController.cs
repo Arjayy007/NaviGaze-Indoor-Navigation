@@ -3,6 +3,7 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class DashboardController : MonoBehaviour
 {
@@ -63,4 +64,10 @@ public class DashboardController : MonoBehaviour
             }
         });
     }
+
+    public void LoadNotificationScene()
+    {
+        SceneManager.LoadScene("NotificationPage");
+    }
+
 }
