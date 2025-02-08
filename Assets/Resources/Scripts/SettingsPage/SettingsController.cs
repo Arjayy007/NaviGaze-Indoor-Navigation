@@ -10,4 +10,9 @@ public class SettingsController : MonoBehaviour
         SceneManager.LoadScene("ProfilePage");
     }
 
+    public void LoadEditSchedule() 
+    {
+        SceneManager.LoadScene("EditSchedulePage");
+    }
+
 }
