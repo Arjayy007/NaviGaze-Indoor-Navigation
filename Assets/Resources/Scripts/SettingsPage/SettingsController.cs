@@ -15,4 +15,9 @@ public class SettingsController : MonoBehaviour
         SceneManager.LoadScene("EditSchedulePage");
     }
 
+    public void LoadPrivacyPolicy() 
+    {
+        SceneManager.LoadScene("PrivacyPolicyPage");
+    }
+
 }
