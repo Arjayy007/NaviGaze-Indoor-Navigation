@@ -71,3 +71,10 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# Ignore Firebase assets
+Assets/Firebase/
+Assets/Firebase/*
+Assets/GoogleService-Info.plist
+Assets/google-services.json
