@@ -153,15 +153,19 @@ public class RegistrationPage : MonoBehaviour
         }
     }
 
-    private void ClearPlayerPrefs()
+private void ClearPlayerPrefs()
 {
     string userId = PlayerPrefs.GetString("UserSession.UserId", ""); // Preserve UserSession.UserId
+    string selectedRole = PlayerPrefs.GetString("SelectedRole", ""); // Preserve SelectedRole
 
     PlayerPrefs.DeleteAll(); // Clear all PlayerPrefs
-    PlayerPrefs.SetString("UserSession.UserId", userId); // Restore UserSession.UserId
+
+    // Restore preserved values
+    PlayerPrefs.SetString("UserSession.UserId", userId);
+    PlayerPrefs.SetString("SelectedRole", selectedRole);
     PlayerPrefs.Save(); // Ensure changes are saved
 
-    Debug.Log("Cleared PlayerPrefs except UserSession.UserId.");
+    Debug.Log("Cleared PlayerPrefs except UserSession.UserId and SelectedRole.");
 }
 
     private string HashPassword(string password)
