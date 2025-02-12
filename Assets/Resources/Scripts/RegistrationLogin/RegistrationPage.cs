@@ -168,6 +168,7 @@ private void ClearPlayerPrefs()
     Debug.Log("Cleared PlayerPrefs except UserSession.UserId and SelectedRole.");
 }
 
+
     private string HashPassword(string password)
     {
         using (SHA256 sha256 = SHA256.Create())
