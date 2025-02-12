@@ -15,28 +15,28 @@
       },
       "oauth_client": [
         {
-          "client_id": "754613247534-2c9a98m2rr6tphi9blg20e93jql2p7qm.apps.googleusercontent.com",
+          "client_id": "754613247534-jbgduudurt59h0aorch62991brp0jg6p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.csgamestudio.navigaze",
-            "certificate_hash": "f11390ff2b0d13672e4bc5b4b240ff5d19e819b2"
+            "certificate_hash": "7bebc8df5d53388d5d85fd83093d8b9758bbd930"
           }
         },
         {
-          "client_id": "754613247534-gcommev8bu0htsj1r8pafnsj2ud56pu5.apps.googleusercontent.com",
+          "client_id": "754613247534-n69orfdj6q5o3d6u184jcj72o5rjap1k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAoYf9Zb9HA3sghuOQimLN6Opwv5jkkqdw"
+          "current_key": "AIzaSyCXaVxoCwcBpfQZds95xZI5PmlidXcDN6A"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "754613247534-6fs4ueotgooi3u21nlp19frdqv2t3hmh.apps.googleusercontent.com",
+              "client_id": "754613247534-g3va2nkhe5flvd16mq6l1rno4hh3n311.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
