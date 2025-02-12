@@ -24,8 +24,20 @@ public class RegistrationPage : MonoBehaviour
 
     private bool switchScene = false;
 
+    private string GoogleUserEmail, GoogleUserFirstName, GoogleUserLastName;
+    private bool isGoogleSignUp = false;
+
     void Start()
-    { 
+    {
+        // Retrieve Google Sign-Up data from PlayerPrefs
+        GoogleUserEmail = PlayerPrefs.GetString("userEmail", "");
+        GoogleUserFirstName = PlayerPrefs.GetString("userFirstName", "");
+        GoogleUserLastName = PlayerPrefs.GetString("userLastName", "");
+        isGoogleSignUp = PlayerPrefs.GetInt("isGoogleSignUp", 0) == 1; // Convert int to bool
+
+        // Debug logs for verification
+        Debug.Log($"Google Sign-Up Data Retrieved: Email: {GoogleUserEmail}, First Name: {GoogleUserFirstName}, Last Name: {GoogleUserLastName}, Is Google Sign-Up: {isGoogleSignUp}");
+
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Result == DependencyStatus.Available)
@@ -40,17 +52,27 @@ public class RegistrationPage : MonoBehaviour
                 Debug.LogError($"Could not resolve Firebase dependencies: {task.Result}");
             }
         });
+
+        // If Google Sign-Up, pre-fill fields and disable password inputs
+        if (isGoogleSignUp)
+        {
+            emailInput.text = GoogleUserEmail;
+            firstNameInput.text = GoogleUserFirstName;
+            lastNameInput.text = GoogleUserLastName;
+
+            passwordInput.interactable = false;
+            confirmPasswordInput.interactable = false;
+        }
     }
 
     void Update()
     {
         if (switchScene)
         {
-            switchScene = false; 
-            SceneManager.LoadScene("AddSchedulePage"); 
+            switchScene = false;
+            SceneManager.LoadScene("AddSchedulePage");
         }
     }
-
 
     public void SaveToDatabase()
     {
@@ -60,7 +82,7 @@ public class RegistrationPage : MonoBehaviour
             return;
         }
 
-        if (firstNameInput == null || lastNameInput == null || emailInput == null || passwordInput == null || confirmPasswordInput == null || yearSectionInput == null)
+        if (firstNameInput == null || lastNameInput == null || emailInput == null || yearSectionInput == null)
         {
             Debug.LogError("One or more input fields are not assigned.");
             return;
@@ -83,20 +105,26 @@ public class RegistrationPage : MonoBehaviour
         string program = dropdownController.collegeProgram.options[dropdownController.collegeProgram.value].text;
         string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
 
-        // Use InputValidator to check all inputs at once
-        string validationError = Validation.ValidateRegistrationInputs(firstName, lastName, email, password, confirmPassword, yearSection, department, program);
-
+        // Validate user inputs
+        string validationError = Validation.ValidateRegistrationInputs(firstName, lastName, email, password, confirmPassword, yearSection, department, program, isGoogleSignUp);
         if (validationError != null)
         {
             Debug.LogError(validationError);
             return;
         }
 
-        // Hash password before saving
-        string hashedPassword = HashPassword(password);
+        // Skip password hashing if signing up with Google
+        if (!isGoogleSignUp)
+        {
+            password = HashPassword(password);
+        }
+        else
+        {
+            password = ""; // No password required
+        }
 
         // Create user data object
-        userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection, selectedRole);
+        userData = new UserData(firstName, lastName, email, password, department, program, yearSection, selectedRole);
         string json = JsonUtility.ToJson(userData);
 
         string userId = dbReference.Child("users").Push().Key;
@@ -110,6 +138,7 @@ public class RegistrationPage : MonoBehaviour
                 if (task.IsCompletedSuccessfully)
                 {
                     Debug.Log("User data saved to Firebase!");
+                    ClearPlayerPrefs();
                     switchScene = true;
                 }
                 else
@@ -124,6 +153,16 @@ public class RegistrationPage : MonoBehaviour
         }
     }
 
+    private void ClearPlayerPrefs()
+{
+    string userId = PlayerPrefs.GetString("UserSession.UserId", ""); // Preserve UserSession.UserId
+
+    PlayerPrefs.DeleteAll(); // Clear all PlayerPrefs
+    PlayerPrefs.SetString("UserSession.UserId", userId); // Restore UserSession.UserId
+    PlayerPrefs.Save(); // Ensure changes are saved
+
+    Debug.Log("Cleared PlayerPrefs except UserSession.UserId.");
+}
 
     private string HashPassword(string password)
     {
@@ -138,5 +177,4 @@ public class RegistrationPage : MonoBehaviour
             return builder.ToString();
         }
     }
-
 }

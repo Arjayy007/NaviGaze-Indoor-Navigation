@@ -22,6 +22,7 @@ public class Logout : MonoBehaviour
     {
         // Clear User Session
         UserSession.ClearSession();
+        PlayerPrefs.DeleteAll(); 
         Debug.Log("Logging Out...");
 
         //Go Back to Landing Scene

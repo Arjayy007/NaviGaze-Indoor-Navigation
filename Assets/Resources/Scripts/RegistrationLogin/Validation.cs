@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-
 public class Validation : MonoBehaviour
 {
     private static string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
@@ -39,7 +38,7 @@ public class Validation : MonoBehaviour
         return !string.IsNullOrEmpty(value) && value != "Select Department" && value != "Select Program";
     }
 
-    public static string ValidateRegistrationInputs(string firstName, string lastName, string email, string password, string confirmPassword, string yearSection, string department, string program)
+    public static string ValidateRegistrationInputs(string firstName, string lastName, string email, string password, string confirmPassword, string yearSection, string department, string program, bool isGoogleSignUp = false)
     {
         if (!IsValidName(firstName) || !IsValidName(lastName))
             return "First name and last name must be at least 2 characters long.";
@@ -47,11 +46,14 @@ public class Validation : MonoBehaviour
         if (!IsValidEmail(email))
             return "Invalid email format.";
 
-        if (!IsValidPassword(password))
-            return "Password must be at least 8 characters long, contain a number, and a special character.";
+        if (!isGoogleSignUp) // **Skip password validation for Google users**
+        {
+            if (!IsValidPassword(password))
+                return "Password must be at least 8 characters long, contain a number, and a special character.";
 
-        if (!IsMatchingPassword(password, confirmPassword))
-            return "Passwords do not match.";
+            if (!IsMatchingPassword(password, confirmPassword))
+                return "Passwords do not match.";
+        }
 
         if (!IsValidYearSection(yearSection))
             return "Please enter a valid year section.";
@@ -62,7 +64,7 @@ public class Validation : MonoBehaviour
         return null; 
     }
 
-    public static string ValidateProfessorRegistrationInputs(string firstName, string lastName, string email, string password, string confirmPassword, string department) 
+    public static string ValidateProfessorRegistrationInputs(string firstName, string lastName, string email, string password, string confirmPassword, string department, bool isGoogleSignUp = false) 
     {
         if (!IsValidName(firstName) || !IsValidName(lastName))
             return "First name and last name must be at least 2 characters long.";
@@ -70,11 +72,14 @@ public class Validation : MonoBehaviour
         if (!IsValidEmail(email))
             return "Invalid email format.";
 
-        if (!IsValidPassword(password))
-            return "Password must be at least 8 characters long, contain a number, and a special character.";
+        if (!isGoogleSignUp) // **Skip password validation for Google users**
+        {
+            if (!IsValidPassword(password))
+                return "Password must be at least 8 characters long, contain a number, and a special character.";
 
-        if (!IsMatchingPassword(password, confirmPassword))
-            return "Passwords do not match.";
+            if (!IsMatchingPassword(password, confirmPassword))
+                return "Passwords do not match.";
+        }
 
         return null;
     }
