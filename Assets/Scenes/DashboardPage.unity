@@ -649,7 +649,7 @@ GameObject:
   - component: {fileID: 301115041}
   - component: {fileID: 301115040}
   m_Layer: 5
-  m_Name: Button
+  m_Name: NotificationButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -751,7 +751,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9671f8029c9f9a346a1daef6e53b194f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3620088dc12c4424290e130c8002ddcd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

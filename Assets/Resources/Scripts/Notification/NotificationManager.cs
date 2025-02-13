@@ -87,27 +87,18 @@ public class NotificationManager : MonoBehaviour
     }
 
     GameObject newCard = Instantiate(notificationCardPrefab, notificationContainer);
+    newCard.SetActive(true);
 
-    // Ensure correct scaling
-    RectTransform rectTransform = newCard.GetComponent<RectTransform>();
-    rectTransform.SetParent(notificationContainer, false); // false = Keeps original prefab dimensions
-    rectTransform.localScale = Vector3.one; // Prevents Unity from shrinking the prefab
-    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, 150); // Force height to 150
-
-    Debug.Log($"[NotificationManager] Created new notification card: {newCard.name}");
-
-    // Assign text
     TextMeshProUGUI messageText = newCard.transform.Find("Message")?.GetComponent<TextMeshProUGUI>();
     TextMeshProUGUI timeText = newCard.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
 
-    if (messageText == null || timeText == null)
-    {
-        Debug.LogError("[NotificationManager] MessageText or TimestampText NOT found in prefab!");
-        return;
-    }
+    if (messageText != null) messageText.text = message;
+    else Debug.LogError("[NotificationManager] MessageText NOT found in prefab!");
 
-    messageText.text = message;
-    timeText.text = timestamp.Split(' ')[1]; // Extract only the time part
+    if (timeText != null) timeText.text = timestamp.Split(' ')[1]; // Extract only the time part
+    else Debug.LogError("[NotificationManager] TimestampText NOT found in prefab!");
+
+    Debug.Log($"[NotificationManager] Created new notification card: {newCard.name}");
 }
 
 
