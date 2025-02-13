@@ -4,6 +4,7 @@ using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class DashboardController : MonoBehaviour
 {
@@ -14,23 +15,29 @@ public class DashboardController : MonoBehaviour
 
     private void Start()
     {
-        userId = UserSession.UserId; 
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-        {
-            if (task.Result == DependencyStatus.Available)
-            {
-                Debug.Log("Firebase initialized successfully.");
-                FirebaseApp app = FirebaseApp.DefaultInstance;
-                dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+       userId = UserSession.UserId;
 
-                LoadUserData(); 
-            }
-            else
-            {
-                Debug.LogError("Firebase not initialized: " + task.Result);
-            }
-        });
+    StartCoroutine(InitializeFirebase());
+}
+
+IEnumerator InitializeFirebase()
+{
+    var dependencyTask = FirebaseApp.CheckDependenciesAsync();
+    yield return new WaitUntil(() => dependencyTask.IsCompleted);
+
+    if (dependencyTask.Result == DependencyStatus.Available)
+    {
+        Debug.Log("Firebase initialized successfully.");
+        FirebaseApp app = FirebaseApp.DefaultInstance;
+        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+
+        LoadUserData();
     }
+    else
+    {
+        Debug.LogError("Firebase not initialized: " + dependencyTask.Result);
+    }
+}
 
     // Function to load user data from Firebase
     public void LoadUserData()
