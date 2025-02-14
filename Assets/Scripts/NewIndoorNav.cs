@@ -82,31 +82,25 @@ private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args) {
 
   private void PopulateDropdown() {
     dropdown.options.Clear();
-    
-    // Add default option first
+
     dropdown.options.Add(new TMP_Dropdown.OptionData("-Select Destination"));
 
-    // Sort targets alphabetically
     navigationTargets = navigationTargets.OrderBy(target => target.name).ToList();
 
-    // Add actual target destinations
     foreach (var target in navigationTargets) {
         dropdown.options.Add(new TMP_Dropdown.OptionData(target.name));
     }
 
     dropdown.RefreshShownValue();
 
-    // Set default value to "-Select Destination"
     dropdown.value = 0;
     dropdown.captionText.text = dropdown.options[0].text;
 
-    // Ensure no navigation line is drawn initially
     UpdateLineRenderer();
 }
 
 private void UpdateLineRenderer() {
     if (dropdown.value == 0) { 
-        // If "-Select Destination" is chosen, don't render the line
         line.positionCount = 0;
         return;
     }

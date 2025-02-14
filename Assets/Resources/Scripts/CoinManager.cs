@@ -22,8 +22,7 @@ public class CoinManager : MonoBehaviour
 
         DatabaseReference userRef = dbReference.Child("users").Child(UserSession.UserId);
 
-        // Check if the specific reward has been claimed
-        userRef.Child("rewardsClaimed").Child(rewardName).GetValueAsync().ContinueWithOnMainThread(task =>
+        userRef.Child("badgesCollected").Child(rewardName).GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCompletedSuccessfully)
             {

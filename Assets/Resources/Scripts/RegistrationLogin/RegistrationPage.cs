@@ -153,7 +153,7 @@ public class RegistrationPage : MonoBehaviour
         }
     }
 
- private void ClearPlayerPrefs()
+private void ClearPlayerPrefs()
 {
     string userId = PlayerPrefs.GetString("UserSession.UserId", ""); // Preserve UserSession.UserId
     string selectedRole = PlayerPrefs.GetString("SelectedRole", ""); // Preserve SelectedRole

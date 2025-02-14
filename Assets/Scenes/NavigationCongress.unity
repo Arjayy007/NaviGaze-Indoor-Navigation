@@ -10980,6 +10980,603 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1485125493}
+    m_Modifications:
+    - target: {fileID: -9182575856355518394, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.78
+      objectReference: {fileID: 0}
+    - target: {fileID: -9041267756353341082, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 208
+      objectReference: {fileID: 0}
+    - target: {fileID: -9041267756353341082, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -8912189966947192040, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.05
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8633474279373035782, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.63
+      objectReference: {fileID: 0}
+    - target: {fileID: -8633474279373035782, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.135
+      objectReference: {fileID: 0}
+    - target: {fileID: -8633474279373035782, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.18
+      objectReference: {fileID: 0}
+    - target: {fileID: -8557002723003063263, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.06
+      objectReference: {fileID: 0}
+    - target: {fileID: -8551654070373378105, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: File Room
+      objectReference: {fileID: 0}
+    - target: {fileID: -8551654070373378105, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -8507530218166242363, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.59
+      objectReference: {fileID: 0}
+    - target: {fileID: -8455728280606582528, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 404
+      objectReference: {fileID: 0}
+    - target: {fileID: -8455728280606582528, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -8035857614479882688, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.64
+      objectReference: {fileID: 0}
+    - target: {fileID: -7918335002988649766, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 88f8acbb0491537478f02c3639e797c1, type: 2}
+    - target: {fileID: -7648502956408741331, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 202
+      objectReference: {fileID: 0}
+    - target: {fileID: -7648502956408741331, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -7395704305543789238, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Library
+      objectReference: {fileID: 0}
+    - target: {fileID: -7395704305543789238, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -7271449666460269675, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 206
+      objectReference: {fileID: 0}
+    - target: {fileID: -7271449666460269675, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -7109301008355729926, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.66
+      objectReference: {fileID: 0}
+    - target: {fileID: -6792889981931915972, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 108
+      objectReference: {fileID: 0}
+    - target: {fileID: -6792889981931915972, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -6763858364670572316, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 309
+      objectReference: {fileID: 0}
+    - target: {fileID: -6763858364670572316, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -6134079766568285550, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.58
+      objectReference: {fileID: 0}
+    - target: {fileID: -6130448485417718077, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.668
+      objectReference: {fileID: 0}
+    - target: {fileID: -6028728253787450086, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.74
+      objectReference: {fileID: 0}
+    - target: {fileID: -6009921392208378166, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.92
+      objectReference: {fileID: 0}
+    - target: {fileID: -5943089204852086151, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.61
+      objectReference: {fileID: 0}
+    - target: {fileID: -5754060345647867467, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 310
+      objectReference: {fileID: 0}
+    - target: {fileID: -5754060345647867467, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -5017511502574830928, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.578
+      objectReference: {fileID: 0}
+    - target: {fileID: -4960584510277547667, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 107
+      objectReference: {fileID: 0}
+    - target: {fileID: -4960584510277547667, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -4906838889796845047, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Guidance Room
+      objectReference: {fileID: 0}
+    - target: {fileID: -4906838889796845047, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -4133703932355585839, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 305
+      objectReference: {fileID: 0}
+    - target: {fileID: -4133703932355585839, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -4058879426038799192, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 110
+      objectReference: {fileID: 0}
+    - target: {fileID: -4058879426038799192, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -3778644264426962316, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 306
+      objectReference: {fileID: 0}
+    - target: {fileID: -3778644264426962316, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -3636894154042799844, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.107
+      objectReference: {fileID: 0}
+    - target: {fileID: -3636894154042799844, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.289
+      objectReference: {fileID: 0}
+    - target: {fileID: -3636894154042799844, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.72
+      objectReference: {fileID: 0}
+    - target: {fileID: -3540495426589365078, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 307
+      objectReference: {fileID: 0}
+    - target: {fileID: -3540495426589365078, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -3410185793394415013, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 309
+      objectReference: {fileID: 0}
+    - target: {fileID: -3410185793394415013, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -3274006528333456403, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.15
+      objectReference: {fileID: 0}
+    - target: {fileID: -3137722172632951806, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 302
+      objectReference: {fileID: 0}
+    - target: {fileID: -3137722172632951806, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -2936978428703597740, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.61
+      objectReference: {fileID: 0}
+    - target: {fileID: -2936978428703597740, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.16
+      objectReference: {fileID: 0}
+    - target: {fileID: -2936978428703597740, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2519092360280523269, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Registrar
+      objectReference: {fileID: 0}
+    - target: {fileID: -2519092360280523269, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -2502106110152090086, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.964
+      objectReference: {fileID: 0}
+    - target: {fileID: -2093772787462966335, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.09
+      objectReference: {fileID: 0}
+    - target: {fileID: -2045257923548263128, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 410
+      objectReference: {fileID: 0}
+    - target: {fileID: -2045257923548263128, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -1891630423312683343, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 301
+      objectReference: {fileID: 0}
+    - target: {fileID: -1891630423312683343, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -859322575320243141, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.092
+      objectReference: {fileID: 0}
+    - target: {fileID: -775069670341356040, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.611
+      objectReference: {fileID: 0}
+    - target: {fileID: -652209905907201759, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 203
+      objectReference: {fileID: 0}
+    - target: {fileID: -652209905907201759, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -634345853091680509, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.09
+      objectReference: {fileID: 0}
+    - target: {fileID: -466329591000292508, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 201
+      objectReference: {fileID: 0}
+    - target: {fileID: -466329591000292508, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: -316598237727293225, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.586
+      objectReference: {fileID: 0}
+    - target: {fileID: -208595431880416365, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 407
+      objectReference: {fileID: 0}
+    - target: {fileID: -208595431880416365, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 26844662620191305, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 205
+      objectReference: {fileID: 0}
+    - target: {fileID: 26844662620191305, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 71915518356630547, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 645056540621773532, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 645056540621773532, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 645056540621773532, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 836453291944497873, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.643
+      objectReference: {fileID: 0}
+    - target: {fileID: 882129737928793925, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 88f8acbb0491537478f02c3639e797c1, type: 2}
+    - target: {fileID: 919132149155446097, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: FloorPrefab (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1066235068171334618, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102640297416220895, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.639
+      objectReference: {fileID: 0}
+    - target: {fileID: 1274316343004466485, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502877291743220047, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 207
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502877291743220047, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771266950956608360, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 1835210009659533079, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 1835210009659533079, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596957926113402938, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 401
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596957926113402938, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 2786534777698132407, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 88f8acbb0491537478f02c3639e797c1, type: 2}
+    - target: {fileID: 2898394801674235841, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 4088688947297397964, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.596
+      objectReference: {fileID: 0}
+    - target: {fileID: 4103881766339141800, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 109
+      objectReference: {fileID: 0}
+    - target: {fileID: 4103881766339141800, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 4406155116359948159, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.105
+      objectReference: {fileID: 0}
+    - target: {fileID: 4418473098069316928, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.603
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504409719310791647, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 209
+      objectReference: {fileID: 0}
+    - target: {fileID: 4504409719310791647, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071954541378243815, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071954541378243815, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.074041
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071954541378243815, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.69856
+      objectReference: {fileID: 0}
+    - target: {fileID: 5134136590023790061, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.618
+      objectReference: {fileID: 0}
+    - target: {fileID: 6014503084441653313, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 210
+      objectReference: {fileID: 0}
+    - target: {fileID: 6014503084441653313, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 6248574976466802116, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 304
+      objectReference: {fileID: 0}
+    - target: {fileID: 6248574976466802116, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 6490625522564147758, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 6830945432629781959, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.163
+      objectReference: {fileID: 0}
+    - target: {fileID: 6902850991424332798, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.614
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045030354117346258, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 403
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045030354117346258, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 7103153012782714218, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 303
+      objectReference: {fileID: 0}
+    - target: {fileID: 7103153012782714218, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 7333631254909853010, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 204
+      objectReference: {fileID: 0}
+    - target: {fileID: 7333631254909853010, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 7917349904687423284, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 405
+      objectReference: {fileID: 0}
+    - target: {fileID: 7917349904687423284, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975042476016782316, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 402
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975042476016782316, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 8009987137999418058, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 408
+      objectReference: {fileID: 0}
+    - target: {fileID: 8009987137999418058, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485173162082002552, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 406
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485173162082002552, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 8494251016116736709, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.012
+      objectReference: {fileID: 0}
+    - target: {fileID: 8577611361374792076, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 8578709097331664583, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 102
+      objectReference: {fileID: 0}
+    - target: {fileID: 8578709097331664583, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 9217234437682292332, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_Name
+      value: Room 308
+      objectReference: {fileID: 0}
+    - target: {fileID: 9217234437682292332, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 987441467}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1320395292}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2096282915}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1993175491}
+  m_SourcePrefab: {fileID: 100100000, guid: 1d42742bcef524e4d91305e5a3e2f6a9, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
