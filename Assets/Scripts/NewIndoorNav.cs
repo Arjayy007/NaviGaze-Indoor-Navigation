@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.UI;
 
 public class NewIndoorNav : MonoBehaviour {
     [SerializeField] private Transform player; // AR camera representing the player
@@ -14,7 +13,7 @@ public class NewIndoorNav : MonoBehaviour {
     [SerializeField] private LineRenderer line; // Line Renderer for navigation path
     [SerializeField] private TMP_Dropdown dropdown; // Destination selector
     [SerializeField] private GameObject infoPanel; // UI panel for arrival confirmation
-    [SerializeField] private SlideUpAnimation slideUpAnimation;
+     [SerializeField] private SlideUpAnimation slideUpAnimation;
     [SerializeField] private TMP_Text startingPoint;
     [SerializeField] private TMP_Text destinationPoint;
 
@@ -54,26 +53,16 @@ private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args) {
 }
 
 
-
-    private void SetPlayerPositionFromQRCode(string qrCodeName) {
+private void SetPlayerPositionFromQRCode(string qrCodeName) {
     GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
-    startingPoint.text = qrCodeName;
 
     if (targetCube != null) {
-        player.position = targetCube.transform.position; // Move player to new QR position
+        // Move player to new QR position
+        player.position = targetCube.transform.position; 
         Debug.Log($"Player repositioned to {qrCodeName}");
 
-        if (slideUpAnimation != null) {
-                slideUpAnimation.SlideUp();
-        }
-
-        if (dropdown.options[dropdown.value].text == qrCodeName) {
-            infoPanel.SetActive(true); // Show arrival confirmation
-            line.positionCount = 0; // Clear the line (Arrived at destination)
-        } else {
-            UpdateLineRenderer(); // Continue updating the navigation path
-        }
-
+        // Ensure the navigation updates immediately
+        UpdateLineRenderer();
     } else {
         Debug.LogWarning($"No matching target found for QR Code: {qrCodeName}");
     }
@@ -82,25 +71,31 @@ private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args) {
 
   private void PopulateDropdown() {
     dropdown.options.Clear();
-
+    
+    // Add default option first
     dropdown.options.Add(new TMP_Dropdown.OptionData("-Select Destination"));
 
+    // Sort targets alphabetically
     navigationTargets = navigationTargets.OrderBy(target => target.name).ToList();
 
+    // Add actual target destinations
     foreach (var target in navigationTargets) {
         dropdown.options.Add(new TMP_Dropdown.OptionData(target.name));
     }
 
     dropdown.RefreshShownValue();
 
+    // Set default value to "-Select Destination"
     dropdown.value = 0;
     dropdown.captionText.text = dropdown.options[0].text;
 
+    // Ensure no navigation line is drawn initially
     UpdateLineRenderer();
 }
 
 private void UpdateLineRenderer() {
     if (dropdown.value == 0) { 
+        // If "-Select Destination" is chosen, don't render the line
         line.positionCount = 0;
         return;
     }
@@ -125,14 +120,12 @@ private void UpdateLineRenderer() {
 }
 
 
-
     private void OnDropdownValueChanged(int index) {
-        UpdateLineRenderer();
-        destinationPoint.text = dropdown.options[dropdown.value].text;
+        UpdateLineRenderer(); // Changing target updates only the destination
+         destinationPoint.text = dropdown.options[dropdown.value].text;
     }
-
     public void CloseHistoryPanel() {
         slideUpAnimation.SlideUp();
-        
+
     }
 }
