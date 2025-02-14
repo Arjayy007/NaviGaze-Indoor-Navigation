@@ -74,7 +74,7 @@ IEnumerator InitializeFirebase()
 
     public void LoadNotificationScene()
     {
-        SceneManager.LoadScene("NotificationPage");
+        SceneManager.LoadScene("CongressNavigationPage");
     }
 
 }

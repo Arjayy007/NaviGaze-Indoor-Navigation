@@ -71,6 +71,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PrivacyPolicyPage.unity
     guid: 203490489b7533f4e97c51dec6182b1b
+  - enabled: 1
+    path: Assets/CongressNavigationPage.unity
+    guid: be40b332329d57e4ea2264af9197db9a
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e271fcac138c7274f9133ff59b0f2282, type: 2}
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 614cd14b325cb0942b0952eda5dd1c9f, type: 2}
