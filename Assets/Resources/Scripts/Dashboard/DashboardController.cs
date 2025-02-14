@@ -67,7 +67,7 @@ public class DashboardController : MonoBehaviour
 
     public void LoadNotificationScene()
     {
-        SceneManager.LoadScene("NotificationPage");
+        SceneManager.LoadScene("CongressNavigationPage");
     }
 
 }
