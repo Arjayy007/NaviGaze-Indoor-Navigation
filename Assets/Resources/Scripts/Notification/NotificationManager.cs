@@ -53,7 +53,7 @@ public class NotificationManager : MonoBehaviour
                     Destroy(child.gameObject);
                 }
 
-                int count = 0; // To track number of notifications
+                int count = 0;
 
                 foreach (var child in snapshot.Children)
                 {

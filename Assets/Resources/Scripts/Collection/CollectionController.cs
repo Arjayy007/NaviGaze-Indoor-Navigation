@@ -37,7 +37,6 @@ public class CollectionController : MonoBehaviour
             }
         });
 
-        LoadUserInventoryFromDatabase();
     }
 
     void LoadUserInventoryFromDatabase()
