@@ -61,62 +61,75 @@ public class AccessoriesController : MonoBehaviour
         });
     }
 
-    void LoadItemsFromDatabase()
+   void LoadItemsFromDatabase()
+{
+    string userInventoryPath = $"users/{userId}/inventory";
+
+    // Clear the existing UI before loading new items
+    ClearExistingUI();
+
+    dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
     {
-        string userInventoryPath = $"users/{userId}/inventory"; 
-
-        // Fetch user inventory first
-        dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
+        if (task.IsCompleted)
         {
-            if (task.IsCompleted)
+            DataSnapshot snapshot = task.Result;
+
+            // Get a list of owned items
+            HashSet<string> ownedItems = new HashSet<string>();
+            if (snapshot.Child(userInventoryPath).Exists)
             {
-                DataSnapshot snapshot = task.Result;
-
-                // Get a list of owned items
-                HashSet<string> ownedItems = new HashSet<string>();
-                if (snapshot.Child(userInventoryPath).Exists)
+                foreach (var item in snapshot.Child(userInventoryPath).Children)
                 {
-                    foreach (var item in snapshot.Child(userInventoryPath).Children)
-                    {
-                        ownedItems.Add(item.Value.ToString());
-                    }
+                    ownedItems.Add(item.Value.ToString());
                 }
+            }
 
-                // Now fetch all shop items
-                dbReference.Child("items").GetValueAsync().ContinueWithOnMainThread(itemTask =>
+            // Now fetch all shop items
+            dbReference.Child("items").GetValueAsync().ContinueWithOnMainThread(itemTask =>
+            {
+                if (itemTask.IsCompleted)
                 {
-                    if (itemTask.IsCompleted)
+                    DataSnapshot itemsSnapshot = itemTask.Result;
+
+                    foreach (DataSnapshot item in itemsSnapshot.Children)
                     {
-                        DataSnapshot itemsSnapshot = itemTask.Result;
+                        string itemName = item.Child("itemName").Value.ToString();
+                        string itemPrice = item.Child("itemPrice").Value.ToString();
 
-                        foreach (DataSnapshot item in itemsSnapshot.Children)
+                        // Skip items that the user already owns
+                        if (!ownedItems.Contains(itemName))
                         {
-                            string itemName = item.Child("itemName").Value.ToString();
-                            string itemPrice = item.Child("itemPrice").Value.ToString();
-
-                            // Skip items that the user already owns
-                            if (!ownedItems.Contains(itemName))
-                            {
-                                CreateUIItem(itemName, itemPrice);
-                            }
+                            CreateUIItem(itemName, itemPrice);
                         }
                     }
-                    else
-                    {
-                        Debug.LogError("Failed to fetch shop items from Firebase.");
-                    }
-                });
-            }
-            else
-            {
-                Debug.LogError("Failed to fetch user inventory from Firebase.");
-            }
-        });
+                }
+                else
+                {
+                    Debug.LogError("Failed to fetch shop items from Firebase.");
+                }
+            });
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch user inventory from Firebase.");
+        }
+    });
+}
 
+
+void ClearExistingUI()
+{
+    foreach (Transform child in contentParent)
+    {
+        Destroy(child.gameObject);
     }
+    Debug.Log("Cleared all existing UI items.");
+}
+
 
     void CreateUIItem(string name, string price)
     {
+        
         GameObject newItem = Instantiate(itemPrefab, contentParent);
 
         newItem.SetActive(true);
