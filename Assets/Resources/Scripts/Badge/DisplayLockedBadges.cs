@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Firebase.Database;
 using Firebase.Extensions;
 using TMPro;
+using UnityEngine.UI;
 
 public class DisplayLockedBadges : MonoBehaviour
 {
@@ -98,8 +99,19 @@ public class DisplayLockedBadges : MonoBehaviour
 
         GameObject newBadge = Instantiate(badgePrefab, badgeContainer);
         newBadge.SetActive(true);
+        
+        Image badgeImage = newBadge.GetComponent<Image>();
+         if (badgeImage != null)
+        {
+             badgeImage.color = new Color(0.5f, 0.5f, 0.5f, 0.6f); // Dark grey with transparency
 
-        TextMeshProUGUI titleText = newBadge.transform.Find("Title")?.GetComponent<TextMeshProUGUI>();
+         }
+         else
+         {
+        Debug.LogError($"Root Image component not found in {badgeType} badge prefab!");
+        }
+
+        TextMeshProUGUI titleText = newBadge.transform.Find("BadgeTitle")?.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI messageText = newBadge.transform.Find("Message")?.GetComponent<TextMeshProUGUI>();
 
         if (titleText != null) titleText.text = title;
