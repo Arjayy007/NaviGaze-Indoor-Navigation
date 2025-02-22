@@ -7,6 +7,7 @@ using SchedulesModel.Models;
 using NotificationModel.Models;
 using Firebase;
 using Firebase.Extensions;
+using TMPro;
 
 public class ScheduleNotificationManager : MonoBehaviour
 {
@@ -15,10 +16,15 @@ public class ScheduleNotificationManager : MonoBehaviour
     private List<ScheduleData> userSchedules = new List<ScheduleData>();
     private List<NotificationData> userNotifications = new List<NotificationData>();
 
+    public InAppNotification inAppNotification;
 
     void Awake()
     {
         DontDestroyOnLoad(gameObject); // Make this object persistent
+        if (inAppNotification == null)
+            {
+                inAppNotification = FindObjectOfType<InAppNotification>();
+            }
     }
 
     void Start()
@@ -31,6 +37,7 @@ public class ScheduleNotificationManager : MonoBehaviour
             {
                 // Firebase is ready, initialize Firebase and load user schedules
                 InitializeFirebase();
+                
             }
             else
             {
@@ -228,6 +235,7 @@ void SaveNotification(string subject, string room, string startTime)
                     
                     // Update local notification list immediately to prevent duplicates
                     userNotifications.Add(newNotification);
+                    inAppNotification.ShowSystemNotification(message);
                 }
                 else
                 {
@@ -256,6 +264,8 @@ DateTime ParseTime(string time)
     // Parse the time in 12-hour format (e.g., "11:00 PM") and convert to 24-hour format (e.g., "23:00:00")
     return DateTime.ParseExact(time, "h:mm tt", System.Globalization.CultureInfo.InvariantCulture);
 }
+
+
 
 
 
