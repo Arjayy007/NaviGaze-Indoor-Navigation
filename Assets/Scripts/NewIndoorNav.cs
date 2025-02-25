@@ -16,12 +16,17 @@ public class NewIndoorNav : MonoBehaviour {
      [SerializeField] private SlideUpAnimation slideUpAnimation;
     [SerializeField] private TMP_Text startingPoint;
     [SerializeField] private TMP_Text destinationPoint;
+    [SerializeField] private TMP_Text estimatedDistance;
+    [SerializeField] private TMP_Text estimatedTime;
+    [SerializeField] private GameObject estimatedArrivalTimeAndDistancePanel;
+    [SerializeField] private GameObject navigationPanel;
+
 
     private List<GameObject> navigationTargets = new List<GameObject>(); // List of all target locations
     private NavMeshPath navMeshPath;
     private GameObject navigationBase;
 
-    private string lastScannedQRCode = ""; // Track last scanned QR code to avoid redundant updates
+    private bool isQRCodeScanned = false;
 
     private void Start() {
         navMeshPath = new NavMeshPath();
@@ -61,8 +66,21 @@ private void SetPlayerPositionFromQRCode(string qrCodeName) {
         player.position = targetCube.transform.position; 
         Debug.Log($"Player repositioned to {qrCodeName}");
 
-        // Ensure the navigation updates immediately
-        UpdateLineRenderer();
+        if (targetCube != destinationPoint){
+
+            startingPoint.text = qrCodeName;
+            UpdateLineRenderer();
+
+            if (!isQRCodeScanned){
+                slideUpAnimation.SlideUp();
+                isQRCodeScanned = true;
+            }
+
+        } else {
+             //pag nakarating sa destination
+             
+        }
+       
     } else {
         Debug.LogWarning($"No matching target found for QR Code: {qrCodeName}");
     }
@@ -122,10 +140,28 @@ private void UpdateLineRenderer() {
 
     private void OnDropdownValueChanged(int index) {
         UpdateLineRenderer(); // Changing target updates only the destination
-         destinationPoint.text = dropdown.options[dropdown.value].text;
+        destinationPoint.text = dropdown.options[dropdown.value].text;
     }
     public void CloseHistoryPanel() {
         slideUpAnimation.SlideUp();
+        
+        estimatedArrivalTimeAndDistancePanel.SetActive(true);
+        navigationPanel.SetActive(true);
+    }
+
+      public (float distance, float time) GetEstimatedArrival() {
+        float totalDistance = 0f;
+        float walkingSpeed = 1.4f; // Average walking speed in meters per second
+
+        for (int i = 1; i < navMeshPath.corners.Length; i++) {
+            totalDistance += Vector3.Distance(navMeshPath.corners[i - 1], navMeshPath.corners[i]);
+        }
+
+        float calculateEstimatedTime = totalDistance / walkingSpeed;
+
+        estimatedDistance.text = $"{totalDistance} meters";
+        estimatedTime.text = $"{calculateEstimatedTime} seconds";
+        return (totalDistance, calculateEstimatedTime);
 
     }
 }
