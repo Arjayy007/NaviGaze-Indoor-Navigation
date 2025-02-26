@@ -28,8 +28,7 @@ public class HamburgerMenu : MonoBehaviour
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 dbReference = FirebaseDatabase.DefaultInstance.RootReference;
 
-                invinsibleButton.SetActive(false);
-                LoadUserData(); 
+                invinsibleButton.SetActive(false); 
             }
             else
             {
@@ -39,37 +38,7 @@ public class HamburgerMenu : MonoBehaviour
  
     }
 
-    public void LoadUserData()
-    {
-        string userPath = $"users/{userId}"; 
 
-        dbReference.Child(userPath).GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-
-                if (snapshot.Exists)
-                {
-                    string firstName = snapshot.Child("firstName").Value.ToString();
-                    string lastName = snapshot.Child("lastName").Value.ToString();
-
-                    string fullName = firstName + " " + lastName;
-
-
-                    Fullname.text = fullName;  
-                }
-                else
-                {
-                    Debug.LogError("User data not found!");
-                }
-            }
-            else
-            {
-                Debug.LogError("Failed to retrieve user data.");
-            }
-        });
-    }
 
 
 
