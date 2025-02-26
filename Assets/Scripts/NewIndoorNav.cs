@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.UI;
 
 public class NewIndoorNav : MonoBehaviour {
     [SerializeField] private Transform player; // AR camera representing the player
@@ -13,13 +14,16 @@ public class NewIndoorNav : MonoBehaviour {
     [SerializeField] private LineRenderer line; // Line Renderer for navigation path
     [SerializeField] private TMP_Dropdown dropdown; // Destination selector
     [SerializeField] private GameObject infoPanel; // UI panel for arrival confirmation
-     [SerializeField] private SlideUpAnimation slideUpAnimation;
     [SerializeField] private TMP_Text startingPoint;
     [SerializeField] private TMP_Text destinationPoint;
     [SerializeField] private TMP_Text estimatedDistance;
     [SerializeField] private TMP_Text estimatedTime;
     [SerializeField] private GameObject estimatedArrivalTimeAndDistancePanel;
-    [SerializeField] private GameObject navigationPanel;
+    [SerializeField] private GameObject navigationPanel; // panel sa taas ng screen 
+    [SerializeField] private TMP_Text destinationRoom; // sa navigation panel sa taas
+    [SerializeField] private Button closeButton; // sa navigation panel sa taas
+    public  GameObject slideUpPanel;
+    
 
 
     private List<GameObject> navigationTargets = new List<GameObject>(); // List of all target locations
@@ -27,6 +31,7 @@ public class NewIndoorNav : MonoBehaviour {
     private GameObject navigationBase;
 
     private bool isQRCodeScanned = false;
+    private bool isQRCodeScanned2 = true;
 
     private void Start() {
         navMeshPath = new NavMeshPath();
@@ -72,13 +77,14 @@ private void SetPlayerPositionFromQRCode(string qrCodeName) {
             UpdateLineRenderer();
 
             if (!isQRCodeScanned){
-                slideUpAnimation.SlideUp();
+                openHistory();
                 isQRCodeScanned = true;
             }
 
         } else {
-             //pag nakarating sa destination
-             
+
+            navigationPanel.SetActive(true);
+            
         }
        
     } else {
@@ -138,18 +144,22 @@ private void UpdateLineRenderer() {
 }
 
 
-    private void OnDropdownValueChanged(int index) {
+private void OnDropdownValueChanged(int index) {
         UpdateLineRenderer(); // Changing target updates only the destination
         destinationPoint.text = dropdown.options[dropdown.value].text;
+        destinationRoom.text = dropdown.options[dropdown.value].text;
     }
-    public void CloseHistoryPanel() {
-        slideUpAnimation.SlideUp();
-        
+public void CloseHistoryPanel() {
+        GetEstimatedArrival();
+        destinationRoom.text = dropdown.options[dropdown.value].text;
+        ToggleHistoryPanel(false);
         estimatedArrivalTimeAndDistancePanel.SetActive(true);
+        dropdown.gameObject.SetActive(false);
+        closeButton.gameObject.SetActive(false);
         navigationPanel.SetActive(true);
     }
 
-      public (float distance, float time) GetEstimatedArrival() {
+public (float distance, float time) GetEstimatedArrival() {
         float totalDistance = 0f;
         float walkingSpeed = 1.4f; // Average walking speed in meters per second
 
@@ -164,4 +174,16 @@ private void UpdateLineRenderer() {
         return (totalDistance, calculateEstimatedTime);
 
     }
+
+public void openHistory(){
+    ToggleHistoryPanel(true);
+}
+private void ToggleHistoryPanel(bool open)
+{
+    Animator animator = slideUpPanel.GetComponent<Animator>();
+    if (animator != null)
+    {
+        animator.SetBool("open", open);
+    }
+}
 }

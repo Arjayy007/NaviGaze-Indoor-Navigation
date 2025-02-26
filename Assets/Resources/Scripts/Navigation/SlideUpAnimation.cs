@@ -5,21 +5,13 @@ public class SlideUpAnimation : MonoBehaviour
 {
     public  GameObject slideUpPanel;
  
-    public void SlideUp()
+    public void ToggleNotificationPanel(bool open)
+{
+    Animator animator = slideUpPanel.GetComponent<Animator>();
+    if (animator != null)
     {
-        if (slideUpPanel != null)
-        {
-            Animator animator = slideUpPanel.GetComponent<Animator>();
-            if (animator != null)
-            {
-                bool isOpen = animator.GetBool("Open");
-                animator.SetBool("Open", !isOpen);
-            }
-        }
+        animator.SetBool("Open", open);
     }
+}
 
-    void Update()
-    {
-        
-    }
 }

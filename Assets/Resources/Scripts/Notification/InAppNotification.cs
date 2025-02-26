@@ -26,7 +26,6 @@ public void ShowSystemNotification(string message)
     // Assuming you are using a custom in-app notification panel
     notificationMessage.text = message;
     ToggleNotificationPanel(true);
-    Invoke(nameof(HideNotificationPanel), 5f);
 
 
 }
@@ -40,6 +39,6 @@ private void HideNotificationPanel()
 public void testNotification()
 {
     ToggleNotificationPanel(true);
-    Invoke(nameof(HideNotificationPanel), 2f);
+
 }
 }
