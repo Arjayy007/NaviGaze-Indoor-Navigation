@@ -160,20 +160,26 @@ public void CloseHistoryPanel() {
     }
 
 public (float distance, float time) GetEstimatedArrival() {
-        float totalDistance = 0f;
-        float walkingSpeed = 1.4f; // Average walking speed in meters per second
+    float totalDistance = 0f;
+    float walkingSpeed = 1.4f; // Average walking speed in meters per second
 
-        for (int i = 1; i < navMeshPath.corners.Length; i++) {
-            totalDistance += Vector3.Distance(navMeshPath.corners[i - 1], navMeshPath.corners[i]);
-        }
-
-        float calculateEstimatedTime = totalDistance / walkingSpeed;
-
-        estimatedDistance.text = $"{totalDistance} meters";
-        estimatedTime.text = $"{calculateEstimatedTime} seconds";
-        return (totalDistance, calculateEstimatedTime);
-
+    for (int i = 1; i < navMeshPath.corners.Length; i++) {
+        totalDistance += Vector3.Distance(navMeshPath.corners[i - 1], navMeshPath.corners[i]);
     }
+
+    float calculateEstimatedTime = totalDistance / walkingSpeed;
+
+    // Convert to whole numbers
+    int roundedDistance = Mathf.RoundToInt(totalDistance);
+    int roundedTime = Mathf.RoundToInt(calculateEstimatedTime);
+
+    // Update UI with whole numbers
+    estimatedDistance.text = $"{roundedDistance} meters";
+    estimatedTime.text = $"{roundedTime} seconds";
+
+    return (roundedDistance, roundedTime);
+}
+
 
 public void openHistory(){
     ToggleHistoryPanel(true);
@@ -186,4 +192,33 @@ private void ToggleHistoryPanel(bool open)
         animator.SetBool("open", open);
     }
 }
+
+public void CancelNavigation() {
+    // Reset the dropdown to default
+    dropdown.value = 0;
+    dropdown.captionText.text = dropdown.options[0].text;
+
+    // Clear the line renderer
+    line.positionCount = 0;
+
+    // Hide navigation-related UI panels
+    navigationPanel.SetActive(false);
+    estimatedArrivalTimeAndDistancePanel.SetActive(false);
+    slideUpPanel.SetActive(false);
+    infoPanel.SetActive(false);
+
+    // Reset estimated distance and time display
+    estimatedDistance.text = "";
+    estimatedTime.text = "";
+
+    // Reset QR scan flags
+    isQRCodeScanned = false;
+    isQRCodeScanned2 = true;
+
+    // Clear destination texts
+    destinationPoint.text = "";
+    destinationRoom.text = "";
+}
+
+
 }

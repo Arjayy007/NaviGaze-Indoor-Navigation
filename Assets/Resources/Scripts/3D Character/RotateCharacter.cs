@@ -3,7 +3,7 @@ using UnityEngine.InputSystem; // For new Input System
 
 public class RotateCharacter : MonoBehaviour
 {
-    public float rotationSpeed = 200f;
+    public float rotationSpeed = 100f;
     private Vector2 lastTouchPosition;
 
     void Update()
