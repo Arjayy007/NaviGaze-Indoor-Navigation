@@ -6,6 +6,9 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using System;
+using UnityEngine.SceneManagement;
+
+
 
 public class AccessoriesController : MonoBehaviour
 {
@@ -176,9 +179,22 @@ void ClearExistingUI()
             buyButton.onClick.AddListener(() => ShowConfirmationPanel(name, price, itemImage));
         }
 
+        Button previewButton = newItem.transform.Find("Preview").GetComponent<Button>();
+        if (previewButton != null)
+        {
+            previewButton.onClick.AddListener(() => OpenPreviewPage(name, price));
+        }
+
     }
 
-
+    void OpenPreviewPage(string itemName, string itemPrice)
+    {
+        Debug.Log($"Preview {itemName}");
+        // Store item data for the Preview Page
+        ItemPreviewData.itemName = itemName;
+        ItemPreviewData.itemPrice = itemPrice;
+        SceneManager.LoadScene("PreviewPage");
+    }
 
 
     void ShowConfirmationPanel(string itemName, string itemPrice, Sprite itemSprite)
