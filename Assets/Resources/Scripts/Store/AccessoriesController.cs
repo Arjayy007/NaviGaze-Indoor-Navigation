@@ -178,6 +178,9 @@ void ClearExistingUI()
 
     }
 
+
+
+
     void ShowConfirmationPanel(string itemName, string itemPrice, Sprite itemSprite)
     {
         confirmationPanel.SetActive(true);
@@ -204,6 +207,8 @@ void ClearExistingUI()
         noButton.onClick.RemoveAllListeners(); 
         noButton.onClick.AddListener(() => confirmationPanel.SetActive(false));
     }
+
+
 
     public void BuyItem(string itemName)
     {
