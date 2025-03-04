@@ -56,7 +56,7 @@ public class ClassNavigationManager : MonoBehaviour
                 }
 
                 Debug.Log($"Loaded {userSchedules.Count} schedules.");
-               
+
             }
             else
             {
@@ -65,10 +65,11 @@ public class ClassNavigationManager : MonoBehaviour
         });
     }
 
-    public void CheckForClassNavigation( string startingPoint, string destination,string status)
+    public void CheckForClassNavigation(string startingPoint, string destination)
     {
         DateTime now = DateTime.Now;
         string dayInAWeek = now.DayOfWeek.ToString();
+        bool classNavigationSaved = false; // Track if class navigation is saved
 
         foreach (ScheduleData schedule in userSchedules)
         {
@@ -81,22 +82,39 @@ public class ClassNavigationManager : MonoBehaviour
                 DateTime validStartTime = classStartTime.Subtract(beforeClass);
                 DateTime validEndTime = classStartTime.Add(afterClass);
 
-                status = (now >= validStartTime && now <= validEndTime) ? "On Time" : "Late";
+                string status = "On Time";
 
-                if (now >= validStartTime && now <= validEndTime)
-                {       
-                        string navigationType = "Class";
-                        Dictionary<string, object> classNavigation = NavigationHistoryData.ClassNavigation(startingPoint, destination, navigationType, status);
-                        SaveNavigationHistory(classNavigation);
-                }
-                else
+                if (now > classStartTime && now <= classStartTime.AddMinutes(15))
                 {
-                    string navigationType = "Normal";
-                    Dictionary<string, object> normalNavigation = NavigationHistoryData.NormalNavigation(startingPoint, destination, navigationType);
-                    Debug.Log("Not within class time.");
-                    SaveNavigationHistory(normalNavigation);
+                    status = "Late"; // Class hasn't started yet
+                }
+                else if  (now < classStartTime)
+                {
+                    status = "On Time"; // If student is within 15 minutes after start time, mark as late
+                }
+
+                // If within valid time range, save navigation
+                if (now >= validStartTime && now <= validEndTime)
+                {
+                    string navigationType = "Class";
+                    Dictionary<string, object> classNavigation = NavigationHistoryData.ClassNavigation(startingPoint, destination, navigationType, status);
+
+                    SaveNavigationHistory(classNavigation);
+                    classNavigationSaved = true;
+
+                    Debug.Log($"Class navigation saved for {schedule.subjectName} at {schedule.startTime}");
                 }
             }
+        }
+
+        // If no class navigation was saved, save a normal navigation
+        if (!classNavigationSaved)
+        {
+            string navigationType = "Normal";
+            Dictionary<string, object> normalNavigation = NavigationHistoryData.NormalNavigation(startingPoint, destination, navigationType);
+
+            SaveNavigationHistory(normalNavigation);
+            Debug.Log("No class found, saving normal navigation.");
         }
     }
 

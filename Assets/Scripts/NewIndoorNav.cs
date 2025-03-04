@@ -7,7 +7,8 @@ using TMPro;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.UI;
 
-public class NewIndoorNav : MonoBehaviour {
+public class NewIndoorNav : MonoBehaviour
+{
     [SerializeField] private Transform player; // AR camera representing the player
     [SerializeField] private ARTrackedImageManager m_TrackedImageManager;
     [SerializeField] private GameObject trackedImagePrefab;
@@ -22,8 +23,8 @@ public class NewIndoorNav : MonoBehaviour {
     [SerializeField] private GameObject navigationPanel; // panel sa taas ng screen 
     [SerializeField] private TMP_Text destinationRoom; // sa navigation panel sa taas
     [SerializeField] private Button closeButton; // sa navigation panel sa taas
-    public  GameObject slideUpPanel;
-    
+    public GameObject slideUpPanel;
+    public ClassNavigationManager classNavigationManager;
 
 
     private List<GameObject> navigationTargets = new List<GameObject>(); // List of all target locations
@@ -31,9 +32,10 @@ public class NewIndoorNav : MonoBehaviour {
     private GameObject navigationBase;
 
     private bool isQRCodeScanned = false;
-    private bool isQRCodeScanned2 = true;
+    private bool hasSavedToDatabase = false;
 
-    private void Start() {
+    private void Start()
+    {
         navMeshPath = new NavMeshPath();
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -43,113 +45,145 @@ public class NewIndoorNav : MonoBehaviour {
         dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
     }
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         if (m_TrackedImageManager != null)
             m_TrackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         if (m_TrackedImageManager != null)
             m_TrackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
 
-private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args) {
-    foreach (var trackedImage in args.added.Concat(args.updated)) { 
-        string qrCodeName = trackedImage.referenceImage.name; 
+    private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)
+    {
+        foreach (var trackedImage in args.added.Concat(args.updated))
+        {
+            string qrCodeName = trackedImage.referenceImage.name;
 
-        // Directly update position and navigation
-        SetPlayerPositionFromQRCode(qrCodeName);
+            // Directly update position and navigation
+            SetPlayerPositionFromQRCode(qrCodeName);
+        }
     }
-}
 
 
-private void SetPlayerPositionFromQRCode(string qrCodeName) {
-    GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
+    private void SetPlayerPositionFromQRCode(string qrCodeName)
+    {
+        GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
 
-    if (targetCube != null) {
-        // Move player to new QR position
-        player.position = targetCube.transform.position; 
-        Debug.Log($"Player repositioned to {qrCodeName}");
+        if (targetCube != null)
+        {
+            // Move player to new QR position
+            player.position = targetCube.transform.position;
+            Debug.Log($"Player repositioned to {qrCodeName}");
 
-        if (targetCube != destinationPoint){
+            if (targetCube.name == destinationPoint.text)
+            {
 
-            startingPoint.text = qrCodeName;
-            UpdateLineRenderer();
+                string startPoint = startingPoint.text;
+                string endPoint = destinationPoint.text;
 
-            if (!isQRCodeScanned){
-                openHistory();
-                isQRCodeScanned = true;
+                if (!hasSavedToDatabase)
+                {
+                    openHistory();
+                    classNavigationManager.CheckForClassNavigation(startPoint, endPoint);
+                    hasSavedToDatabase = true;
+                };
+
+
+            }
+            else
+            {
+
+                startingPoint.text = qrCodeName;
+                UpdateLineRenderer();
+
+                if (!isQRCodeScanned)
+                {
+                    openHistory();
+                    isQRCodeScanned = true;
+                }
             }
 
-        } else {
-
-            navigationPanel.SetActive(true);
-            
         }
-       
-    } else {
-        Debug.LogWarning($"No matching target found for QR Code: {qrCodeName}");
-    }
-}
-
-
-  private void PopulateDropdown() {
-    dropdown.options.Clear();
-    
-    // Add default option first
-    dropdown.options.Add(new TMP_Dropdown.OptionData("-Select Destination"));
-
-    // Sort targets alphabetically
-    navigationTargets = navigationTargets.OrderBy(target => target.name).ToList();
-
-    // Add actual target destinations
-    foreach (var target in navigationTargets) {
-        dropdown.options.Add(new TMP_Dropdown.OptionData(target.name));
+        else
+        {
+            Debug.LogWarning($"No matching target found for QR Code: {qrCodeName}");
+        }
     }
 
-    dropdown.RefreshShownValue();
 
-    // Set default value to "-Select Destination"
-    dropdown.value = 0;
-    dropdown.captionText.text = dropdown.options[0].text;
+    private void PopulateDropdown()
+    {
+        dropdown.options.Clear();
 
-    // Ensure no navigation line is drawn initially
-    UpdateLineRenderer();
-}
+        // Add default option first
+        dropdown.options.Add(new TMP_Dropdown.OptionData("-Select Destination"));
 
-private void UpdateLineRenderer() {
-    if (dropdown.value == 0) { 
-        // If "-Select Destination" is chosen, don't render the line
-        line.positionCount = 0;
-        return;
+        // Sort targets alphabetically
+        navigationTargets = navigationTargets.OrderBy(target => target.name).ToList();
+
+        // Add actual target destinations
+        foreach (var target in navigationTargets)
+        {
+            dropdown.options.Add(new TMP_Dropdown.OptionData(target.name));
+        }
+
+        dropdown.RefreshShownValue();
+
+        // Set default value to "-Select Destination"
+        dropdown.value = 0;
+        dropdown.captionText.text = dropdown.options[0].text;
+
+        // Ensure no navigation line is drawn initially
+        UpdateLineRenderer();
     }
 
-    string selectedTargetName = dropdown.options[dropdown.value].text;
-    GameObject selectedTarget = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
+    private void UpdateLineRenderer()
+    {
+        if (dropdown.value == 0)
+        {
+            // If "-Select Destination" is chosen, don't render the line
+            line.positionCount = 0;
+            return;
+        }
 
-    if (selectedTarget != null) {
-        // Always calculate from the latest player position
-        NavMesh.CalculatePath(player.position, selectedTarget.transform.position, NavMesh.AllAreas, navMeshPath);
+        string selectedTargetName = dropdown.options[dropdown.value].text;
+        GameObject selectedTarget = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
 
-        if (navMeshPath.status == NavMeshPathStatus.PathComplete) {
-            line.positionCount = navMeshPath.corners.Length;
-            line.SetPositions(navMeshPath.corners);
-        } else {
+        if (selectedTarget != null)
+        {
+            // Always calculate from the latest player position
+            NavMesh.CalculatePath(player.position, selectedTarget.transform.position, NavMesh.AllAreas, navMeshPath);
+
+            if (navMeshPath.status == NavMeshPathStatus.PathComplete)
+            {
+                line.positionCount = navMeshPath.corners.Length;
+                line.SetPositions(navMeshPath.corners);
+            }
+            else
+            {
+                line.positionCount = 0;
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"No valid target found for {selectedTargetName}");
             line.positionCount = 0;
         }
-    } else {
-        Debug.LogWarning($"No valid target found for {selectedTargetName}");
-        line.positionCount = 0;
     }
-}
 
 
-private void OnDropdownValueChanged(int index) {
+    private void OnDropdownValueChanged(int index)
+    {
         UpdateLineRenderer(); // Changing target updates only the destination
         destinationPoint.text = dropdown.options[dropdown.value].text;
         destinationRoom.text = dropdown.options[dropdown.value].text;
     }
-public void CloseHistoryPanel() {
+    public void CloseHistoryPanel()
+    {
         GetEstimatedArrival();
         destinationRoom.text = dropdown.options[dropdown.value].text;
         ToggleHistoryPanel(false);
@@ -159,66 +193,69 @@ public void CloseHistoryPanel() {
         navigationPanel.SetActive(true);
     }
 
-public (float distance, float time) GetEstimatedArrival() {
-    float totalDistance = 0f;
-    float walkingSpeed = 1.4f; // Average walking speed in meters per second
-
-    for (int i = 1; i < navMeshPath.corners.Length; i++) {
-        totalDistance += Vector3.Distance(navMeshPath.corners[i - 1], navMeshPath.corners[i]);
-    }
-
-    float calculateEstimatedTime = totalDistance / walkingSpeed;
-
-    // Convert to whole numbers
-    int roundedDistance = Mathf.RoundToInt(totalDistance);
-    int roundedTime = Mathf.RoundToInt(calculateEstimatedTime);
-
-    // Update UI with whole numbers
-    estimatedDistance.text = $"{roundedDistance} meters";
-    estimatedTime.text = $"{roundedTime} seconds";
-
-    return (roundedDistance, roundedTime);
-}
-
-
-public void openHistory(){
-    ToggleHistoryPanel(true);
-}
-private void ToggleHistoryPanel(bool open)
-{
-    Animator animator = slideUpPanel.GetComponent<Animator>();
-    if (animator != null)
+    public (float distance, float time) GetEstimatedArrival()
     {
-        animator.SetBool("open", open);
+        float totalDistance = 0f;
+        float walkingSpeed = 1.4f; // Average walking speed in meters per second
+
+        for (int i = 1; i < navMeshPath.corners.Length; i++)
+        {
+            totalDistance += Vector3.Distance(navMeshPath.corners[i - 1], navMeshPath.corners[i]);
+        }
+
+        float calculateEstimatedTime = totalDistance / walkingSpeed;
+
+        // Convert to whole numbers
+        int roundedDistance = Mathf.RoundToInt(totalDistance);
+        int roundedTime = Mathf.RoundToInt(calculateEstimatedTime);
+
+        // Update UI with whole numbers
+        estimatedDistance.text = $"{roundedDistance} meters";
+        estimatedTime.text = $"{roundedTime} seconds";
+
+        return (roundedDistance, roundedTime);
     }
-}
 
-public void CancelNavigation() {
-    // Reset the dropdown to default
-    dropdown.value = 0;
-    dropdown.captionText.text = dropdown.options[0].text;
 
-    // Clear the line renderer
-    line.positionCount = 0;
+    public void openHistory()
+    {
+        ToggleHistoryPanel(true);
+    }
+    private void ToggleHistoryPanel(bool open)
+    {
+        Animator animator = slideUpPanel.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("open", open);
+        }
+    }
 
-    // Hide navigation-related UI panels
-    navigationPanel.SetActive(false);
-    estimatedArrivalTimeAndDistancePanel.SetActive(false);
-    slideUpPanel.SetActive(false);
-    infoPanel.SetActive(false);
+    public void CancelNavigation()
+    {
+        // Reset the dropdown to default
+        dropdown.value = 0;
+        dropdown.captionText.text = dropdown.options[0].text;
 
-    // Reset estimated distance and time display
-    estimatedDistance.text = "";
-    estimatedTime.text = "";
+        // Clear the line renderer
+        line.positionCount = 0;
 
-    // Reset QR scan flags
-    isQRCodeScanned = false;
-    isQRCodeScanned2 = true;
+        // Hide navigation-related UI panels
+        navigationPanel.SetActive(false);
+        estimatedArrivalTimeAndDistancePanel.SetActive(false);
+        slideUpPanel.SetActive(false);
+        infoPanel.SetActive(false);
 
-    // Clear destination texts
-    destinationPoint.text = "";
-    destinationRoom.text = "";
-}
+        // Reset estimated distance and time display
+        estimatedDistance.text = "";
+        estimatedTime.text = "";
+
+        // Reset QR scan flags
+        isQRCodeScanned = false;
+
+        // Clear destination texts
+        destinationPoint.text = "";
+        destinationRoom.text = "";
+    }
 
 
 }
