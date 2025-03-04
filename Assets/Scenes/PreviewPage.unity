@@ -771,6 +771,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cat Character
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 2be41dab6fe2e77498e51f12f769d02f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b9dd719664da3fa4a8db1585d84c8712, type: 2}
     - target: {fileID: 8670761335428686811, guid: 2be41dab6fe2e77498e51f12f769d02f, type: 3}
       propertyPath: m_LocalScale.z
       value: 1.4041783
@@ -874,7 +878,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

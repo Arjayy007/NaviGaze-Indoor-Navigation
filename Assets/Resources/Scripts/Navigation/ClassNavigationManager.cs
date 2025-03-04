@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Database;
 using SchedulesModel.Models;
+using System.Threading.Tasks;
 
 public class ClassNavigationManager : MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class ClassNavigationManager : MonoBehaviour
                 }
 
                 Debug.Log($"Loaded {userSchedules.Count} schedules.");
-                CheckForClassNavigation();
+               
             }
             else
             {
@@ -64,7 +65,7 @@ public class ClassNavigationManager : MonoBehaviour
         });
     }
 
-    void CheckForClassNavigation()
+    public void CheckForClassNavigation( string startingPoint, string destination,string status)
     {
         DateTime now = DateTime.Now;
         string dayInAWeek = now.DayOfWeek.ToString();
@@ -75,21 +76,44 @@ public class ClassNavigationManager : MonoBehaviour
             {
                 DateTime classStartTime = DateTime.Parse(schedule.startTime);
                 TimeSpan beforeClass = TimeSpan.FromHours(1);
-                TimeSpan afterClass = TimeSpan.FromMinutes(30);
+                TimeSpan afterClass = TimeSpan.FromMinutes(15);
 
                 DateTime validStartTime = classStartTime.Subtract(beforeClass);
                 DateTime validEndTime = classStartTime.Add(afterClass);
 
+                status = (now >= validStartTime && now <= validEndTime) ? "On Time" : "Late";
+
                 if (now >= validStartTime && now <= validEndTime)
-                {
-                    Debug.Log("Navigation for class.");
+                {       
+                        string navigationType = "Class";
+                        Dictionary<string, object> classNavigation = NavigationHistoryData.ClassNavigation(startingPoint, destination, navigationType, status);
+                        SaveNavigationHistory(classNavigation);
                 }
                 else
                 {
-                    Debug.Log("Normal navigation.");
+                    string navigationType = "Normal";
+                    Dictionary<string, object> normalNavigation = NavigationHistoryData.NormalNavigation(startingPoint, destination, navigationType);
+                    Debug.Log("Not within class time.");
+                    SaveNavigationHistory(normalNavigation);
                 }
             }
         }
     }
+
+    public void SaveNavigationHistory(Dictionary<string, object> navigationData)
+    {
+        dbReference.Child("users").Child(userId).Child("navigationHistory").Push().SetValueAsync(navigationData).ContinueWith(Task =>
+        {
+            if (Task.IsCompleted)
+            {
+                Debug.Log("Navigation history saved.");
+            }
+            else
+            {
+                Debug.LogWarning("Failed to save navigation history.");
+            }
+        });
+    }
+
 }
 
