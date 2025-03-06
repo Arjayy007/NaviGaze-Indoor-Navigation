@@ -26,10 +26,13 @@ public class NewIndoorNav : MonoBehaviour
     public GameObject slideUpPanel;
     public ClassNavigationManager classNavigationManager;
 
+    [SerializeField] private GameObject character; // Assign your character in the Inspector
+    private NavMeshAgent characterAgent;
+    private Animator characterAnimator;
+
 
     private List<GameObject> navigationTargets = new List<GameObject>(); // List of all target locations
     private NavMeshPath navMeshPath;
-    private GameObject navigationBase;
 
     private bool isQRCodeScanned = false;
     private bool hasSavedToDatabase = false;
@@ -43,7 +46,19 @@ public class NewIndoorNav : MonoBehaviour
         PopulateDropdown();
 
         dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+
+        characterAgent = character.GetComponent<NavMeshAgent>();
+        characterAnimator = character.GetComponent<Animator>();
     }
+
+    private void Update()
+{
+    if (characterAgent != null && characterAgent.remainingDistance <= characterAgent.stoppingDistance && !characterAgent.pathPending)
+    {
+        characterAnimator.SetFloat("Speed", 0.0f); // Stop walking animation
+    }
+}
+
 
     private void OnEnable()
     {
@@ -198,6 +213,7 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
         dropdown.gameObject.SetActive(false);
         closeButton.gameObject.SetActive(false);
         navigationPanel.SetActive(true);
+         MoveCharacterToDestination();
     }
 
     public (float distance, float time) GetEstimatedArrival()
@@ -263,6 +279,30 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
         destinationPoint.text = "";
         destinationRoom.text = "";
     }
+
+//testingggggggggg
+    private void MoveCharacterToDestination()
+{
+    if (dropdown.value == 0)
+    {
+        Debug.LogWarning("No destination selected!");
+        return;
+    }
+
+    string selectedTargetName = dropdown.options[dropdown.value].text;
+    GameObject destinationCube = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
+
+    if (destinationCube != null)
+    {
+        characterAgent.SetDestination(destinationCube.transform.position);
+        characterAnimator.SetFloat("Speed", 1.0f); // Start walking animation
+    }
+    else
+    {
+        Debug.LogWarning("Destination cube not found!");
+    }
+}
+
 
 
 }
