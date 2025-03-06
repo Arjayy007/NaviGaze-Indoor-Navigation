@@ -69,50 +69,57 @@ public class NewIndoorNav : MonoBehaviour
     }
 
 
-    private void SetPlayerPositionFromQRCode(string qrCodeName)
+private void SetPlayerPositionFromQRCode(string qrCodeName)
+{
+    GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
+
+    if (targetCube != null)
     {
-        GameObject targetCube = navigationTargets.FirstOrDefault(target => target.name == qrCodeName);
+        Vector3 targetPosition = targetCube.transform.position;
 
-        if (targetCube != null)
+        // Get XR Origin (parent of Camera Offset)
+        Transform xrOrigin = player.transform.parent; 
+        if (xrOrigin != null)
         {
-            // Move player to new QR position
-            player.position = targetCube.transform.position;
-            Debug.Log($"Player repositioned to {qrCodeName}");
+            // Move XR Origin instead of just the camera
+            xrOrigin.position = targetPosition;
 
-            if (targetCube.name == destinationPoint.text)
+            // Preserve camera's original upright rotation
+            Quaternion targetRotation = Quaternion.Euler(0, targetCube.transform.eulerAngles.y, 0);
+            xrOrigin.rotation = targetRotation;
+
+            Debug.Log($"XR Origin repositioned to {qrCodeName} at {targetPosition}");
+        }
+
+        // Update navigation and history
+        if (targetCube.name == destinationPoint.text)
+        {
+            if (!hasSavedToDatabase)
             {
-
-                string startPoint = startingPoint.text;
-                string endPoint = destinationPoint.text;
-
-                if (!hasSavedToDatabase)
-                {
-                    openHistory();
-                    classNavigationManager.CheckForClassNavigation(startPoint, endPoint);
-                    hasSavedToDatabase = true;
-                };
-
-
+                openHistory();
+                classNavigationManager.CheckForClassNavigation(startingPoint.text, destinationPoint.text);
+                hasSavedToDatabase = true;
             }
-            else
-            {
-
-                startingPoint.text = qrCodeName;
-                UpdateLineRenderer();
-
-                if (!isQRCodeScanned)
-                {
-                    openHistory();
-                    isQRCodeScanned = true;
-                }
-            }
-
         }
         else
         {
-            Debug.LogWarning($"No matching target found for QR Code: {qrCodeName}");
+            startingPoint.text = qrCodeName;
+            UpdateLineRenderer();
+
+            if (!isQRCodeScanned)
+            {
+                openHistory();
+                isQRCodeScanned = true;
+            }
         }
     }
+    else
+    {
+        Debug.LogWarning($"No matching target found for QR Code: {qrCodeName}");
+    }
+}
+
+
 
 
     private void PopulateDropdown()

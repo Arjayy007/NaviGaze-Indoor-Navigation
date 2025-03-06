@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PreviewPageController : MonoBehaviour
 {
 
     // Reference to all item models in the Preview Page
     public GameObject CatHat;
+    public GameObject CatGlasses;
 
 
     void Start()
@@ -22,7 +24,7 @@ public class PreviewPageController : MonoBehaviour
     {
         // Disable all accessories first
         CatHat.SetActive(false);
-
+        CatGlasses.SetActive(false);
 
         // Enable only the selected accessory on the Cat Character
         switch (itemName)
@@ -30,9 +32,17 @@ public class PreviewPageController : MonoBehaviour
             case "Cat Hat":
                 CatHat.SetActive(true);
                 break;
+            case "Cat Glasses":
+                CatGlasses.SetActive(true);
+                break;
             default:
                 Debug.LogWarning("Accessory not found!");
                 break;
         }
     }
+    public void BacktoStore()
+    {
+        SceneManager.LoadScene("StorePage");
+    }
+
 }
