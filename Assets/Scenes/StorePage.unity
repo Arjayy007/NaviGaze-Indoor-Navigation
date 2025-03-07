@@ -3774,7 +3774,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 500
+  m_Spacing: 400
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -4776,7 +4776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1916112017532144637, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -233
+      value: -200
       objectReference: {fileID: 0}
     - target: {fileID: 3534284953951179986, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_FontData.m_FontSize
@@ -4800,7 +4800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347694750699088907, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -339.71
+      value: -306.7099
       objectReference: {fileID: 0}
     - target: {fileID: 4839545396184923699, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_Color.a
@@ -4820,7 +4820,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5334734693014854026, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -251
+      value: -217.99992
       objectReference: {fileID: 0}
     - target: {fileID: 5882048119252670562, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_Name
@@ -4936,7 +4936,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7339850197122867627, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -339.71
+      value: -306.7099
       objectReference: {fileID: 0}
     - target: {fileID: 7999275224043071354, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_SizeDelta.x
@@ -4952,7 +4952,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7999275224043071354, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -157
+      value: -123.99992
       objectReference: {fileID: 0}
     - target: {fileID: 8325140102235937174, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size

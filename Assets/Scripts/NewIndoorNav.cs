@@ -6,6 +6,7 @@ using UnityEngine.AI;
 using TMPro;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.UI;
+using System.Collections;
 
 public class NewIndoorNav : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class NewIndoorNav : MonoBehaviour
     [SerializeField] private GameObject navigationPanel; // panel sa taas ng screen 
     [SerializeField] private TMP_Text destinationRoom; // sa navigation panel sa taas
     [SerializeField] private Button closeButton; // sa navigation panel sa taas
+    [SerializeField] private GameObject CatCharacter; // character
     public GameObject slideUpPanel;
     public ClassNavigationManager classNavigationManager;
 
@@ -49,14 +51,12 @@ public class NewIndoorNav : MonoBehaviour
 
         characterAgent = character.GetComponent<NavMeshAgent>();
         characterAnimator = character.GetComponent<Animator>();
+        characterAnimator.Play("Breathing"); // Start with idle animation
     }
 
     private void Update()
 {
-    if (characterAgent != null && characterAgent.remainingDistance <= characterAgent.stoppingDistance && !characterAgent.pathPending)
-    {
-        characterAnimator.SetFloat("Speed", 0.0f); // Stop walking animation
-    }
+ 
 }
 
 
@@ -203,6 +203,8 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
         UpdateLineRenderer(); // Changing target updates only the destination
         destinationPoint.text = dropdown.options[dropdown.value].text;
         destinationRoom.text = dropdown.options[dropdown.value].text;
+
+        CatCharacter.SetActive(true);
     }
     public void CloseHistoryPanel()
     {
@@ -281,7 +283,7 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
     }
 
 //testingggggggggg
-    private void MoveCharacterToDestination()
+  private void MoveCharacterToDestination()
 {
     if (dropdown.value == 0)
     {
@@ -295,13 +297,31 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
     if (destinationCube != null)
     {
         characterAgent.SetDestination(destinationCube.transform.position);
-        characterAnimator.SetFloat("Speed", 1.0f); // Start walking animation
+
+        // 🔥 Trigger Walking Animation
+        characterAnimator.SetTrigger("StartWalking");
+        
+        // Start checking when the character arrives
+        StartCoroutine(CheckIfCharacterArrived());
     }
     else
     {
         Debug.LogWarning("Destination cube not found!");
     }
 }
+
+
+// Coroutine to check when the character arrives at destination
+private IEnumerator CheckIfCharacterArrived()
+{
+    yield return new WaitUntil(() => characterAgent.remainingDistance <= characterAgent.stoppingDistance && !characterAgent.pathPending);
+
+    // 🔥 Reset walking trigger and return to Breathing (Idle)
+    characterAnimator.ResetTrigger("StartWalking");
+    characterAnimator.Play("Breathing");
+}
+
+
 
 
 

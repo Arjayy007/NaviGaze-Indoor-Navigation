@@ -41,11 +41,16 @@ public class CollectionController : MonoBehaviour
 
     void LoadUserInventoryFromDatabase()
     {
+
+    
+
         if (string.IsNullOrEmpty(userId))
         {
             Debug.LogError("User ID is not set!");
             return;
         }
+
+        //ClearExistingUI();
 
         string userInventoryPath = $"users/{UserSession.UserId}/inventory"; 
         dbReference.Child(userInventoryPath).GetValueAsync().ContinueWithOnMainThread(task =>
@@ -85,9 +90,19 @@ public class CollectionController : MonoBehaviour
         });
     }
 
+
+    /*void ClearExistingUI()
+    {
+        foreach (Transform child in contentParent)
+        {
+            Destroy(child.gameObject);
+        }
+        Debug.Log("Cleared all existing UI items.");
+    }*/
+
+
     void CreateUIItem(string itemName)
     {
-        Debug.Log($"Creating UI panel for item: {itemName}");
         GameObject newItem = Instantiate(CollectionPanelPrefab, contentParent);
 
         if (newItem == null)
