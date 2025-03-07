@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -267, y: -245.37}
+  m_AnchoredPosition: {x: -267, y: -207.00003}
   m_SizeDelta: {x: 266.6329, y: 250.91}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3316220772893782389
@@ -109,7 +109,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 149.92, y: -255}
+  m_AnchoredPosition: {x: 149.92, y: -216.63004}
   m_SizeDelta: {x: 299.83, y: 66.6301}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6262876599307165041
@@ -188,7 +188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 146.84, y: -157.43}
+  m_AnchoredPosition: {x: 146.84, y: -119.06002}
   m_SizeDelta: {x: 505.62, y: 83.7751}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1893587939044333507
@@ -348,7 +348,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 21, y: -344.62}
+  m_AnchoredPosition: {x: 21, y: -306.25003}
   m_SizeDelta: {x: 196.5695, y: 52.4185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1542852930776988321
@@ -481,7 +481,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 301, y: -344.62}
+  m_AnchoredPosition: {x: 301, y: -306.25003}
   m_SizeDelta: {x: 197.3, y: 52.416}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6968045829556678911
@@ -600,7 +600,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.715, y: -245.37}
+  m_AnchoredPosition: {x: -0.715, y: -207}
   m_SizeDelta: {x: 932.5703, y: 368.74}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1313669000234891976
@@ -734,7 +734,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6511147868378175364
 RectTransform:
   m_ObjectHideFlags: 0
