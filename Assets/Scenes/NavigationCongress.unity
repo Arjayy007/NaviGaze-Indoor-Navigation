@@ -1304,6 +1304,7 @@ MonoBehaviour:
   navigationPanel: {fileID: 495960063}
   destinationRoom: {fileID: 1386269706}
   closeButton: {fileID: 640403391}
+  CatCharacter: {fileID: 1520544504}
   slideUpPanel: {fileID: 1003072171}
   classNavigationManager: {fileID: 564465705}
   character: {fileID: 1520544504}
@@ -2676,7 +2677,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
       propertyPath: m_Name
-      value: Cat Character 1
+      value: 'Cat Character '
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3978,7 +3983,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 769
+    m_Bits: 4294967295
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
