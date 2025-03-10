@@ -392,8 +392,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 190, y: 441.3737}
-  m_SizeDelta: {x: 160, y: 45.2526}
+  m_AnchoredPosition: {x: 184, y: 464}
+  m_SizeDelta: {x: 56.5, y: 56.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &49558016
 MonoBehaviour:
@@ -471,8 +471,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 28e43e9f2e0fad6428142d1f07ec6509, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4465,7 +4465,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Change Avatar
+  m_Text: 
 --- !u!222 &1108937808
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4632,6 +4632,30 @@ PrefabInstance:
     - target: {fileID: 3588700285020848383, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657119010327202513, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657119010327202513, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657119010327202513, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 94.64993
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657119010327202513, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 94.64993
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657119010327202513, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -317.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3657119010327202513, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -440
       objectReference: {fileID: 0}
     - target: {fileID: 3799402514962736502, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
       propertyPath: m_Pivot.x
