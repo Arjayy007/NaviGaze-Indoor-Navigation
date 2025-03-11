@@ -4,41 +4,44 @@ using TMPro;
 
 public class InAppNotification : MonoBehaviour
 {
-
     [Header("UI Elements")]
     public GameObject notificationPanel;
     public TextMeshProUGUI notificationMessage;
 
+    [Header("Audio")]
+    public AudioSource notificationAudioSource;
+    public AudioClip notificationSound;
 
-   private void ToggleNotificationPanel(bool show)
-{
-    Animator animator = notificationPanel.GetComponent<Animator>();
-    if (animator != null)
+    private void ToggleNotificationPanel(bool show)
     {
-        animator.SetBool("Show", show);
+        Animator animator = notificationPanel.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("Show", show);
+        }
+
+        if (show && notificationAudioSource != null && notificationSound != null)
+        {
+            notificationAudioSource.PlayOneShot(notificationSound);
+        }
     }
-}
 
-public void ShowSystemNotification(string message)
-{
-    Debug.Log("Showing system notification: " + message);
+    public void ShowSystemNotification(string message)
+    {
+        Debug.Log("Showing system notification: " + message);
 
-    // Assuming you are using a custom in-app notification panel
-    notificationMessage.text = message;
-    ToggleNotificationPanel(true);
+        // Update UI
+        notificationMessage.text = message;
+        ToggleNotificationPanel(true);
+    }
 
+    private void HideNotificationPanel()
+    {
+        ToggleNotificationPanel(false);
+    }
 
-}
-
-
-private void HideNotificationPanel()
-{
-    ToggleNotificationPanel(false);
-}
-
-public void testNotification()
-{
-    ToggleNotificationPanel(true);
-
-}
+    public void testNotification()
+    {
+        ToggleNotificationPanel(true);
+    }
 }
