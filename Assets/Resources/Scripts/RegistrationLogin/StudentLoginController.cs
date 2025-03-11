@@ -151,6 +151,10 @@ public class StudentLoginController : MonoBehaviour
         SceneManager.LoadScene("TermsAndCondition");
     }
 
+    public void OnBackButtonClicked()
+    {
+        SceneManager.LoadScene("LandingPage");
+    }
 
     
 }
