@@ -1,72 +1,53 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class OfflineMapController : MonoBehaviour
 {
-    public GameObject panel;   // Main panel (Campus Panel 1)
-    public GameObject panel2;  // Main panel (Campus Panel 2)
-    public GameObject panel3;  // Main panel (Campus Panel 3)
-
-    public Dropdown OfflineMapDropdown;  // First dropdown (Campus selection)
-    public Dropdown FloorCampusDropdown; // Second dropdown (Floor selection)
-
-    public GameObject[] floorPanels; // Array of floor panels (Ground, 1st, 2nd, etc.)
+    public Dropdown firstDropdown;  // The first dropdown (Campus)
+    public Dropdown secondDropdown; // The second dropdown (Floors/Buildings)
 
     void Start()
     {
-        OfflineMapDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
-        FloorCampusDropdown.onValueChanged.AddListener(OnFloorDropdownValueChanged);
-        FloorCampusDropdown.gameObject.SetActive(false); // Hide initially
+        // Ensure Dropdown 2 starts as disabled
+        secondDropdown.interactable = false;
+
+        // Clear previous options
+        firstDropdown.onValueChanged.AddListener(delegate { UpdateSecondDropdown(); });
     }
 
-    public void OnDropdownValueChanged(int index)
+    void UpdateSecondDropdown()
     {
-        string selectedOption = OfflineMapDropdown.options[index].text;
-        Debug.Log("Selected: " + selectedOption);
+        // Enable second dropdown when first dropdown has a valid selection
+        secondDropdown.interactable = true;
+        secondDropdown.ClearOptions();
 
-        // Show/Hide Campus Panels
-        switch (index)
+        List<string> secondDropdownOptions = new List<string>();
+
+        // Get selected option from first dropdown
+        string selectedOption = firstDropdown.options[firstDropdown.value].text;
+
+        // Populate second dropdown based on first dropdown selection
+        switch (selectedOption)
         {
-            case 0: // Panel 1 (Enables Floor Dropdown)
-                panel.SetActive(true);
-                panel2.SetActive(false);
-                panel3.SetActive(false);
-                FloorCampusDropdown.gameObject.SetActive(true); // Show floor dropdown
+            case "Congress":
+                secondDropdownOptions.AddRange(new List<string> { "Ground Floor", "2nd Floor", "3rd Floor", "4th Floor", "5th Floor" });
                 break;
-            case 1: // Panel 2 (Hides Floor Dropdown)
-                panel.SetActive(false);
-                panel2.SetActive(true);
-                panel3.SetActive(false);
-                FloorCampusDropdown.gameObject.SetActive(false); // Hide floor dropdown
-                HideAllFloorPanels();
+
+            case "Camarin":
+                secondDropdownOptions.AddRange(new List<string> { "Old Building: 1st Floor", "Old Building: 2nd Floor", "Old Building: Third Floor", "Building 2" });
                 break;
-            case 2: // Panel 3 (Hides Floor Dropdown)
-                panel.SetActive(false);
-                panel2.SetActive(false);
-                panel3.SetActive(true);
-                FloorCampusDropdown.gameObject.SetActive(false); // Hide floor dropdown
-                HideAllFloorPanels();
+
+            case "Engineering":
+                secondDropdownOptions.AddRange(new List<string> { "First Floor", "Second Floor", "Third Floor", "Fourth Floor" });
                 break;
-        }
-    }
 
-    public void OnFloorDropdownValueChanged(int index)
-    {
-        // Hide all floor panels first
-        HideAllFloorPanels();
-
-        // Show the selected floor panel
-        if (index >= 0 && index < floorPanels.Length)
-        {
-            floorPanels[index].SetActive(true);
+            default:
+                secondDropdown.interactable = false;
+                return; // No valid option selected
         }
-    }
 
-    private void HideAllFloorPanels()
-    {
-        foreach (GameObject floorPanel in floorPanels)
-        {
-            floorPanel.SetActive(false);
-        }
+        // Apply new options to second dropdown
+        secondDropdown.AddOptions(secondDropdownOptions);
     }
 }
