@@ -106,6 +106,12 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
             Debug.Log($"XR Origin repositioned to {qrCodeName} at {targetPosition}");
         }
 
+         if (CatCharacter != null)
+            {
+                CatCharacter.transform.position = targetPosition;
+               
+            }
+
         // Update navigation and history
         if (targetCube.name == destinationPoint.text)
         {
