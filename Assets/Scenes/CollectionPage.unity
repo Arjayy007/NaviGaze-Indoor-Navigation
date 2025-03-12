@@ -2768,6 +2768,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NavigationPanel 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5232504007524885320, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6016639462547377079, guid: 2769a5c3b0d273c45a40bf5dc6b0552a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -5107,7 +5111,7 @@ MonoBehaviour:
   sceneManager: {fileID: 2060299512}
   menuPanel: {fileID: 1834388654}
   invinsibleButton: {fileID: 1834388656}
-  Fullname: {fileID: 0}
+  Fullname: {fileID: 769786506}
 --- !u!114 &2060299511
 MonoBehaviour:
   m_ObjectHideFlags: 0

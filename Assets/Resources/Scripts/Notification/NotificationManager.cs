@@ -6,6 +6,7 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class NotificationManager : MonoBehaviour
 {
@@ -101,5 +102,9 @@ public class NotificationManager : MonoBehaviour
     Debug.Log($"[NotificationManager] Created new notification card: {newCard.name}");
 }
 
+public void backButton()
+{
+    SceneManager.LoadScene("DashboardPage");
+}
 
 }

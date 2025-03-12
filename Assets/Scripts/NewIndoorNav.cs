@@ -24,6 +24,7 @@ public class NewIndoorNav : MonoBehaviour
     [SerializeField] private GameObject navigationPanel; // panel sa taas ng screen 
     [SerializeField] private TMP_Text destinationRoom; // sa navigation panel sa taas
     [SerializeField] private Button closeButton; // sa navigation panel sa taas
+    [SerializeField] private TMP_Text arrivedText;
     public GameObject slideUpPanel;
     public ClassNavigationManager classNavigationManager;
 
@@ -116,8 +117,9 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
             if (!hasSavedToDatabase)
             {
                     if (selectedRole == "Student" || selectedRole == "Professor")
-                    {
-                        openHistory();
+                    {   
+                        GetEstimatedArrival();
+                        arrivedText.text = "Arrived";
                         classNavigationManager.CheckForClassNavigation(startingPoint.text, destinationPoint.text);
                         hasSavedToDatabase = true;
                     }
@@ -275,6 +277,8 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
         estimatedArrivalTimeAndDistancePanel.SetActive(false);
         slideUpPanel.SetActive(false);
         infoPanel.SetActive(false);
+        dropdown.gameObject.SetActive(true);
+        closeButton.gameObject.SetActive(true);
 
         // Reset estimated distance and time display
         estimatedDistance.text = "";
@@ -288,12 +292,13 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
         startingPoint.text = "";
         destinationPoint.text = "";
         destinationRoom.text = "";
+        arrivedText.text = "Navigating";
 
         // Reset character movement
         if (characterAgent != null)
         {
             characterAgent.ResetPath(); // Stop the NavMeshAgent
-            characterAgent.Warp(player.position); // Move character back to player’s position
+            characterAgent.Warp(player.position); // Move character back to playerï¿½s position
         }
 
         // Reset character animation to idle

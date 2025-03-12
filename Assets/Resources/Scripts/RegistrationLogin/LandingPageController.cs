@@ -32,4 +32,11 @@ public class LandingPageController : MonoBehaviour
             SceneManager.LoadScene("GuestLanding");  
         }
     }
+
+    public void TutorialButtonClicked()
+    {
+        SceneManager.LoadScene("TutorialPage");
+    }
+
+  
 }
