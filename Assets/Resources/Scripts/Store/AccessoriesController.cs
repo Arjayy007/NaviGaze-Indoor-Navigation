@@ -298,51 +298,47 @@ void ClearExistingUI()
 
     private void UpdateInventory(DataSnapshot snapshot, string userInventoryPath, string itemName)
     {
-        if (!snapshot.Child(userInventoryPath).Exists)
-        {
-            // If inventory doesn't exist, create a new inventory with the item
-            Dictionary<string, string> newInventory = new Dictionary<string, string> {
-            { "Item 1", itemName }
-        };
-            dbReference.Child(userInventoryPath).SetValueAsync(newInventory).ContinueWithOnMainThread(createTask =>
-            {
-                if (createTask.IsCompleted)
-                {
-                    Debug.Log($"Inventory created and item '{itemName}' added successfully!");
-                }
-                else
-                {
-                    Debug.LogError("Failed to create inventory: " + createTask.Exception);
-                }
-            });
-        }
-        else
-        {
-            // If inventory exists, add the new item
-            Dictionary<string, string> inventory = new Dictionary<string, string>();
-            int index = 1;
+        DatabaseReference inventoryRef = dbReference.Child(userInventoryPath);
 
-            foreach (var item in snapshot.Child(userInventoryPath).Children)
+        // Check if the inventory exists
+        inventoryRef.GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted && !task.IsFaulted)
             {
-                inventory.Add($"Item {index}", item.Value.ToString());
-                index++;
+                DataSnapshot inventorySnapshot = task.Result;
+
+                // Check if the item already exists in inventory
+                if (inventorySnapshot.Child(itemName).Exists)
+                {
+                    Debug.Log($"Item '{itemName}' already exists in inventory.");
+                    return;
+                }
+
+                // Add the new item with isUsed = false
+                Dictionary<string, object> newItemData = new Dictionary<string, object>
+            {
+                { "isUsed", false }
+            };
+
+                inventoryRef.Child(itemName).SetValueAsync(newItemData).ContinueWithOnMainThread(setTask =>
+                {
+                    if (setTask.IsCompleted)
+                    {
+                        Debug.Log($"Item '{itemName}' added to inventory with isUsed = false.");
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to add '{itemName}' to inventory: " + setTask.Exception);
+                    }
+                });
             }
-
-            inventory.Add($"Item {index}", itemName);
-
-            dbReference.Child(userInventoryPath).SetValueAsync(inventory).ContinueWithOnMainThread(updateTask =>
+            else
             {
-                if (updateTask.IsCompleted)
-                {
-                    Debug.Log($"Item '{itemName}' purchased and added to inventory successfully!");
-                }
-                else
-                {
-                    Debug.LogError("Failed to update inventory: " + updateTask.Exception);
-                }
-            });
-        }
+                Debug.LogError("Error checking inventory: " + task.Exception);
+            }
+        });
     }
+
 
     void RemoveItemFromScrollView(string itemName)
     {

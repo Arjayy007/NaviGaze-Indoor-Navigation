@@ -24,7 +24,6 @@ public class NewIndoorNav : MonoBehaviour
     [SerializeField] private GameObject navigationPanel; // panel sa taas ng screen 
     [SerializeField] private TMP_Text destinationRoom; // sa navigation panel sa taas
     [SerializeField] private Button closeButton; // sa navigation panel sa taas
-    [SerializeField] private GameObject CatCharacter; // character
     public GameObject slideUpPanel;
     public ClassNavigationManager classNavigationManager;
 
@@ -38,10 +37,11 @@ public class NewIndoorNav : MonoBehaviour
 
     private bool isQRCodeScanned = false;
     private bool hasSavedToDatabase = false;
+    private string selectedRole;
 
     private void Start()
     {
-        navMeshPath = new NavMeshPath();
+        navMeshPath = new NavMeshPath(); 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         navigationTargets = GameObject.FindGameObjectsWithTag("Target").ToList();
@@ -51,7 +51,8 @@ public class NewIndoorNav : MonoBehaviour
 
         characterAgent = character.GetComponent<NavMeshAgent>();
         characterAnimator = character.GetComponent<Animator>();
-        characterAnimator.Play("Breathing"); // Start with idle animation
+        characterAnimator.Play("Breathing");
+        selectedRole = PlayerPrefs.GetString("SelectedRole", "");
     }
 
     private void Update()
@@ -106,21 +107,21 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
             Debug.Log($"XR Origin repositioned to {qrCodeName} at {targetPosition}");
         }
 
-         if (CatCharacter != null)
-            {
-                CatCharacter.transform.position = targetPosition;
-               
-            }
+            characterAgent.Warp(targetPosition);
+            characterAgent.ResetPath();
 
-        // Update navigation and history
-        if (targetCube.name == destinationPoint.text)
+            // Update navigation and history
+            if (targetCube.name == destinationPoint.text)
         {
             if (!hasSavedToDatabase)
             {
-                openHistory();
-                classNavigationManager.CheckForClassNavigation(startingPoint.text, destinationPoint.text);
-                hasSavedToDatabase = true;
-            }
+                    if (selectedRole == "Student" || selectedRole == "Professor")
+                    {
+                        openHistory();
+                        classNavigationManager.CheckForClassNavigation(startingPoint.text, destinationPoint.text);
+                        hasSavedToDatabase = true;
+                    }
+                }
         }
         else
         {
@@ -206,11 +207,10 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
 
     private void OnDropdownValueChanged(int index)
     {
+        character.SetActive(true);
         UpdateLineRenderer(); // Changing target updates only the destination
         destinationPoint.text = dropdown.options[dropdown.value].text;
         destinationRoom.text = dropdown.options[dropdown.value].text;
-
-        CatCharacter.SetActive(true);
     }
     public void CloseHistoryPanel()
     {
@@ -282,53 +282,69 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
 
         // Reset QR scan flags
         isQRCodeScanned = false;
+        hasSavedToDatabase = false;
 
-        // Clear destination texts
+        // Clear starting and destination texts
+        startingPoint.text = "";
         destinationPoint.text = "";
         destinationRoom.text = "";
+
+        // Reset character movement
+        if (characterAgent != null)
+        {
+            characterAgent.ResetPath(); // Stop the NavMeshAgent
+            characterAgent.Warp(player.position); // Move character back to player�s position
+        }
+
+        // Reset character animation to idle
+        if (characterAnimator != null)
+        {
+            characterAnimator.ResetTrigger("StartWalking");
+            characterAnimator.Play("Breathing"); // Idle animation
+        }
+
+        // Reset QR tracking (if needed)
+        if (m_TrackedImageManager != null)
+        {
+            foreach (var trackedImage in m_TrackedImageManager.trackables)
+            {
+                trackedImage.gameObject.SetActive(false); // Hide tracked images
+            }
+        }
+
+        Debug.Log("Navigation has been fully reset!");
     }
 
-//testingggggggggg
-  private void MoveCharacterToDestination()
-{
-    if (dropdown.value == 0)
+    //testingggggggggg
+    private void MoveCharacterToDestination()
     {
-        Debug.LogWarning("No destination selected!");
-        return;
+        if (dropdown.value == 0)
+        {
+            Debug.LogWarning("No destination selected!");
+            return;
+        }
+
+        string selectedTargetName = dropdown.options[dropdown.value].text;
+        GameObject destinationCube = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
+
+        if (destinationCube != null)
+        {
+            
+            characterAgent.SetDestination(destinationCube.transform.position);
+            characterAnimator.SetTrigger("StartWalking");
+
+            StartCoroutine(checkIfCharacterArrived());
+        }
+        else
+        {
+            Debug.LogWarning("Destination cube not found!");
+        }
     }
 
-    string selectedTargetName = dropdown.options[dropdown.value].text;
-    GameObject destinationCube = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
-
-    if (destinationCube != null)
-    {
-        characterAgent.SetDestination(destinationCube.transform.position);
-
-        // 🔥 Trigger Walking Animation
-        characterAnimator.SetTrigger("StartWalking");
-        
-        // Start checking when the character arrives
-        StartCoroutine(CheckIfCharacterArrived());
+    private IEnumerator checkIfCharacterArrived() {
+        yield return new WaitUntil(() => characterAgent.remainingDistance <= characterAgent.stoppingDistance && !characterAgent.pathPending);
+        characterAnimator.ResetTrigger("StartWalking");
+        characterAnimator.Play("Breathing");
     }
-    else
-    {
-        Debug.LogWarning("Destination cube not found!");
-    }
-}
-
-
-// Coroutine to check when the character arrives at destination
-private IEnumerator CheckIfCharacterArrived()
-{
-    yield return new WaitUntil(() => characterAgent.remainingDistance <= characterAgent.stoppingDistance && !characterAgent.pathPending);
-
-    // 🔥 Reset walking trigger and return to Breathing (Idle)
-    characterAnimator.ResetTrigger("StartWalking");
-    characterAnimator.Play("Breathing");
-}
-
-
-
-
 
 }

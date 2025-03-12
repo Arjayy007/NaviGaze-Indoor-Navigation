@@ -103,7 +103,7 @@ public class DisplayLockedBadges : MonoBehaviour
         Image badgeImage = newBadge.GetComponent<Image>();
          if (badgeImage != null)
         {
-             badgeImage.color = new Color(0.5f, 0.5f, 0.5f, 0.6f); // Dark grey with transparency
+             badgeImage.color = new Color(0.5f, 0.5f, 0.5f); 
 
          }
          else

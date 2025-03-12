@@ -1304,7 +1304,6 @@ MonoBehaviour:
   navigationPanel: {fileID: 495960063}
   destinationRoom: {fileID: 1386269706}
   closeButton: {fileID: 640403391}
-  CatCharacter: {fileID: 1520544504}
   slideUpPanel: {fileID: 1003072171}
   classNavigationManager: {fileID: 564465705}
   character: {fileID: 1520544504}
@@ -1718,8 +1717,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2681,7 +2680,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249469568667610963, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+      propertyPath: m_Name
+      value: Cat Hat
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249469568667610963, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6524296907165094974, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+      propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+      propertyPath: m_Name
+      value: Cat Glass
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2693,7 +2712,20 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1520544505}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1520544507}
   m_SourcePrefab: {fileID: 100100000, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+--- !u!1 &939560451 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5249469568667610963, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+  m_PrefabInstance: {fileID: 939560450}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &939560452 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8416272007918961125, guid: 69ea56e212304ce44a3618df9d63626d, type: 3}
+  m_PrefabInstance: {fileID: 939560450}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &987441466
 GameObject:
   m_ObjectHideFlags: 0
@@ -4071,6 +4103,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1520544507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520544504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4de2eec0ce32cc34890e87c4da62c639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  catGlass: {fileID: 939560452}
+  catHat: {fileID: 939560451}
 --- !u!1 &1554742675
 GameObject:
   m_ObjectHideFlags: 0
@@ -4571,7 +4617,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a2a144f01b34dd44f9be8c309450fb29, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 54c7174a49c79fc4e9f9daf2be64554f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4622,7 +4668,7 @@ RectTransform:
   m_Father: {fileID: 1285981151}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.2}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4733,7 +4779,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -18, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1810363581
 MonoBehaviour:
@@ -4852,7 +4898,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4281479730
   m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -4865,7 +4911,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -5080,7 +5126,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1751801391}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.2
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

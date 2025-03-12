@@ -57,4 +57,78 @@ public class CoinManager : MonoBehaviour
             }
         });
     }
+
+    // New function to directly add coins to the user
+    public void AddCoinsDirectly(int coins)
+    {
+        if (string.IsNullOrEmpty(UserSession.UserId))
+        {
+            Debug.LogError("User ID is null or empty.");
+            return;
+        }
+
+        DatabaseReference userRef = dbReference.Child("users").Child(UserSession.UserId);
+
+        userRef.Child("userCoins").GetValueAsync().ContinueWithOnMainThread(coinTask =>
+        {
+            if (coinTask.IsCompletedSuccessfully)
+            {
+                int currentCoins = coinTask.Result.Exists ? int.Parse(coinTask.Result.Value.ToString()) : 0;
+                int newCoinBalance = currentCoins + coins;
+
+                userRef.Child("userCoins").SetValueAsync(newCoinBalance).ContinueWithOnMainThread(updateTask =>
+                {
+                    if (updateTask.IsCompletedSuccessfully)
+                    {
+                        Debug.Log($"Added {coins} coins. New balance: {newCoinBalance}");
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to update coins: " + updateTask.Exception);
+                    }
+                });
+            }
+            else
+            {
+                Debug.LogError("Failed to retrieve user coins: " + coinTask.Exception);
+            }
+        });
+    }
+
+    public void AddExperienceDirectly(int experience)
+    {
+        if (string.IsNullOrEmpty(UserSession.UserId))
+        {
+            Debug.LogError("User ID is null or empty.");
+            return;
+        }
+
+        DatabaseReference userRef = dbReference.Child("users").Child(UserSession.UserId);
+
+        userRef.Child("exp").GetValueAsync().ContinueWithOnMainThread(expTask =>
+        {
+            if (expTask.IsCompletedSuccessfully)
+            {
+                int currentExp = expTask.Result.Exists ? int.Parse(expTask.Result.Value.ToString()) : 0;
+                int newExpBalance = currentExp + experience;
+
+                userRef.Child("exp").SetValueAsync(newExpBalance).ContinueWithOnMainThread(updateTask =>
+                {
+                    if (updateTask.IsCompletedSuccessfully)
+                    {
+                        Debug.Log($"Added {experience} experience points. New EXP balance: {newExpBalance}");
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to update experience: " + updateTask.Exception);
+                    }
+                });
+            }
+            else
+            {
+                Debug.LogError("Failed to retrieve user experience: " + expTask.Exception);
+            }
+        });
+    }
+
 }
