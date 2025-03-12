@@ -467,8 +467,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneManager: {fileID: 278511596}
   menuPanel: {fileID: 1337061052}
-  invinsibleButton: {fileID: 0}
-  Fullname: {fileID: 0}
+  invinsibleButton: {fileID: 1337061054}
+  Fullname: {fileID: 1337061053}
 --- !u!4 &278511595
 Transform:
   m_ObjectHideFlags: 0
@@ -521,7 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4478a7ba700e604f97a2f963d99b6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logoutButton: {fileID: 0}
+  logoutButton: {fileID: 1337061055}
 --- !u!114 &278511599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1499,6 +1499,33 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3026604154710671473, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
   m_PrefabInstance: {fileID: 1337061050}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1337061053 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6069684932405519616, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+  m_PrefabInstance: {fileID: 1337061050}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1337061054 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6042216013709534622, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+  m_PrefabInstance: {fileID: 1337061050}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1337061055 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4153586137629266243, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
+  m_PrefabInstance: {fileID: 1337061050}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1576190992
 GameObject:
   m_ObjectHideFlags: 0

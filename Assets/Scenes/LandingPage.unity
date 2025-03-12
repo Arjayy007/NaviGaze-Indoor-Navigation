@@ -1057,9 +1057,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 446616592}
-        m_TargetAssemblyTypeName: Database, Assembly-CSharp
-        m_MethodName: AddToDatabase
+      - m_Target: {fileID: 446616590}
+        m_TargetAssemblyTypeName: LandingPageController, Assembly-CSharp
+        m_MethodName: TutorialButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

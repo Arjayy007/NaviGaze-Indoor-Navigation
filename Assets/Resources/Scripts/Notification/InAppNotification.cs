@@ -1,6 +1,8 @@
 using UnityEngine;
 using Firebase.Database;
 using TMPro;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class InAppNotification : MonoBehaviour
 {
@@ -9,8 +11,9 @@ public class InAppNotification : MonoBehaviour
     public TextMeshProUGUI notificationMessage;
 
     [Header("Audio")]
-    public AudioSource notificationAudioSource;
+
     public AudioClip notificationSound;
+    public AudioSource audioSource;
 
     private void ToggleNotificationPanel(bool show)
     {
@@ -18,11 +21,6 @@ public class InAppNotification : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("Show", show);
-        }
-
-        if (show && notificationAudioSource != null && notificationSound != null)
-        {
-            notificationAudioSource.PlayOneShot(notificationSound);
         }
     }
 
@@ -33,6 +31,16 @@ public class InAppNotification : MonoBehaviour
         // Update UI
         notificationMessage.text = message;
         ToggleNotificationPanel(true);
+        PlayNotificationSound();
+
+        StartCoroutine(HideAfterDelay(3f));
+    }
+
+     private IEnumerator HideAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ToggleNotificationPanel(false);
+        Debug.Log("Notification hidden after " + delay + " seconds");
     }
 
     private void HideNotificationPanel()
@@ -42,6 +50,21 @@ public class InAppNotification : MonoBehaviour
 
     public void testNotification()
     {
-        ToggleNotificationPanel(true);
+        SceneManager.LoadScene("NotificationPage");
+    }
+
+        private void PlayNotificationSound()
+    {
+        if (notificationSound != null)
+        {
+            audioSource.PlayOneShot(notificationSound);
+            Debug.Log("Playing notification sound: " + notificationSound.name);
+        }
+        else
+        {
+            Debug.LogError("Notification sound is missing!");
+        }
     }
 }
+
+
