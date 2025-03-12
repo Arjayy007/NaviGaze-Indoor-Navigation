@@ -8,13 +8,12 @@ public class StoreVisibility : MonoBehaviour
 
     void Start()
     {
-        accessoriesUI.SetActive(false);
 
         openAccessoriesButton.onClick.AddListener(ToggleShopVisibility);
     }
 
     void ToggleShopVisibility()
     {
-        accessoriesUI.SetActive(!accessoriesUI.activeSelf);
+        accessoriesUI.SetActive(accessoriesUI.activeSelf);
     }
 }

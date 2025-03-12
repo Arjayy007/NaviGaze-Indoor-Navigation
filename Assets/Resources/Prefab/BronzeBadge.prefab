@@ -144,8 +144,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Kasipagan Badge
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 93fe49eef7a086047bdc29d36bad55e8, type: 2}
+  m_sharedMaterial: {fileID: 4276853705271030945, guid: 93fe49eef7a086047bdc29d36bad55e8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -247,7 +247,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 105.00067, y: -30.841766}
+  m_AnchoredPosition: {x: 105.00067, y: -24}
   m_SizeDelta: {x: 671.0029, y: 69.6765}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8202658873369663321
@@ -278,10 +278,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You have completed x number of classes this weel
+  m_text: You have completed x number of classes this week
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 93fe49eef7a086047bdc29d36bad55e8, type: 2}
+  m_sharedMaterial: {fileID: 4276853705271030945, guid: 93fe49eef7a086047bdc29d36bad55e8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 1.2297096, z: -0.00000010876724, w: 0}
+  m_margin: {x: 0, y: 1.2297096, z: -16.829834, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

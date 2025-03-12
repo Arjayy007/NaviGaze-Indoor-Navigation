@@ -4,22 +4,27 @@ using UnityEngine;
 using Firebase.Database;
 using SchedulesModel.Models;
 using System.Threading.Tasks;
+using Firebase.Extensions;
 
 public class ClassNavigationManager : MonoBehaviour
 {
     private DatabaseReference dbReference;
     private string userId;
     private List<ScheduleData> userSchedules = new List<ScheduleData>();
+    public CoinManager coinManager;
+
 
     void Start()
     {
         InitializeFirebase();
+        
     }
 
     void InitializeFirebase()
     {
         dbReference = FirebaseDatabase.DefaultInstance.RootReference;
         userId = UserSession.UserId;
+       
 
         if (!string.IsNullOrEmpty(userId))
         {
@@ -69,7 +74,7 @@ public class ClassNavigationManager : MonoBehaviour
     {
         DateTime now = DateTime.Now;
         string dayInAWeek = now.DayOfWeek.ToString();
-        bool classNavigationSaved = false; // Track if class navigation is saved
+        bool classFound = false;  // Tracks if at least one class navigation is detected
 
         foreach (ScheduleData schedule in userSchedules)
         {
@@ -86,29 +91,29 @@ public class ClassNavigationManager : MonoBehaviour
 
                 if (now > classStartTime && now <= classStartTime.AddMinutes(15))
                 {
-                    status = "Late"; // Class hasn't started yet
+                    status = "Late";
                 }
-                else if  (now < classStartTime)
+                else if (now < classStartTime)
                 {
-                    status = "On Time"; // If student is within 15 minutes after start time, mark as late
+                    status = "On Time";
                 }
 
-                // If within valid time range, save navigation
                 if (now >= validStartTime && now <= validEndTime)
                 {
                     string navigationType = "Class";
                     Dictionary<string, object> classNavigation = NavigationHistoryData.ClassNavigation(startingPoint, destination, navigationType, status);
 
                     SaveNavigationHistory(classNavigation);
-                    classNavigationSaved = true;
+                    SaveClassStreak(schedule.subjectName);
 
+                    classFound = true;  // A valid class navigation was found
                     Debug.Log($"Class navigation saved for {schedule.subjectName} at {schedule.startTime}");
                 }
             }
         }
 
         // If no class navigation was saved, save a normal navigation
-        if (!classNavigationSaved)
+        if (!classFound)
         {
             string navigationType = "Normal";
             Dictionary<string, object> normalNavigation = NavigationHistoryData.NormalNavigation(startingPoint, destination, navigationType);
@@ -118,6 +123,7 @@ public class ClassNavigationManager : MonoBehaviour
         }
     }
 
+
     public void SaveNavigationHistory(Dictionary<string, object> navigationData)
     {
         dbReference.Child("users").Child(userId).Child("navigationHistory").Push().SetValueAsync(navigationData).ContinueWith(Task =>
@@ -125,10 +131,60 @@ public class ClassNavigationManager : MonoBehaviour
             if (Task.IsCompleted)
             {
                 Debug.Log("Navigation history saved.");
+
+                if (coinManager != null)
+                {
+                    coinManager.AddCoinsDirectly(10);
+                    coinManager.AddExperienceDirectly(10);
+                    Debug.Log("10 coins added for completing navigation.");
+                    Debug.Log("10 experience added for completing navigation.");
+                }
+            }
+            else
+            { 
+                Debug.LogWarning("Failed to save navigation history.");
+            }
+        });
+    }
+
+    public void SaveClassStreak(string className)
+    {
+        string currentWeek = DateTime.Now.ToString("yyyy-'W'ww"); // Example: "2025-W10" (Year-Week)
+
+        DatabaseReference streakRef = dbReference.Child("users").Child(userId).Child("streaks").Child(className);
+
+        streakRef.GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted && task.Result.Exists)
+            {
+                int currentStreak = int.Parse(task.Result.Value.ToString());
+                int newStreak = currentStreak + 1;
+
+                streakRef.SetValueAsync(newStreak).ContinueWithOnMainThread(updateTask =>
+                {
+                    if (updateTask.IsCompletedSuccessfully)
+                    {
+                        Debug.Log($"Streak updated for {className}: {newStreak}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Failed to update streak.");
+                    }
+                });
             }
             else
             {
-                Debug.LogWarning("Failed to save navigation history.");
+                streakRef.SetValueAsync(1).ContinueWithOnMainThread(setTask =>
+                {
+                    if (setTask.IsCompletedSuccessfully)
+                    {
+                        Debug.Log($"New streak started for {className}: 1");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Failed to start streak.");
+                    }
+                });
             }
         });
     }
