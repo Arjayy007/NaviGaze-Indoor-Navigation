@@ -7,13 +7,50 @@ public class OfflineMapController : MonoBehaviour
     public Dropdown firstDropdown;  // The first dropdown (Campus)
     public Dropdown secondDropdown; // The second dropdown (Floors/Buildings)
 
+    // Panel references
+    public GameObject congressGroundFloorPanel;
+    public GameObject congressSecondFloorPanel;
+    public GameObject congressThirdFloorPanel;
+    public GameObject congressFourthFloorPanel;
+    public GameObject congressFifthFloorPanel;
+
+    public GameObject camarinOldBuilding1stFloorPanel;
+    public GameObject camarinOldBuilding2ndFloorPanel;
+    public GameObject camarinOldBuilding3rdFloorPanel;
+    public GameObject camarin2ndBuildingPanel;
+
+    public GameObject engineeringFirstFloorPanel;
+    public GameObject engineeringSecondFloorPanel;
+    public GameObject engineeringThirdFloorPanel;
+    public GameObject engineeringFourthFloorPanel;
+
+    private Dictionary<string, GameObject> panelDictionary = new Dictionary<string, GameObject>();
+
     void Start()
     {
-        // Ensure Dropdown 2 starts as disabled
-        secondDropdown.interactable = false;
+        // Ensure second dropdown starts as disabled
+        
 
-        // Clear previous options
+        // Initialize panel dictionary
+        panelDictionary.Add("Congress: Ground Floor", congressGroundFloorPanel);
+        panelDictionary.Add("Congress: 2nd Floor", congressSecondFloorPanel);
+        panelDictionary.Add("Congress: 3rd Floor", congressThirdFloorPanel);
+        panelDictionary.Add("Congress: 4th Floor", congressFourthFloorPanel);
+        panelDictionary.Add("Social Hall", congressFifthFloorPanel);
+
+        panelDictionary.Add("Old Building: 1st Floor", camarinOldBuilding1stFloorPanel);
+        panelDictionary.Add("Old Building: 2nd Floor", camarinOldBuilding2ndFloorPanel);
+        panelDictionary.Add("Old Building: 3rd Floor", camarinOldBuilding3rdFloorPanel);
+        panelDictionary.Add("2nd Building", camarin2ndBuildingPanel);
+
+        panelDictionary.Add("Engineering: 1st Floor", engineeringFirstFloorPanel);
+        panelDictionary.Add("Engineering: 2nd Floor", engineeringSecondFloorPanel);
+        panelDictionary.Add("Engineering: 3rd Floor", engineeringThirdFloorPanel);
+        panelDictionary.Add("Engineering: 4th Floor", engineeringFourthFloorPanel);
+
+        // Attach event listeners
         firstDropdown.onValueChanged.AddListener(delegate { UpdateSecondDropdown(); });
+        secondDropdown.onValueChanged.AddListener(delegate { UpdatePanelVisibility(); });
     }
 
     void UpdateSecondDropdown()
@@ -31,15 +68,15 @@ public class OfflineMapController : MonoBehaviour
         switch (selectedOption)
         {
             case "Congress":
-                secondDropdownOptions.AddRange(new List<string> { "Ground Floor", "2nd Floor", "3rd Floor", "4th Floor", "5th Floor" });
+                secondDropdownOptions.AddRange(new List<string> { "Congress: Ground Floor", "Congress: 2nd Floor", "Congress: 3rd Floor", "Congress: 4th Floor", "Social Hall" });
                 break;
 
             case "Camarin":
-                secondDropdownOptions.AddRange(new List<string> { "Old Building: 1st Floor", "Old Building: 2nd Floor", "Old Building: Third Floor", "Building 2" });
+                secondDropdownOptions.AddRange(new List<string> { "Old Building: 1st Floor", "Old Building: 2nd Floor", "Old Building: 3rd Floor", "2nd Building" });
                 break;
 
             case "Engineering":
-                secondDropdownOptions.AddRange(new List<string> { "First Floor", "Second Floor", "Third Floor", "Fourth Floor" });
+                secondDropdownOptions.AddRange(new List<string> { "Engineering: 1st Floor", "Engineering: 2nd Floor", "Engineering: 3rd Floor", "Engineering: 4th Floor" });
                 break;
 
             default:
@@ -49,5 +86,31 @@ public class OfflineMapController : MonoBehaviour
 
         // Apply new options to second dropdown
         secondDropdown.AddOptions(secondDropdownOptions);
+
+        // Reset panel visibility
+        HideAllPanels();
+    }
+
+    void UpdatePanelVisibility()
+    {
+        // Hide all panels first
+        HideAllPanels();
+
+        // Get selected option
+        string selectedOption = secondDropdown.options[secondDropdown.value].text;
+
+        // Show only the selected panel
+        if (panelDictionary.ContainsKey(selectedOption))
+        {
+            panelDictionary[selectedOption].SetActive(true);
+        }
+    }
+
+    void HideAllPanels()
+    {
+        foreach (var panel in panelDictionary.Values)
+        {
+            panel.SetActive(false);
+        }
     }
 }
