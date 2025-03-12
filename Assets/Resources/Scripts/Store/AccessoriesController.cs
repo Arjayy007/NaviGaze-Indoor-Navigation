@@ -64,63 +64,63 @@ public class AccessoriesController : MonoBehaviour
         });
     }
 
-   void LoadItemsFromDatabase()
-{
-    string userInventoryPath = $"users/{userId}/inventory";
-
-    // Clear the existing UI before loading new items
-    ClearExistingUI();
-
-    dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
+    void LoadItemsFromDatabase()
     {
-        if (task.IsCompleted)
+        string userInventoryPath = $"users/{userId}/inventory";
+
+        // Clear the existing UI before loading new items
+        ClearExistingUI();
+
+        dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
         {
-            DataSnapshot snapshot = task.Result;
-
-            // Get a list of owned items
-            HashSet<string> ownedItems = new HashSet<string>();
-            if (snapshot.Child(userInventoryPath).Exists)
+            if (task.IsCompleted)
             {
-                foreach (var item in snapshot.Child(userInventoryPath).Children)
-                {
-                    ownedItems.Add(item.Value.ToString());
-                }
-            }
+                DataSnapshot snapshot = task.Result;
 
-            // Now fetch all shop items
-            dbReference.Child("items").GetValueAsync().ContinueWithOnMainThread(itemTask =>
-            {
-                if (itemTask.IsCompleted)
+                // Get a list of owned items
+                HashSet<string> ownedItems = new HashSet<string>();
+                if (snapshot.Child(userInventoryPath).Exists)
                 {
-                    DataSnapshot itemsSnapshot = itemTask.Result;
-
-                    foreach (DataSnapshot item in itemsSnapshot.Children)
+                    foreach (var item in snapshot.Child(userInventoryPath).Children)
                     {
-                        string itemName = item.Child("itemName").Value.ToString();
-                        string itemPrice = item.Child("itemPrice").Value.ToString();
-
-                        // Skip items that the user already owns
-                        if (!ownedItems.Contains(itemName))
-                        {
-                            CreateUIItem(itemName, itemPrice);
-                        }
+                        ownedItems.Add(item.Key); // Extract item name from key
                     }
                 }
-                else
+
+                // Now fetch all shop items
+                dbReference.Child("items").GetValueAsync().ContinueWithOnMainThread(itemTask =>
                 {
-                    Debug.LogError("Failed to fetch shop items from Firebase.");
-                }
-            });
-        }
-        else
-        {
-            Debug.LogError("Failed to fetch user inventory from Firebase.");
-        }
-    });
-}
+                    if (itemTask.IsCompleted)
+                    {
+                        DataSnapshot itemsSnapshot = itemTask.Result;
+
+                        foreach (DataSnapshot item in itemsSnapshot.Children)
+                        {
+                            string itemName = item.Child("itemName").Value.ToString();
+                            string itemPrice = item.Child("itemPrice").Value.ToString();
+
+                            // Skip items that the user already owns
+                            if (!ownedItems.Contains(itemName))
+                            {
+                                CreateUIItem(itemName, itemPrice);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to fetch shop items from Firebase.");
+                    }
+                });
+            }
+            else
+            {
+                Debug.LogError("Failed to fetch user inventory from Firebase.");
+            }
+        });
+    }
 
 
-void ClearExistingUI()
+    void ClearExistingUI()
 {
     foreach (Transform child in contentParent)
     {
