@@ -2,7 +2,8 @@
 <projectSettings>
   <projectSetting name="com.google.external-dependency-managerAnalyticsCookie" value="5d3c9e04e9b541268c8fee4f9422643c" />
   <projectSetting name="com.google.external-dependency-managerAnalyticsEnabled" value="True" />
-  <projectSetting name="com.google.firebaseAnalyticsEnabled" value="False" />
+  <projectSetting name="com.google.firebaseAnalyticsCookie" value="9d04bcb37019492b826ce8d416923496" />
+  <projectSetting name="com.google.firebaseAnalyticsEnabled" value="True" />
   <projectSetting name="GooglePlayServices.AndroidPackageInstallationEnabled" value="True" />
   <projectSetting name="GooglePlayServices.AutoResolutionDisabledWarning" value="True" />
   <projectSetting name="GooglePlayServices.AutoResolveOnBuild" value="False" />
