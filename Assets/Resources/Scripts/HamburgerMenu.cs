@@ -59,6 +59,11 @@ public class HamburgerMenu : MonoBehaviour
         SceneManager.LoadScene("CollectionPage");
     }
 
+   public void LoadofflineMapGuest() 
+    {
+        SceneManager.LoadScene("OfflineMapGuest");
+    }
+
     public void LoadHistoryMap() 
     {
         SceneManager.LoadScene("HistoryPage");
