@@ -10,6 +10,15 @@ using UnityEngine.SceneManagement;
 
 public class RegistrationPage : MonoBehaviour
 {
+
+
+    public RectTransform panel; // The UI panel to move
+    private float originalY;
+    private bool keyboardVisible = false;
+
+
+
+
     public SceneManagerScript sceneManager;
     private DatabaseReference dbReference;
 
@@ -29,6 +38,11 @@ public class RegistrationPage : MonoBehaviour
 
     void Start()
     {
+
+         originalY = panel.anchoredPosition.y;
+
+
+
         // Retrieve Google Sign-Up data from PlayerPrefs
         GoogleUserEmail = PlayerPrefs.GetString("userEmail", "");
         GoogleUserFirstName = PlayerPrefs.GetString("userFirstName", "");
@@ -67,6 +81,28 @@ public class RegistrationPage : MonoBehaviour
 
     void Update()
     {
+
+
+     if (TouchScreenKeyboard.visible)
+        {
+            if (!keyboardVisible)
+            {
+                keyboardVisible = true;
+                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY + 300); // Move up
+            }
+        }
+        else
+        {
+            if (keyboardVisible)
+            {
+                keyboardVisible = false;
+                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY); // Move back
+            }
+        }
+
+
+
+
         if (switchScene)
         {
             switchScene = false;
