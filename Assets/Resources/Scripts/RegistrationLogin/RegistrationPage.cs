@@ -218,4 +218,43 @@ private void ClearPlayerPrefs()
             return builder.ToString();
         }
     }
+
+    public void OnTogglePasswordVisibility()
+{
+    if (passwordInput == null)
+    {
+        Debug.LogError("passwordInput is NULL!");
+        return;
+    }
+
+    if (passwordInput.contentType == InputField.ContentType.Password)
+    {
+        passwordInput.contentType = InputField.ContentType.Standard; // Show text
+    }
+    else
+    {
+        passwordInput.contentType = InputField.ContentType.Password; // Hide text
+    }
+    passwordInput.ForceLabelUpdate(); 
+}
+
+public void OnConfirmTogglePasswordVisibility()
+{
+    if (confirmPasswordInput == null)
+    {
+        Debug.LogError("passwordInput is NULL!");
+        return;
+    }
+
+    if (confirmPasswordInput.contentType == InputField.ContentType.Password)
+    {
+        confirmPasswordInput.contentType = InputField.ContentType.Standard; // Show text
+    }
+    else
+    {
+        confirmPasswordInput.contentType = InputField.ContentType.Password; // Hide text
+    }
+    confirmPasswordInput.ForceLabelUpdate(); 
+}
+
 }

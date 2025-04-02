@@ -156,5 +156,19 @@ public class StudentLoginController : MonoBehaviour
         SceneManager.LoadScene("LandingPage");
     }
 
+    public void OnTogglePasswordVisibility()
+{
+    if (passwordInputField.contentType == InputField.ContentType.Password)
+    {
+        passwordInputField.contentType = InputField.ContentType.Standard; // Show text
+    }
+    else
+    {
+        passwordInputField.contentType = InputField.ContentType.Password; // Hide text
+    }
+    passwordInputField.ForceLabelUpdate(); 
+}
+
+
     
 }
