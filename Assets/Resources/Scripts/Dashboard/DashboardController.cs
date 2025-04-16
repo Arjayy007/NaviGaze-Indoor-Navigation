@@ -1,73 +1,82 @@
 using UnityEngine;
 using Firebase;
-using Firebase.Database;
+using Firebase.Firestore;
 using Firebase.Extensions;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections;
+using System.Collections.Generic;
 
 public class DashboardController : MonoBehaviour
 {
-    public Text UsernameText;   
-    public Text CoinsText;      
-    private DatabaseReference dbReference;
+    public Text UsernameText;
+    public Text CoinsText;
+
+    private FirebaseFirestore firestore;
     private string userId;
+    public GameObject noInternetPanel;
+
 
     private void Start()
     {
-       userId = UserSession.UserId;
-
-    StartCoroutine(InitializeFirebase());
-}
-
-IEnumerator InitializeFirebase()
-{
-    var dependencyTask = FirebaseApp.CheckDependenciesAsync();
-    yield return new WaitUntil(() => dependencyTask.IsCompleted);
-
-    if (dependencyTask.Result == DependencyStatus.Available)
-    {
-        Debug.Log("Firebase initialized successfully.");
-        FirebaseApp app = FirebaseApp.DefaultInstance;
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-
-        LoadUserData();
+        userId = UserSession.UserId;
+        InitializeFirebase();
     }
-    else
-    {
-        Debug.LogError("Firebase not initialized: " + dependencyTask.Result);
-    }
-}
 
-    // Function to load user data from Firebase
+    void InitializeFirebase()
+    {
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.Result == DependencyStatus.Available)
+            {
+                firestore = FirebaseFirestore.DefaultInstance;
+                Debug.Log("Firestore initialized.");
+                LoadUserData();
+            }
+            else
+            {
+                Debug.LogError("Could not initialize Firebase: " + task.Result);
+            }
+        });
+    }
+
     public void LoadUserData()
     {
-        string userPath = $"users/{UserSession.UserId}"; 
+        if (firestore == null || string.IsNullOrEmpty(userId))
+        {
+            Debug.LogError("Firestore or User ID is not initialized.");
+            return;
+        }
 
-        dbReference.Child(userPath).GetValueAsync().ContinueWithOnMainThread(task =>
+        DocumentReference profileRef = firestore
+            .Collection("users")
+            .Document(userId)
+            .Collection("information")
+            .Document("profile");
+
+        profileRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted)
             {
-                DataSnapshot snapshot = task.Result;
+                DocumentSnapshot snapshot = task.Result;
 
                 if (snapshot.Exists)
                 {
-                    string userName = snapshot.Child("firstName").Value.ToString();
-                    string userCoins = snapshot.Child("userCoins").Value.ToString();
+                    Dictionary<string, object> userData = snapshot.ToDictionary();
 
+                    string firstName = userData.ContainsKey("firstName") ? userData["firstName"].ToString() : "User";
+                    string coins = userData.ContainsKey("userCoins") ? userData["userCoins"].ToString() : "0"; // Optional
 
-                    UsernameText.text = userName;  
-                    CoinsText.text = userCoins + "Coins";
-
+                    UsernameText.text = firstName;
+                    CoinsText.text = coins + " Coins";
                 }
                 else
                 {
-                    Debug.LogError("User data not found!");
+                    Debug.LogWarning("Profile document does not exist.");
                 }
             }
             else
             {
-                Debug.LogError("Failed to retrieve user data.");
+                Debug.LogError("Failed to fetch profile: " + task.Exception);
             }
         });
     }
@@ -76,5 +85,4 @@ IEnumerator InitializeFirebase()
     {
         SceneManager.LoadScene("NotificationPage");
     }
-
 }

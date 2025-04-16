@@ -1,86 +1,88 @@
 using UnityEngine;
-using Firebase.Database;
+using Firebase;
+using Firebase.Firestore;
 using Firebase.Extensions;
 using TMPro;
 using UnityEngine.UI;
-using Firebase;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class Schedule : MonoBehaviour
 {
     public Transform tableContainer;   // The parent container for rows
     public GameObject rowTemplate;     // Prefab for each row (Make sure it's assigned in Inspector)
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
     private string userId;
     
-    void Start()
+    async void Start()
     {
         rowTemplate.SetActive(false); // Disable after ensuring it's initially active
         userId = UserSession.UserId;  // Fetch the logged-in user ID
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-        {
-            if (task.Result == DependencyStatus.Available)
-            {
-                Debug.Log("Firebase initialized successfully.");
-                FirebaseApp app = FirebaseApp.DefaultInstance;
-                dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-                FetchSchedules();
 
-            }
-            else
-            {
-                Debug.LogError("Firebase not initialized: " + task.Result);
-            }
-        }); 
+        // Await Firebase initialization
+        var task = FirebaseApp.CheckAndFixDependenciesAsync();
+        await task;
+
+        if (task.Result == DependencyStatus.Available)
+        {
+            Debug.Log("Firebase initialized successfully.");
+            FirebaseApp app = FirebaseApp.DefaultInstance;
+            firestore = FirebaseFirestore.DefaultInstance;  // Initialize Firestore
+            FetchSchedules(); // Call the method to fetch schedules asynchronously
+        }
+        else
+        {
+            Debug.LogError("Firebase not initialized: " + task.Result);
+        }
     }
 
-    public void FetchSchedules()
+    public async void FetchSchedules()
     {
-        if (dbReference == null)
+        if (firestore == null)
         {
-            Debug.LogError("Firebase is not initialized yet!");
+            Debug.LogError("Firebase Firestore is not initialized yet!");
             return;
         }
 
         string schedulePath = $"users/{userId}/schedules";  // Path to user schedules
         Debug.Log("Fetching schedules from: " + schedulePath);
 
-        dbReference.Child(schedulePath).GetValueAsync().ContinueWithOnMainThread(task =>
+        try
         {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Error fetching schedules: " + task.Exception);
-                return;
-            }
+            // Query Firestore to get schedules
+            QuerySnapshot snapshot = await firestore.Collection(schedulePath).GetSnapshotAsync();
 
-            if (!task.Result.Exists)
+            if (snapshot.Count == 0)
             {
                 Debug.LogWarning("No schedules found in the database!");
                 return;
             }
 
-            DataSnapshot snapshot = task.Result;
-            Debug.Log("Successfully retrieved schedules. Count: " + snapshot.ChildrenCount);
+            Debug.Log("Successfully retrieved schedules. Count: " + snapshot.Count);
 
+            // Clear existing rows in the table
             foreach (Transform child in tableContainer)
             {
                 Destroy(child.gameObject);
             }
 
-            foreach (var childSnapshot in snapshot.Children)
+            // Loop through each schedule document and add to table
+            foreach (DocumentSnapshot document in snapshot.Documents)
             {
-                string scheduleID = childSnapshot.Key; 
-                Debug.Log("Processing Schedule ID: " + scheduleID);
-
-                string subjectCode = childSnapshot.Child("subjectCode").Value?.ToString() ?? "N/A";
-                string subjectName = childSnapshot.Child("subjectName").Value?.ToString() ?? "N/A";
-                string room = childSnapshot.Child("room").Value?.ToString() ?? "N/A";
-                string day = childSnapshot.Child("dayOfTheWeek").Value?.ToString() ?? "N/A";
-                string startTime = childSnapshot.Child("startTime").Value?.ToString() ?? "N/A";
-                string endTime = childSnapshot.Child("endTime").Value?.ToString() ?? "N/A";
+                string subjectCode = document.GetValue<string>("subjectCode") ?? "N/A";
+                string subjectName = document.GetValue<string>("subjectName") ?? "N/A";
+                string room = document.GetValue<string>("room") ?? "N/A";
+                string day = document.GetValue<string>("dayOfTheWeek") ?? "N/A";
+                string startTime = document.GetValue<string>("startTime") ?? "N/A";
+                string endTime = document.GetValue<string>("endTime") ?? "N/A";
 
                 AddRowToTable(subjectCode, subjectName, room, day, startTime, endTime);
             }
-        });
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Error fetching schedules: " + ex.Message);
+        }
     }
 
     private void AddRowToTable(string subjectCode, string subjectName, string room, string day, string startTime, string endTime)
@@ -134,9 +136,4 @@ public class Schedule : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(tableContainer.GetComponent<RectTransform>());
     }
-
-
-
-
-
 }

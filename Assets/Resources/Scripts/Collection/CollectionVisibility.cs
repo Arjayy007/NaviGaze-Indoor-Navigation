@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
-using Firebase.Database;
 using Firebase.Extensions;
+using Firebase.Firestore;
+using TMPro;
+using System.Collections.Generic;
 
 public class CollectionVisibility : MonoBehaviour
 {
@@ -10,11 +12,14 @@ public class CollectionVisibility : MonoBehaviour
     public GameObject badgesPanel;
     public GameObject missionsPanel;
     public GameObject userAccessoriesPanel;
-    public Text Coins;
-    public Text Exp;
-    public Text Fullname;
-    public Text ProgramSection;
-    private DatabaseReference dbReference;
+
+public TMP_Text Coins;
+public TMP_Text Exp;
+public TMP_Text Fullname;
+public TMP_Text ProgramSection;
+
+
+    private FirebaseFirestore firestore;
     private string userId;
 
     private void Start()
@@ -23,16 +28,14 @@ public class CollectionVisibility : MonoBehaviour
         InitializeFirebase();
     }
 
-    private void InitializeFirebase() 
+    private void InitializeFirebase()
     {
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Result == DependencyStatus.Available)
             {
                 Debug.Log("Firebase initialized successfully.");
-                FirebaseApp app = FirebaseApp.DefaultInstance;
-                dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-
+                firestore = FirebaseFirestore.DefaultInstance;
                 LoadUserData();
             }
             else
@@ -42,67 +45,75 @@ public class CollectionVisibility : MonoBehaviour
         });
     }
 
-    public void LoadUserData()
+   public void LoadUserData()
+{
+    DocumentReference docRef = firestore.Collection("users")
+                                         .Document(userId)
+                                         .Collection("information")
+                                         .Document("profile");
+
+    docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
     {
-        string userPath = $"users/{userId}";
-
-        dbReference.Child(userPath).GetValueAsync().ContinueWithOnMainThread(task =>
+        if (task.IsCompleted && task.Result.Exists)
         {
-            if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
+            DocumentSnapshot snapshot = task.Result;
 
-                if (snapshot.Exists)
-                {
-                    string userCoins = snapshot.Child("userCoins").Value.ToString();
-                    string userExp = snapshot.Child("exp").Value.ToString();
-                    string firstName = snapshot.Child("firstName").Value.ToString();
-                    string lastName = snapshot.Child("lastName").Value.ToString();
-                    string program = snapshot.Child("program").Value.ToString();
-                    string yearAndSection = snapshot.Child("yearSection").Value.ToString();
+            // Use correct types based on Firestore field type
+            long userCoins = snapshot.ContainsField("userCoins") ? snapshot.GetValue<long>("userCoins") : 0;
+            long userExp = snapshot.ContainsField("exp") ? snapshot.GetValue<long>("exp") : 0;
 
-                    ProgramSection.text = program + " " + yearAndSection;
-                    Fullname.text = firstName + " " + lastName;
-                    Coins.text = userCoins;
-                    Exp.text = userExp;
-                }
-                else
-                {
-                    Debug.LogError("User data not found!");
-                }
-            }
-            else
-            {
-                Debug.LogError("Failed to retrieve user data.");
-            }
-        });
-    }
+            string firstName = snapshot.ContainsField("firstName") ? snapshot.GetValue<string>("firstName") : "N/A";
+            string lastName = snapshot.ContainsField("lastName") ? snapshot.GetValue<string>("lastName") : "N/A";
+            string program = snapshot.ContainsField("program") ? snapshot.GetValue<string>("program") : "N/A";
+            string yearAndSection = snapshot.ContainsField("yearSection") ? snapshot.GetValue<string>("yearSection") : "N/A";
 
-    public void ShowCollection() 
+            ProgramSection.text = $"{program} {yearAndSection}";
+            Fullname.text = $"{firstName} {lastName}";
+           Coins.text = userCoins.ToString() + " Coins";
+           Exp.text = userExp.ToString() + " XP";
+
+
+            Debug.Log("Document data: " + snapshot.ToDictionary());
+            Debug.Log("Has userCoins: " + snapshot.ContainsField("userCoins"));
+            Debug.Log("Has exp: " + snapshot.ContainsField("exp"));
+            Debug.Log("userCoins value: " + userCoins);
+            Debug.Log("userExp value: " + userExp);
+            Debug.Log("Fullname: " + Fullname.text);
+            Debug.Log("Program and Section: " + ProgramSection.text);
+
+
+        }
+        else
+        {
+            Debug.LogError("User profile document not found or error occurred.");
+        }
+    });
+}
+
+
+    public void ShowCollection()
     {
         collectionPanel.SetActive(true);
         badgesPanel.SetActive(false);
         missionsPanel.SetActive(false);
     }
 
-    public void ShowBadges() 
+    public void ShowBadges()
     {
         badgesPanel.SetActive(true);
         missionsPanel.SetActive(false);
         collectionPanel.SetActive(false);
     }
 
-    public void ShowMissions() 
+    public void ShowMissions()
     {
         missionsPanel.SetActive(true);
         collectionPanel.SetActive(false);
         badgesPanel.SetActive(false);
     }
 
-    public void ShowUserAccessories() 
+    public void ShowUserAccessories()
     {
         userAccessoriesPanel.SetActive(true);
     }
-
-
 }

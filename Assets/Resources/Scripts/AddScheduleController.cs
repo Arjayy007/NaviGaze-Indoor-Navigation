@@ -1,34 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // For TextMeshPro
+using TMPro;
 using Firebase;
-using Firebase.Database;
+using Firebase.Firestore;
 using Firebase.Extensions;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using SchedulesModel.Models;
 
-
 public class AddScheduleController : MonoBehaviour
 {
     public SceneManagerScript sceneManager;
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
 
-    public InputField subjectCode;    
-    public InputField subjectName;    
-    public InputField room;          
-    public Dropdown dayOfTheWeek; 
+    public InputField subjectCode;
+    public InputField subjectName;
+    public InputField room;
+    public Dropdown dayOfTheWeek;
     public Dropdown startTime;
     public Dropdown endTime;
     public Dropdown campus;
 
-    public GameObject rowTemplate;     
+    public GameObject rowTemplate;
     public Transform tableContainer;
     public ScheduleData schedulesModel;
     private bool switchScene = false;
 
     private List<ScheduleData> scheduleList = new List<ScheduleData>();
     string userId = UserSession.UserId;
+
     void Start()
     {
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
@@ -36,10 +36,9 @@ public class AddScheduleController : MonoBehaviour
             if (task.Result == DependencyStatus.Available)
             {
                 FirebaseApp app = FirebaseApp.DefaultInstance;
-                string databaseUrl = "https://navigaze-448413-default-rtdb.asia-southeast1.firebasedatabase.app/"; 
-                dbReference = FirebaseDatabase.GetInstance(app, databaseUrl).RootReference;
-                Debug.Log("Firebase Initialized Successfully");
-                
+                firestore = FirebaseFirestore.DefaultInstance;
+                Debug.Log("Firebase Firestore Initialized Successfully");
+
                 Debug.Log("User ID: " + userId);
             }
             else
@@ -69,12 +68,10 @@ public class AddScheduleController : MonoBehaviour
         }
     }
 
-
     public void OnAddScheduleButtonClicked()
     {
-    
-        if (string.IsNullOrEmpty(subjectCode.text) || 
-            string.IsNullOrEmpty(subjectName.text) || 
+        if (string.IsNullOrEmpty(subjectCode.text) ||
+            string.IsNullOrEmpty(subjectName.text) ||
             string.IsNullOrEmpty(room.text))
         {
             Debug.LogWarning("Please fill in all input fields!");
@@ -82,9 +79,8 @@ public class AddScheduleController : MonoBehaviour
         }
 
         GameObject newRow = Instantiate(rowTemplate, tableContainer);
-        newRow.SetActive(true); 
+        newRow.SetActive(true);
 
-      
         TextMeshProUGUI[] rowColumns = newRow.GetComponentsInChildren<TextMeshProUGUI>();
 
         if (rowColumns.Length >= 6)
@@ -111,7 +107,7 @@ public class AddScheduleController : MonoBehaviour
             campus.options[campus.value].text
         );
 
-        scheduleList.Add(schedule); 
+        scheduleList.Add(schedule);
         ClearInputFields();
     }
 
@@ -122,7 +118,7 @@ public class AddScheduleController : MonoBehaviour
             Debug.LogWarning("No schedule data to save!");
             return;
         }
-        
+
         foreach (var schedule in scheduleList)
         {
             SaveToDatabase(schedule);
@@ -131,46 +127,48 @@ public class AddScheduleController : MonoBehaviour
         ClearTable();
     }
 
-private void SaveToDatabase(ScheduleData schedule)
-{
-    if (dbReference == null)
+    private void SaveToDatabase(ScheduleData schedule)
     {
-        Debug.LogError("Database reference is not initialized.");
-        return;
-    }
-    
-    if (string.IsNullOrEmpty(userId))
-    {
-        Debug.LogError("No user is logged in. Cannot associate schedule.");
-        return;
-    }
-
-    Dictionary<string, object> scheduleData = new Dictionary<string, object>
-    {
-        { "subjectCode", schedule.subjectCode },
-        { "subjectName", schedule.subjectName },
-        { "room", schedule.room },
-        { "dayOfTheWeek", schedule.dayOfTheWeek },
-        { "startTime", schedule.startTime },
-        { "endTime", schedule.endTime},
-        { "campus", schedule.campus}
-    };
-
-    // Save the schedule under the user's ID
-        dbReference.Child("users").Child(userId).Child("schedules").Push().SetValueAsync(scheduleData).ContinueWithOnMainThread(task =>
-    {
-        if (task.IsCompleted)
-     {
-         Debug.Log("Schedule data saved to Firebase under user: " + userId);
-         switchScene = true;
-
-        }
-        else
+        if (firestore == null)
         {
-        Debug.LogError("Failed to save schedule data: " + task.Exception);
+            Debug.LogError("Firestore is not initialized.");
+            return;
         }
-    });
-}
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            Debug.LogError("No user is logged in. Cannot associate schedule.");
+            return;
+        }
+
+        DocumentReference userDocRef = firestore.Collection("users").Document(userId);
+        CollectionReference schedulesCollection = userDocRef.Collection("schedules");
+
+        Dictionary<string, object> scheduleData = new Dictionary<string, object>
+        {
+            { "subjectCode", schedule.subjectCode },
+            { "subjectName", schedule.subjectName },
+            { "room", schedule.room },
+            { "dayOfTheWeek", schedule.dayOfTheWeek },
+            { "startTime", schedule.startTime },
+            { "endTime", schedule.endTime},
+            { "campus", schedule.campus}
+        };
+
+    
+        schedulesCollection.AddAsync(scheduleData).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                Debug.Log("Schedule data saved to Firestore under user: " + userId);
+                switchScene = true;
+            }
+            else
+            {
+                Debug.LogError("Failed to save schedule data: " + task.Exception);
+            }
+        });
+    }
 
     private void ClearInputFields()
     {
@@ -210,5 +208,3 @@ private void SaveToDatabase(ScheduleData schedule)
         subjectName.text = ClassCodeDictionary.GetSubjectName(input);
     }
 }
-
-

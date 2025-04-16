@@ -801,7 +801,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c24c7e434c5b74ba73badad6e0dc51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel: {fileID: 0}
+  panel: {fileID: 5161720563326880625}
   sceneManager: {fileID: 0}
   firstNameInput: {fileID: 1319758978}
   lastNameInput: {fileID: 1970603889}
@@ -822,6 +822,7 @@ MonoBehaviour:
     avatarName: 
     userCoins: 0
     exp: 0
+  registerButton: {fileID: 384472034685681760}
 --- !u!114 &762553549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -917,6 +918,7 @@ MonoBehaviour:
     avatarName: 
     userCoins: 0
     exp: 0
+  registerButton: {fileID: 0}
 --- !u!114 &1255274653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1787,6 +1789,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
+--- !u!114 &384472034685681760 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6661410173592992369, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
+  m_PrefabInstance: {fileID: 384472034685681759}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5161720563326880625 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8965330015864436236, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}

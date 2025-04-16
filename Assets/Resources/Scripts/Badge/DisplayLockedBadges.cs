@@ -1,74 +1,72 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Firebase.Database;
-using Firebase.Extensions;
 using TMPro;
 using UnityEngine.UI;
+using Firebase;
+using Firebase.Extensions;
+using Firebase.Firestore;
 
 public class DisplayLockedBadges : MonoBehaviour
 {
     public GameObject goldBadgePrefab;
     public GameObject silverBadgePrefab;
     public GameObject bronzeBadgePrefab;
-    public Transform badgeContainer; // Assign in Unity to place badge prefabs inside
+    public Transform badgeContainer;
 
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
     private string userId;
 
     void Start()
     {
-        userId = UserSession.UserId; // Ensure UserSession.UserId is correctly set
+        userId = UserSession.UserId;
+
         if (string.IsNullOrEmpty(userId))
         {
             Debug.LogError("User ID is not set! Ensure the user is logged in.");
             return;
         }
 
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-        FetchBadges();
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.Result == DependencyStatus.Available)
+            {
+                firestore = FirebaseFirestore.DefaultInstance;
+                FetchBadges();
+            }
+            else
+            {
+                Debug.LogError("Firebase dependencies not resolved: " + task.Result);
+            }
+        });
     }
 
     void FetchBadges()
     {
-        string badgesPath = "badges"; // Path to badges in Firebase
+        string[] badgeTypes = { "Gold", "Silver", "Bronze" };
+        int count = 0;
 
-        dbReference.Child(badgesPath).GetValueAsync().ContinueWithOnMainThread(task =>
+        foreach (string type in badgeTypes)
         {
-            if (task.IsCompleted && !task.IsFaulted)
+            DocumentReference docRef = firestore.Collection("badges").Document(type);
+
+            docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
-                DataSnapshot snapshot = task.Result;
-
-                if (!snapshot.Exists)
+                if (task.IsCompleted && task.Result.Exists)
                 {
-                    Debug.LogError("No badge data found in Firebase.");
-                    return;
-                }
+                    DocumentSnapshot snapshot = task.Result;
 
-                // Clear previous badges (if any)
-                foreach (Transform child in badgeContainer)
-                {
-                    Destroy(child.gameObject);
-                }
+                    string title = snapshot.ContainsField("title") ? snapshot.GetValue<string>("title") : "No Title";
+                    string message = snapshot.ContainsField("message") ? snapshot.GetValue<string>("message") : "No Message";
 
-                int count = 0;
-
-                foreach (var badge in snapshot.Children)
-                {
-                    string badgeKey = badge.Key; // e.g., "Bronze", "Silver", "Gold"
-                    string title = badge.Child("title").Value.ToString();
-                    string message = badge.Child("message").Value.ToString();
-
-                    CreateBadge(badgeKey, title, message);
+                    CreateBadge(type, title, message);
                     count++;
                 }
-
-                Debug.Log($"Total Badges Displayed: {count}");
-            }
-            else
-            {
-                Debug.LogError("Failed to fetch badges from Firebase: " + task.Exception);
-            }
-        });
+                else
+                {
+                    Debug.LogWarning($"Badge type '{type}' not found in Firestore.");
+                }
+            });
+        }
     }
 
     void CreateBadge(string badgeType, string title, string message)
@@ -99,26 +97,25 @@ public class DisplayLockedBadges : MonoBehaviour
 
         GameObject newBadge = Instantiate(badgePrefab, badgeContainer);
         newBadge.SetActive(true);
-        
-        Image badgeImage = newBadge.GetComponent<Image>();
-         if (badgeImage != null)
-        {
-             badgeImage.color = new Color(0.5f, 0.5f, 0.5f); 
 
-         }
-         else
-         {
-        Debug.LogError($"Root Image component not found in {badgeType} badge prefab!");
+        Image badgeImage = newBadge.GetComponent<Image>();
+        if (badgeImage != null)
+        {
+            badgeImage.color = new Color(0.5f, 0.5f, 0.5f); // Dimmed effect for locked badges
+        }
+        else
+        {
+            Debug.LogError($"Image component not found on {badgeType} badge prefab!");
         }
 
         TextMeshProUGUI titleText = newBadge.transform.Find("BadgeTitle")?.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI messageText = newBadge.transform.Find("Message")?.GetComponent<TextMeshProUGUI>();
 
         if (titleText != null) titleText.text = title;
-        else Debug.LogError($"Title text not found in {badgeType} badge prefab!");
+        else Debug.LogError($"BadgeTitle not found in {badgeType} prefab!");
 
         if (messageText != null) messageText.text = message;
-        else Debug.LogError($"Message text not found in {badgeType} badge prefab!");
+        else Debug.LogError($"Message not found in {badgeType} prefab!");
 
         Debug.Log($"Created {badgeType} badge: {title}");
     }
