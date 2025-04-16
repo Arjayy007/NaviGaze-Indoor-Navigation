@@ -1,26 +1,41 @@
 using System;
-using Firebase.Database;
 using UnityEngine;
+using Firebase.Firestore;
+using Firebase.Extensions;
 
 public class BadgeRequirementCalculator : MonoBehaviour
 {
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
+
     void Start()
     {
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        firestore = FirebaseFirestore.DefaultInstance;
         string userId = UserSession.UserId;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            Debug.LogError("User ID is not set. Ensure the user is logged in.");
+            return;
+        }
+
         CountUserClasses(userId);
     }
 
     void CountUserClasses(string userId)
     {
-        dbReference.Child("users").Child(userId).Child("schedules").GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCompleted && task.Result.Exists)
-            {
-                int totalClasses = (int)task.Result.ChildrenCount;
+        CollectionReference scheduleRef = firestore
+            .Collection("users")
+            .Document(userId)
+            .Collection("schedules");
 
-                // Calculate badge requirements
+        scheduleRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+            {
+                QuerySnapshot snapshot = task.Result;
+
+                int totalClasses = snapshot.Count;
+
                 int bronzeRequirement = Mathf.CeilToInt(totalClasses / 3.0f);
                 int silverRequirement = Mathf.CeilToInt((totalClasses - bronzeRequirement) / 2.0f);
                 int goldRequirement = totalClasses;

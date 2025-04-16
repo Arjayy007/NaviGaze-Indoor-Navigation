@@ -3,83 +3,97 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
-using Firebase.Database;
 using Firebase.Extensions;
+using Firebase.Firestore;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
 
 public class NotificationManager : MonoBehaviour
 {
     public GameObject notificationCardPrefab;  // Assign your prefab in Unity Inspector
-    public Transform notificationContainer;   // Assign the Scroll View's content panel
-    private DatabaseReference dbReference;
+    public Transform notificationContainer;    // Assign the Scroll View's content panel
+
+    private FirebaseFirestore firestore;
 
     void Start()
     {
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        firestore = FirebaseFirestore.DefaultInstance;
         LoadNotifications();
-        
     }
 
     void LoadNotifications()
     {
-        string userId = UserSession.UserId; // Assuming you have user authentication
+        string userId = UserSession.UserId;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            Debug.LogWarning("[NotificationManager] User ID is null or empty.");
+            return;
+        }
 
         Debug.Log($"[NotificationManager] Fetching notifications for user: {userId}");
 
-        dbReference.Child("notifications").Child(userId).GetValueAsync().ContinueWithOnMainThread(task =>
+        firestore.Collection("users").Document(userId).Collection("notification")
+    .OrderByDescending("timestamp")
+    .GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("[NotificationManager] Firebase Database Error: " + task.Exception);
+                Debug.LogError("[NotificationManager] Firestore Error: " + task.Exception);
                 return;
             }
 
-            if (task.IsCompleted)
+            QuerySnapshot snapshot = task.Result;
+
+            if (snapshot.Count == 0)
             {
-                DataSnapshot snapshot = task.Result;
-
-                if (!snapshot.Exists)
-                {
-                    Debug.LogWarning("[NotificationManager] No notifications found for this user.");
-                    return;
-                }
-
-                // Print the raw JSON retrieved
-                Debug.Log("[NotificationManager] Raw JSON from Firebase: " + snapshot.GetRawJsonValue());
-
-                // Clear previous notifications
-                foreach (Transform child in notificationContainer)
-                {
-                    Destroy(child.gameObject);
-                }
-
-                int count = 0;
-
-                foreach (var child in snapshot.Children)
-                {
-                    if (child.HasChild("message") && child.HasChild("timestamp"))
-                    {
-                        string message = child.Child("message").Value.ToString();
-                        string timestamp = child.Child("timestamp").Value.ToString();
-
-                        Debug.Log($"[NotificationManager] Notification {count + 1}: {message} at {timestamp}");
-
-                        CreateNotificationCard(message, timestamp);
-                        count++;
-                    }
-                    else
-                    {
-                        Debug.LogWarning("[NotificationManager] Skipping invalid notification entry (missing fields).");
-                    }
-                }
-
-                Debug.Log($"[NotificationManager] Total Notifications Displayed: {count}");
+                Debug.LogWarning("[NotificationManager] No notifications found for this user.");
+                return;
             }
+
+            // Clear previous notifications
+            foreach (Transform child in notificationContainer)
+            {
+                Destroy(child.gameObject);
+            }
+
+            int count = 0;
+
+            foreach (DocumentSnapshot doc in snapshot.Documents)
+            {
+                Dictionary<string, object> data = doc.ToDictionary();
+
+                if (data.ContainsKey("message") && data.ContainsKey("timestamp"))
+                {
+                    string message = data["message"].ToString();
+
+                if (data["timestamp"] is Timestamp firestoreTimestamp)
+{
+    DateTime dateTime = firestoreTimestamp.ToDateTime();
+    string formattedTime = dateTime.ToString("hh:mm tt"); // Full time like "09:49 PM"
+    
+    Debug.Log($"[NotificationManager] Notification {count + 1}: {message} at {formattedTime}");
+    CreateNotificationCard(message, formattedTime);
+    count++;
+}
+
+             else
+             {
+            Debug.LogWarning("[NotificationManager] Timestamp format is invalid.");
+        }
+                }
+                else
+                {
+                    Debug.LogWarning("[NotificationManager] Skipping invalid notification entry (missing fields).");
+                }
+            }
+
+            Debug.Log($"[NotificationManager] Total Notifications Displayed: {count}");
         });
     }
 
-  void CreateNotificationCard(string message, string timestamp)
+void CreateNotificationCard(string message, string timestamp)
 {
     if (notificationCardPrefab == null || notificationContainer == null)
     {
@@ -93,18 +107,22 @@ public class NotificationManager : MonoBehaviour
     TextMeshProUGUI messageText = newCard.transform.Find("Message")?.GetComponent<TextMeshProUGUI>();
     TextMeshProUGUI timeText = newCard.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
 
-    if (messageText != null) messageText.text = message;
-    else Debug.LogError("[NotificationManager] MessageText NOT found in prefab!");
+    if (messageText != null)
+        messageText.text = message;
+    else
+        Debug.LogError("[NotificationManager] MessageText NOT found in prefab!");
 
-    if (timeText != null) timeText.text = timestamp.Split(' ')[1]; // Extract only the time part
-    else Debug.LogError("[NotificationManager] TimestampText NOT found in prefab!");
+    if (timeText != null)
+        timeText.text = timestamp; // Don't split here
+    else
+        Debug.LogError("[NotificationManager] TimestampText NOT found in prefab!");
 
     Debug.Log($"[NotificationManager] Created new notification card: {newCard.name}");
 }
 
-public void backButton()
-{
-    SceneManager.LoadScene("DashboardPage");
-}
 
+    public void backButton()
+    {
+        SceneManager.LoadScene("DashboardPage");
+    }
 }

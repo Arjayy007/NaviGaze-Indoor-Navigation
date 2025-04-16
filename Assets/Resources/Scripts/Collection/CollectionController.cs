@@ -1,24 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Firebase.Database;
-using Firebase.Extensions;
 using Firebase;
+using Firebase.Extensions;
+using Firebase.Firestore;
 using System.Collections.Generic;
 
 public class CollectionController : MonoBehaviour
 {
-    public Transform contentParent; // Assign the Content object of the Scroll View
-    public GameObject CollectionPanelPrefab; // Assign the panel prefab in the Inspector
+    public Transform contentParent;
+    public GameObject CollectionPanelPrefab;
 
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
     private string userId;
 
     void Start()
     {
         userId = UserSession.UserId;
+
         if (string.IsNullOrEmpty(userId))
         {
-            Debug.LogError("User ID is not set! Ensure the user is logged in or registered.");
+            Debug.LogError("User ID is not set!");
             return;
         }
 
@@ -26,49 +27,37 @@ public class CollectionController : MonoBehaviour
         {
             if (task.Result == DependencyStatus.Available)
             {
-                Debug.Log("Firebase is ready.");
-                dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-                LoadUserInventoryFromDatabase();
+                firestore = FirebaseFirestore.DefaultInstance;
+                LoadUserInventoryFromFirestore();
             }
             else
             {
-                Debug.LogError($"Could not resolve Firebase dependencies: {task.Result}");
+                Debug.LogError("Firebase initialization failed: " + task.Result);
             }
         });
     }
 
-    void LoadUserInventoryFromDatabase()
+    void LoadUserInventoryFromFirestore()
     {
-        if (string.IsNullOrEmpty(userId))
-        {
-            Debug.LogError("User ID is not set!");
-            return;
-        }
+        CollectionReference inventoryRef = firestore.Collection("users").Document(userId).Collection("inventory");
 
-        string userInventoryPath = $"users/{userId}/inventory";
-        dbReference.Child(userInventoryPath).GetValueAsync().ContinueWithOnMainThread(task =>
+        inventoryRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompleted && !task.IsFaulted)
+            if (task.IsCompleted)
             {
-                DataSnapshot snapshot = task.Result;
+                QuerySnapshot snapshot = task.Result;
 
-                if (snapshot == null || !snapshot.Exists)
+                foreach (DocumentSnapshot doc in snapshot.Documents)
                 {
-                    Debug.LogError("User inventory is empty or doesn't exist.");
-                    return;
-                }
-
-                foreach (var item in snapshot.Children)
-                {
-                    string itemName = item.Key; // The actual item name
-                    bool isUsed = item.Child("isUsed").Exists && item.Child("isUsed").Value.ToString() == "True"; // Fetch 'isUsed'
+                    string itemName = doc.Id;
+                    bool isUsed = doc.ContainsField("isUsed") && doc.GetValue<bool>("isUsed");
 
                     CreateUIItem(itemName, isUsed);
                 }
             }
             else
             {
-                Debug.LogError("Failed to fetch user inventory from Firebase: " + task.Exception);
+                Debug.LogError("Failed to fetch inventory: " + task.Exception);
             }
         });
     }
@@ -76,13 +65,6 @@ public class CollectionController : MonoBehaviour
     void CreateUIItem(string itemName, bool isUsed)
     {
         GameObject newItem = Instantiate(CollectionPanelPrefab, contentParent);
-
-        if (newItem == null)
-        {
-            Debug.LogError("Failed to instantiate the item panel prefab.");
-            return;
-        }
-
         newItem.SetActive(true);
 
         Text[] texts = newItem.GetComponentsInChildren<Text>();
@@ -96,21 +78,8 @@ public class CollectionController : MonoBehaviour
 
         Sprite itemImage = Resources.Load<Sprite>($"Assets/{itemName}");
         Image itemImageComponent = newItem.transform.Find("ItemImage").GetComponent<Image>();
-        if (itemImage != null)
-        {
-            itemImageComponent.sprite = itemImage;
-        }
-        else
-        {
-            Debug.LogWarning($"Image for {itemName} not found. Using placeholder.");
-            Sprite placeholderImage = Resources.Load<Sprite>("placeholder");
-            if (placeholderImage != null)
-            {
-                itemImageComponent.sprite = placeholderImage;
-            }
-        }
+        itemImageComponent.sprite = itemImage ?? Resources.Load<Sprite>("placeholder");
 
-        // Set up the UseButton
         Button useButton = newItem.transform.Find("UseButton").GetComponent<Button>();
         if (useButton != null)
         {
@@ -126,16 +95,16 @@ public class CollectionController : MonoBehaviour
 
     void ToggleItemUsage(string itemName, Button useButton)
     {
-        string itemPath = $"users/{userId}/inventory/{itemName}/isUsed";
+        DocumentReference itemRef = firestore.Collection("users").Document(userId).Collection("inventory").Document(itemName);
 
-        dbReference.Child(itemPath).GetValueAsync().ContinueWithOnMainThread(task =>
+        itemRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompleted && !task.IsFaulted)
+            if (task.IsCompleted && task.Result.Exists)
             {
-                bool currentState = task.Result.Exists && task.Result.Value.ToString() == "True";
-                bool newState = !currentState; // Toggle the value
+                bool currentState = task.Result.GetValue<bool>("isUsed");
+                bool newState = !currentState;
 
-                dbReference.Child(itemPath).SetValueAsync(newState).ContinueWithOnMainThread(updateTask =>
+                itemRef.UpdateAsync("isUsed", newState).ContinueWithOnMainThread(updateTask =>
                 {
                     if (updateTask.IsCompleted)
                     {
@@ -144,17 +113,17 @@ public class CollectionController : MonoBehaviour
                         {
                             buttonText.text = newState ? "Unuse" : "Use";
                         }
-                        Debug.Log($"Item '{itemName}' is now {(newState ? "used" : "unused")}.");
+                        Debug.Log($"'{itemName}' usage toggled: {(newState ? "used" : "unused")}");
                     }
                     else
                     {
-                        Debug.LogError($"Failed to update 'isUsed' for '{itemName}': " + updateTask.Exception);
+                        Debug.LogError($"Failed to update 'isUsed': {updateTask.Exception}");
                     }
                 });
             }
             else
             {
-                Debug.LogError($"Failed to fetch 'isUsed' state for '{itemName}': " + task.Exception);
+                Debug.LogError($"Item '{itemName}' not found or fetch failed.");
             }
         });
     }
