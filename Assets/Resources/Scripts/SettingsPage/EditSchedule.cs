@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine.UI;
 using Firebase;
 using Firebase.Extensions;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Firebase.Firestore;
 
@@ -38,8 +37,6 @@ public class EditSchedule : MonoBehaviour
             {
                 Debug.Log("Firebase initialized successfully.");
                 firestore = FirebaseFirestore.DefaultInstance;
-
-                FetchSchedules();
             }
             else
             {
@@ -48,152 +45,70 @@ public class EditSchedule : MonoBehaviour
         });
     }
 
-    public void FetchSchedules()
+    public void AddClickListenerToRow(GameObject row, string scheduleID, string subjectCode, string subjectName, string room, string day, string startTime, string endTime)
     {
-        if (firestore == null)
+        Button button = row.GetComponent<Button>();
+        if (button == null)
         {
-            Debug.LogError("Firestore is not initialized yet!");
-            return;
+            button = row.AddComponent<Button>();
         }
 
-        firestore.Collection("users").Document(userId).Collection("schedules")
-            .GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(() =>
         {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Error fetching schedules: " + task.Exception);
-                return;
-            }
-
-            QuerySnapshot snapshot = task.Result;
-
-            if (snapshot.Count == 0)
-            {
-                Debug.LogWarning("No schedules found in Firestore!");
-                return;
-            }
-
-            // Clear existing rows before adding new ones
-            foreach (Transform child in tableContainer)
-            {
-                if (child.gameObject != rowTemplate)
-                {
-                    Destroy(child.gameObject);
-                }
-            }
-
-            // Add new rows to the table
-            foreach (DocumentSnapshot doc in snapshot.Documents)
-            {
-                string scheduleID = doc.Id;
-                Debug.Log("Processing Schedule ID: " + scheduleID);
-
-                Dictionary<string, object> data = doc.ToDictionary();
-
-                string subjectCode = data.ContainsKey("subjectCode") ? data["subjectCode"].ToString() : "N/A";
-                string subjectName = data.ContainsKey("subjectName") ? data["subjectName"].ToString() : "N/A";
-                string room = data.ContainsKey("room") ? data["room"].ToString() : "N/A";
-                string day = data.ContainsKey("dayOfTheWeek") ? data["dayOfTheWeek"].ToString() : "N/A";
-                string startTime = data.ContainsKey("startTime") ? data["startTime"].ToString() : "N/A";
-                string endTime = data.ContainsKey("endTime") ? data["endTime"].ToString() : "N/A";
-
-                AddRowToTable(subjectCode, subjectName, room, day, startTime, endTime, scheduleID);
-            }
+            Debug.Log("Clicked schedule row with ID: " + scheduleID); 
+            PopulateFields(scheduleID, subjectCode, subjectName, room, day, startTime, endTime);
         });
     }
 
-    private void AddRowToTable(string subjectCode, string subjectName, string room, string day, string startTime, string endTime, string scheduleID)
+    private void PopulateFields(string scheduleID, string subjectCode, string subjectName, string room, string day, string startTime, string endTime)
     {
-        GameObject newRow = Instantiate(rowTemplate, tableContainer);
-        newRow.SetActive(true);
-
-        // Create a new Button component dynamically for the row
-        Button rowButton = newRow.AddComponent<Button>();
-        rowButton.interactable = true;
-        rowButton.onClick.RemoveAllListeners();
-        rowButton.onClick.AddListener(() =>
-        {
-            // Directly populate the fields with row data
-            PopulateEditFields(subjectCode, subjectName, room, day, startTime, endTime, scheduleID);
-        });
-
-        // Enable the child elements
-        foreach (Transform child in newRow.transform)
-        {
-            child.gameObject.SetActive(true);
-        }
-
-        // Populate the Text components
-        Text[] rowColumns = newRow.GetComponentsInChildren<Text>(true);
-        if (rowColumns.Length >= 6)
-        {
-            rowColumns[0].text = subjectCode;
-            rowColumns[1].text = subjectName;
-            rowColumns[2].text = room;
-            rowColumns[3].text = day;
-            rowColumns[4].text = startTime;
-            rowColumns[5].text = endTime;
-        }
-        else
-        {
-            Debug.LogError("Row template does not have enough columns!");
-        }
-
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(tableContainer.GetComponent<RectTransform>());
-    }
-
-    public void PopulateEditFields(string subjectCode, string subjectName, string room, string day, string startTime, string endTime, string scheduleID)
-    {
+        currentScheduleID = scheduleID; // Store selected document ID
         subjectCodeInput.text = subjectCode;
         subjectNameInput.text = subjectName;
         roomInput.text = room;
-
-        SetDropdownValue(dayDropdown, day);
-        SetDropdownValue(startTimeDropdown, startTime);
-        SetDropdownValue(endTimeDropdown, endTime);
-
-        currentScheduleID = scheduleID;
+        dayDropdown.value = dayDropdown.options.FindIndex(option => option.text == day);
+        startTimeDropdown.value = startTimeDropdown.options.FindIndex(option => option.text == startTime);
+        endTimeDropdown.value = endTimeDropdown.options.FindIndex(option => option.text == endTime);
     }
 
-    private void SetDropdownValue(Dropdown dropdown, string value)
-    {
-        int index = dropdown.options.FindIndex(option => option.text == value);
-        if (index != -1)
-        {
-            dropdown.value = index;
-        }
-    }
-
-    public void SaveEditedSchedule()
+    // 🔄 CALL THIS from Update Button's OnClick event
+    public void UpdateScheduleInFirestore()
     {
         if (string.IsNullOrEmpty(currentScheduleID))
         {
-            Debug.LogError("No schedule selected for editing.");
+            Debug.LogError("No schedule selected for update.");
             return;
         }
 
-        var updatedSchedule = new Dictionary<string, object>
+        string subjectCode = subjectCodeInput.text.Trim();
+        string subjectName = subjectNameInput.text.Trim();
+        string room = roomInput.text.Trim();
+        string day = dayDropdown.options[dayDropdown.value].text;
+        string startTime = startTimeDropdown.options[startTimeDropdown.value].text;
+        string endTime = endTimeDropdown.options[endTimeDropdown.value].text;
+
+        DocumentReference docRef = firestore.Collection("users").Document(userId).Collection("schedules").Document(currentScheduleID);
+
+        Dictionary<string, object> updatedData = new Dictionary<string, object>
         {
-            ["subjectCode"] = subjectCodeInput.text,
-            ["subjectName"] = subjectNameInput.text,
-            ["room"] = roomInput.text,
-            ["dayOfTheWeek"] = dayDropdown.options[dayDropdown.value].text,
-            ["startTime"] = startTimeDropdown.options[startTimeDropdown.value].text,
-            ["endTime"] = endTimeDropdown.options[endTimeDropdown.value].text
+            { "subjectCode", subjectCode },
+            { "subjectName", subjectName },
+            { "room", room },
+            { "dayOfTheWeek", day },
+            { "startTime", startTime },
+            { "endTime", endTime }
         };
 
-        firestore.Collection("users").Document(userId).Collection("schedules").Document(currentScheduleID)
-            .SetAsync(updatedSchedule).ContinueWithOnMainThread(task =>
+        docRef.UpdateAsync(updatedData).ContinueWithOnMainThread(task =>
         {
             if (task.IsCompletedSuccessfully)
             {
                 Debug.Log("Schedule updated successfully!");
-                SceneManager.LoadScene("EditSchedulePage");
             }
             else
             {
-                Debug.LogError("Error updating schedule: " + task.Exception);
+                Debug.LogError("Failed to update schedule: " + task.Exception);
             }
         });
     }

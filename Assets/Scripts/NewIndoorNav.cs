@@ -41,20 +41,28 @@ public class NewIndoorNav : MonoBehaviour
     private string selectedRole;
 
     private void Start()
+{
+    navMeshPath = new NavMeshPath(); 
+    Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+    navigationTargets = GameObject.FindGameObjectsWithTag("Target").ToList();
+    PopulateDropdown();
+
+    dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+
+    characterAgent = character.GetComponent<NavMeshAgent>();
+    characterAnimator = character.GetComponent<Animator>();
+    characterAnimator.Play("Breathing");
+    selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+
+    // ✅ Set custom XR Origin start position
+    Transform xrOrigin = player.transform.parent;
+    if (xrOrigin != null)
     {
-        navMeshPath = new NavMeshPath(); 
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
-        navigationTargets = GameObject.FindGameObjectsWithTag("Target").ToList();
-        PopulateDropdown();
-
-        dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
-
-        characterAgent = character.GetComponent<NavMeshAgent>();
-        characterAnimator = character.GetComponent<Animator>();
-        characterAnimator.Play("Breathing");
-        selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+        xrOrigin.position = new Vector3(0f, 0.87f, 1.50f); // your desired starting position
+        Debug.Log("XR Origin manually positioned at (0, 0.87, 1.68)");
     }
+}
 
     private void Update()
 {
@@ -322,29 +330,55 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
 
     //testingggggggggg
     private void MoveCharacterToDestination()
+{
+    if (dropdown.value == 0)
     {
-        if (dropdown.value == 0)
-        {
-            Debug.LogWarning("No destination selected!");
-            return;
-        }
+        Debug.LogWarning("No destination selected!");
+        return;
+    }
 
-        string selectedTargetName = dropdown.options[dropdown.value].text;
-        GameObject destinationCube = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
+    string selectedTargetName = dropdown.options[dropdown.value].text;
+    GameObject destinationCube = navigationTargets.FirstOrDefault(target => target.name == selectedTargetName);
 
-        if (destinationCube != null)
-        {
-            
-            characterAgent.SetDestination(destinationCube.transform.position);
-            characterAnimator.SetTrigger("StartWalking");
+    if (destinationCube != null)
+    {
+        characterAgent.SetDestination(destinationCube.transform.position);
+        characterAnimator.SetTrigger("StartWalking");
 
-            StartCoroutine(checkIfCharacterArrived());
-        }
-        else
+        FaceCameraToPathDirection(); // 👈 Face the camera to the direction of the line
+        StartCoroutine(checkIfCharacterArrived());
+    }
+    else
+    {
+        Debug.LogWarning("Destination cube not found!");
+    }
+}
+
+private void FaceCameraToPathDirection()
+{
+    if (navMeshPath.corners.Length >= 2)
+    {
+        // Use characterAgent position as the starting point
+        Vector3 direction = navMeshPath.corners[1] - characterAgent.transform.position;
+        direction.y = 0; // Flatten the direction
+
+        if (direction != Vector3.zero)
         {
-            Debug.LogWarning("Destination cube not found!");
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+            // Rotate the XR Origin so the camera faces the path
+            Transform xrOrigin = Camera.main.transform.parent; // Or player.transform.parent if player is the camera
+            if (xrOrigin != null)
+            {
+                xrOrigin.rotation = lookRotation;
+                Debug.Log("Camera rotated to face path direction: " + lookRotation.eulerAngles);
+            }
+
+            Debug.DrawLine(characterAgent.transform.position, navMeshPath.corners[1], Color.green, 3f);
         }
     }
+}
+
 
     private IEnumerator checkIfCharacterArrived() {
         yield return new WaitUntil(() => characterAgent.remainingDistance <= characterAgent.stoppingDistance && !characterAgent.pathPending);

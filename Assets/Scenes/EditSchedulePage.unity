@@ -353,7 +353,7 @@ PrefabInstance:
       objectReference: {fileID: 2079566283}
     - target: {fileID: 250811851018569259, guid: fed067b9a317f464ea4b380dcc7086f9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SaveEditedSchedule
+      value: UpdateScheduleInFirestore
       objectReference: {fileID: 0}
     - target: {fileID: 250811851018569259, guid: fed067b9a317f464ea4b380dcc7086f9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -1890,6 +1890,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tableContainer: {fileID: 1369431444}
   rowTemplate: {fileID: 1369431443}
+  editSchedule: {fileID: 2079566283}
 --- !u!114 &2079566283
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -838,7 +838,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 636545104}
         m_TargetAssemblyTypeName: ProfileController, Assembly-CSharp
         m_MethodName: OnEditButtonClicked
         m_Mode: 1
@@ -4948,7 +4948,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 636545104}
         m_TargetAssemblyTypeName: ProfileController, Assembly-CSharp
         m_MethodName: OnSaveButtonClicked
         m_Mode: 1
