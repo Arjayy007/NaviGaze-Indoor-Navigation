@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
-using Firebase.Database;
-using System.Threading.Tasks;
 using Firebase.Extensions;
+using Firebase.Firestore;
 using UnityEngine.SceneManagement;
 
 public class ChangeAvatar : MonoBehaviour
@@ -13,14 +12,14 @@ public class ChangeAvatar : MonoBehaviour
 
     private string selectedAvatar = ""; // Store the selected avatar
     private string userId;
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
 
     void Start()
     {
         userId = UserSession.UserId;
         InitializeFirebase();
 
-        // Assign button click events (now they call UpdateAvatar immediately)
+        // Assign button click events
         avatarButton1.onClick.AddListener(() => SelectAvatar("Capybara Avatar"));
         avatarButton2.onClick.AddListener(() => SelectAvatar("placeholder"));
         avatarButton3.onClick.AddListener(() => SelectAvatar("Capybara V2"));
@@ -29,24 +28,23 @@ public class ChangeAvatar : MonoBehaviour
 
     private void InitializeFirebase()
     {
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Result == DependencyStatus.Available)
             {
-                Debug.Log("Firebase initialized successfully.");
-                FirebaseApp app = FirebaseApp.DefaultInstance;
-                dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+                firestore = FirebaseFirestore.DefaultInstance;
+                Debug.Log("Firestore initialized successfully.");
             }
             else
             {
-                Debug.LogError("Firebase not initialized: " + task.Result);
+                Debug.LogError("Firestore not initialized: " + task.Result);
             }
         });
     }
 
     void SelectAvatar(string avatarName)
     {
-        selectedAvatar = avatarName; // Store the selected avatar
+        selectedAvatar = avatarName;
         Debug.Log($"Avatar selected: {selectedAvatar}");
     }
 
@@ -58,31 +56,36 @@ public class ChangeAvatar : MonoBehaviour
             return;
         }
 
-        if (dbReference == null)
+        if (firestore == null)
         {
-            Debug.LogError("Firebase not initialized. Cannot update avatar.");
+            Debug.LogError("Firestore not initialized. Cannot update avatar.");
             return;
         }
 
         Debug.Log($"Saving avatar: {selectedAvatar}");
 
-        dbReference.Child("users").Child(userId).Child("avatarName").SetValueAsync(selectedAvatar)
-            .ContinueWith(task =>
+        DocumentReference profileRef = firestore
+            .Collection("users")
+            .Document(userId)
+            .Collection("information")
+            .Document("profile");
+
+        profileRef.UpdateAsync("avatarName", selectedAvatar).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompletedSuccessfully)
             {
-                if (task.IsCompleted)
-                {
-                    Debug.Log("Avatar updated successfully in Firebase.");
-                }
-                else
-                {
-                    Debug.LogError("Error updating avatar.");
-                }
-            });
+                Debug.Log("Avatar updated successfully in Firestore.");
+            }
+            else
+            {
+                Debug.LogError("Error updating avatar in Firestore: " + task.Exception);
+            }
+        });
     }
 
     public void LoadProfilePage()
     {
-        Invoke(nameof(LoadScene), 0.5f); // Delays by 0.5 seconds
+        Invoke(nameof(LoadScene), 0.5f);
     }
 
     private void LoadScene()

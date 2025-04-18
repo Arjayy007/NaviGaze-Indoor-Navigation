@@ -336,7 +336,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1331028333}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProfileController, Assembly-CSharp
         m_MethodName: DisplayFullName
         m_Mode: 1
@@ -530,10 +530,10 @@ RectTransform:
   - {fileID: 892625229}
   - {fileID: 1265796118}
   - {fileID: 1510474945}
-  - {fileID: 438662126}
   - {fileID: 1368144590}
   - {fileID: 86491674}
   - {fileID: 1173803964}
+  - {fileID: 1577807127}
   m_Father: {fileID: 459238515}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -838,7 +838,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1331028333}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProfileController, Assembly-CSharp
         m_MethodName: OnEditButtonClicked
         m_Mode: 1
@@ -1252,7 +1252,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1331028333}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProfileController, Assembly-CSharp
         m_MethodName: DisplayFullName
         m_Mode: 1
@@ -1689,85 +1689,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 377573733}
-  m_CullTransparentMesh: 1
---- !u!1 &438662125
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 438662126}
-  - component: {fileID: 438662128}
-  - component: {fileID: 438662127}
-  m_Layer: 5
-  m_Name: EmailText
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &438662126
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438662125}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5289613, y: 1.5289613, z: 1.5289613}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 82483621}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -205.07, y: -323.4}
-  m_SizeDelta: {x: 289.8632, y: 40.6782}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &438662127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438662125}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: 56c8d0bd9fc052444a2999ee42899dfb, type: 3}
-    m_FontSize: 30
-    m_FontStyle: 1
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 70
-    m_Alignment: 3
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 'Email:'
---- !u!222 &438662128
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438662125}
   m_CullTransparentMesh: 1
 --- !u!1 &441042701
 GameObject:
@@ -2211,7 +2132,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: 'Full Name '
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2419,6 +2340,7 @@ GameObject:
   - component: {fileID: 636545100}
   - component: {fileID: 636545099}
   - component: {fileID: 636545103}
+  - component: {fileID: 636545104}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2484,7 +2406,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -2521,6 +2443,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072eb72a1002e7d40b88951f61ccaec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &636545104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636545098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083b78497f072d840b802ebfd87f8cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstNameInputField: {fileID: 215282910}
+  lastNameInputField: {fileID: 13269420}
+  fullNameInputField: {fileID: 530036420}
+  collegeDepartmentInputField: {fileID: 1769852559}
+  programInputField: {fileID: 892625232}
+  emailInputField: {fileID: 1368144593}
+  yearAndSectionInputField: {fileID: 1510474948}
+  collegeDepartmentDropdown: {fileID: 85407256}
+  programDropdown: {fileID: 366521926}
+  saveButton: {fileID: 1173803961}
+  editButton: {fileID: 86491677}
+  editButtonText: {fileID: 1679064029}
 --- !u!1 &649664771
 GameObject:
   m_ObjectHideFlags: 0
@@ -5002,7 +4948,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1331028333}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProfileController, Assembly-CSharp
         m_MethodName: OnSaveButtonClicked
         m_Mode: 1
@@ -5674,7 +5620,6 @@ GameObject:
   - component: {fileID: 1331028332}
   - component: {fileID: 1331028331}
   - component: {fileID: 1331028330}
-  - component: {fileID: 1331028333}
   - component: {fileID: 1331028334}
   - component: {fileID: 1331028336}
   - component: {fileID: 1331028335}
@@ -5729,30 +5674,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1331028333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1331028329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 083b78497f072d840b802ebfd87f8cbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firstNameInputField: {fileID: 215282910}
-  lastNameInputField: {fileID: 13269420}
-  fullNameInputField: {fileID: 530036420}
-  collegeDepartmentInputField: {fileID: 1769852559}
-  programInputField: {fileID: 892625232}
-  emailInputField: {fileID: 1368144593}
-  yearAndSectionInputField: {fileID: 1510474948}
-  collegeDepartmentDropdown: {fileID: 85407256}
-  programDropdown: {fileID: 366521926}
-  saveButton: {fileID: 1173803961}
-  editButton: {fileID: 86491677}
-  editButtonText: {fileID: 0}
 --- !u!114 &1331028334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7091,6 +7012,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520109068}
   m_CullTransparentMesh: 1
+--- !u!1 &1577807126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1577807127}
+  - component: {fileID: 1577807129}
+  - component: {fileID: 1577807128}
+  m_Layer: 5
+  m_Name: Text (Legacy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1577807127
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577807126}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.528961, y: 1.528961, z: 1.528961}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 82483621}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -112, y: -348}
+  m_SizeDelta: {x: 426.83, y: 81.2856}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1577807128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577807126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 56c8d0bd9fc052444a2999ee42899dfb, type: 3}
+    m_FontSize: 30
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 60
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'Email:'
+--- !u!222 &1577807129
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577807126}
+  m_CullTransparentMesh: 1
 --- !u!1 &1602280401
 GameObject:
   m_ObjectHideFlags: 0
@@ -7161,7 +7161,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 'Full Name '
 --- !u!222 &1602280404
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8748,7 +8748,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136061707}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 

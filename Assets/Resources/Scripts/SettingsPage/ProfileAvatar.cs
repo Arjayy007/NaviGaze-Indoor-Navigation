@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
-using Firebase.Database;
-using System.Threading.Tasks;
 using Firebase.Extensions;
+using Firebase.Firestore;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 public class ProfileAvatar : MonoBehaviour
 {
     public Image avatarImage; // Assign in Inspector
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
     private string userId; // Already declared in your script
 
     void Start()
@@ -22,10 +23,7 @@ public class ProfileAvatar : MonoBehaviour
         var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
         if (dependencyStatus == DependencyStatus.Available)
         {
-            FirebaseApp app = FirebaseApp.DefaultInstance;
-            dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-
-            // Now it's safe to load avatar and user data
+            firestore = FirebaseFirestore.DefaultInstance;
             LoadAvatarFromDatabase();
         }
         else
@@ -39,7 +37,6 @@ public class ProfileAvatar : MonoBehaviour
         string avatarName = await GetAvatarName();
         LoadAvatarImage(avatarName);
         Debug.Log($"Load Avatar Image: {avatarName}");
-
     }
 
     async Task<string> GetAvatarName()
@@ -47,11 +44,17 @@ public class ProfileAvatar : MonoBehaviour
         try
         {
             Debug.Log($"Fetching avatar for userId: {userId}");
-            var snapshot = await dbReference.Child("users").Child(userId).Child("avatarName").GetValueAsync();
+            DocumentReference docRef = firestore
+                .Collection("users")
+                .Document(userId)
+                .Collection("information")
+                .Document("profile");
 
-            if (snapshot.Exists && snapshot.Value != null)
+            DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
+
+            if (snapshot.Exists && snapshot.ContainsField("avatarName"))
             {
-                string avatarName = snapshot.Value.ToString();
+                string avatarName = snapshot.GetValue<string>("avatarName");
                 Debug.Log($"Avatar found: {avatarName}");
                 return avatarName;
             }

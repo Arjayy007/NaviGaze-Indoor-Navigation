@@ -3,8 +3,8 @@ using ProfessorDataModel.Models;
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
-using Firebase.Database;
 using Firebase.Extensions;
+using Firebase.Firestore;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine.SceneManagement;
@@ -12,7 +12,6 @@ using UnityEngine.SceneManagement;
 public class ProfRegController : MonoBehaviour
 {
     public SceneManagerScript sceneManager;
-    private DatabaseReference dbReference;
 
     public InputField firstNameInput;
     public InputField lastNameInput;
@@ -22,9 +21,8 @@ public class ProfRegController : MonoBehaviour
     public Dropdown collegeDepartment;
     public ProfessorData professorData;
 
-
+    private FirebaseFirestore firestore;
     private bool switchScene = false;
-
 
     void Start()
     {
@@ -33,9 +31,8 @@ public class ProfRegController : MonoBehaviour
             if (task.Result == DependencyStatus.Available)
             {
                 FirebaseApp app = FirebaseApp.DefaultInstance;
-                string databaseUrl = "https://navigaze-448413-default-rtdb.asia-southeast1.firebasedatabase.app/";
-                dbReference = FirebaseDatabase.GetInstance(app, databaseUrl).RootReference;
-                Debug.Log("Firebase Initialized Successfully");
+                firestore = FirebaseFirestore.DefaultInstance;
+                Debug.Log("Firestore Initialized Successfully");
             }
             else
             {
@@ -44,7 +41,6 @@ public class ProfRegController : MonoBehaviour
         });
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (switchScene)
@@ -54,14 +50,8 @@ public class ProfRegController : MonoBehaviour
         }
     }
 
-    public void SaveToDatabase() 
+    public void SaveToDatabase()
     {
-        if (dbReference == null)
-        {
-            Debug.LogError("Database reference is not initialized.");
-            return;
-        }
-
         if (firstNameInput == null || lastNameInput == null || emailInput == null || passwordInput == null || confirmPasswordInput == null)
         {
             Debug.LogError("One or more input fields are not assigned.");
@@ -78,36 +68,39 @@ public class ProfRegController : MonoBehaviour
 
         string validationError = Validation.ValidateProfessorRegistrationInputs(firstName, lastName, email, password, confirmPassword, department);
 
-        // Use Validation to Check all the Inputs
         if (validationError != null)
         {
             Debug.LogError(validationError);
             return;
         }
 
-        // Hash password before saving
         string hashedPassword = HashPassword(password);
 
-        // Create professor data object
         professorData = new ProfessorData(firstName, lastName, email, hashedPassword, department, selectedRole);
-        string json = JsonUtility.ToJson(professorData);
 
-        string userId = dbReference.Child("users").Push().Key;
-        if (userId != null)
+        // Generate a unique user ID manually
+        string userId = firestore.Collection("users").Document().Id;
+        if (!string.IsNullOrEmpty(userId))
         {
             Debug.Log($"Generated User ID: {userId}");
             UserSession.UserId = userId;
 
-            dbReference.Child("users").Child(userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+            DocumentReference profileDocRef = firestore
+                .Collection("users")
+                .Document(userId)
+                .Collection("information")
+                .Document("profile");
+
+            profileDocRef.SetAsync(professorData).ContinueWithOnMainThread(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
-                    Debug.Log("User data saved to Firebase!");
+                    Debug.Log("User profile saved to Firestore!");
                     switchScene = true;
                 }
                 else
                 {
-                    Debug.LogError("Failed to save user data: " + task.Exception);
+                    Debug.LogError("Failed to save user profile: " + task.Exception);
                 }
             });
         }
