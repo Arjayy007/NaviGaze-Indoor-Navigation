@@ -358,7 +358,6 @@ RectTransform:
   m_Children:
   - {fileID: 5161720563326880625}
   - {fileID: 252967264}
-  - {fileID: 1370247448}
   m_Father: {fileID: 762553547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -427,17 +426,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 360715174}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 459901331}
-  m_Father: {fileID: 762553547}
+  m_Father: {fileID: 5161720563326880625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 322, y: -692}
+  m_AnchoredPosition: {x: 317.99994, y: -430.14136}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &360715176
@@ -780,8 +779,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 353431891}
-  - {fileID: 1568622025}
-  - {fileID: 360715175}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -810,18 +807,6 @@ MonoBehaviour:
   passwordInput: {fileID: 2012695104}
   confirmPasswordInput: {fileID: 216737086}
   dropdownController: {fileID: 1255274651}
-  userData:
-    firstName: 
-    lastName: 
-    email: 
-    password: 
-    department: 
-    program: 
-    yearSection: 
-    role: 
-    avatarName: 
-    userCoins: 0
-    exp: 0
   registerButton: {fileID: 384472034685681760}
 --- !u!114 &762553549
 MonoBehaviour:
@@ -906,18 +891,6 @@ MonoBehaviour:
   passwordInput: {fileID: 2012695104}
   confirmPasswordInput: {fileID: 216737086}
   dropdownController: {fileID: 1255274651}
-  userData:
-    firstName: 
-    lastName: 
-    email: 
-    password: 
-    department: 
-    program: 
-    yearSection: 
-    role: 
-    avatarName: 
-    userCoins: 0
-    exp: 0
   registerButton: {fileID: 0}
 --- !u!114 &1255274653
 MonoBehaviour:
@@ -958,18 +931,6 @@ MonoBehaviour:
   sceneManager: {fileID: 0}
   usernameInputField: {fileID: 0}
   passwordInputField: {fileID: 0}
-  userData:
-    firstName: 
-    lastName: 
-    email: 
-    password: 
-    department: 
-    program: 
-    yearSection: 
-    role: 
-    avatarName: 
-    userCoins: 0
-    exp: 0
   errorHandler: {fileID: 0}
   switchScene: 0
 --- !u!114 &1319758978 stripped
@@ -1000,7 +961,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 353431891}
+    m_TransformParent: {fileID: 5161720563326880625}
     m_Modifications:
     - target: {fileID: 1841023098392988701, guid: 3645c26699360534bab165dab98dbb7a, type: 3}
       propertyPath: m_Pivot.x
@@ -1052,23 +1013,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1841023098392988701, guid: 3645c26699360534bab165dab98dbb7a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1841023098392988701, guid: 3645c26699360534bab165dab98dbb7a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1841023098392988701, guid: 3645c26699360534bab165dab98dbb7a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1841023098392988701, guid: 3645c26699360534bab165dab98dbb7a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -21
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 1841023098392988701, guid: 3645c26699360534bab165dab98dbb7a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 795
+      value: 1056.8586
       objectReference: {fileID: 0}
     - target: {fileID: 1841023098392988701, guid: 3645c26699360534bab165dab98dbb7a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1133,17 +1094,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568622024}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1611047153}
-  m_Father: {fileID: 762553547}
+  m_Father: {fileID: 5161720563326880625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 322, y: -828}
+  m_AnchoredPosition: {x: 317.99994, y: -566.14136}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1568622026
@@ -1786,7 +1747,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8965330015864436236, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1370247448}
+    - targetCorrespondingSourceObject: {fileID: 8965330015864436236, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1568622025}
+    - targetCorrespondingSourceObject: {fileID: 8965330015864436236, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 360715175}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
 --- !u!114 &384472034685681760 stripped
