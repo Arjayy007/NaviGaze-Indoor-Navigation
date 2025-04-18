@@ -1,35 +1,33 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
-using Firebase.Database;
-using System.Threading.Tasks;
+using Firebase.Firestore;
 using Firebase.Extensions;
+using System.Threading.Tasks;
 
 public class AvatarDisplay : MonoBehaviour
 {
-    public Image avatarImage; // Assign in Inspector
+    public Image avatarImage;
     public Text Fullname;
-    private DatabaseReference dbReference;
-    private string userId; // Already declared in your script
+
+    private FirebaseFirestore firestore;
+    private string userId;
 
     void Start()
     {
         userId = UserSession.UserId;
         InitializeFirebase();
-
     }
 
-    private async Task InitializeFirebase()
+    private async void InitializeFirebase()
     {
         var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
         if (dependencyStatus == DependencyStatus.Available)
         {
-            FirebaseApp app = FirebaseApp.DefaultInstance;
-            dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+            firestore = FirebaseFirestore.DefaultInstance;
 
-            // Now it's safe to load avatar and user data
-            LoadAvatarFromDatabase();
-            LoadUserData();
+            LoadAvatarFromFirestore();
+            LoadUserDataFromFirestore();
         }
         else
         {
@@ -37,12 +35,11 @@ public class AvatarDisplay : MonoBehaviour
         }
     }
 
-    async void LoadAvatarFromDatabase()
+    async void LoadAvatarFromFirestore()
     {
         string avatarName = await GetAvatarName();
         LoadAvatarImage(avatarName);
         Debug.Log($"Load Avatar Image: {avatarName}");
-
     }
 
     async Task<string> GetAvatarName()
@@ -50,17 +47,24 @@ public class AvatarDisplay : MonoBehaviour
         try
         {
             Debug.Log($"Fetching avatar for userId: {userId}");
-            var snapshot = await dbReference.Child("users").Child(userId).Child("avatarName").GetValueAsync();
 
-            if (snapshot.Exists && snapshot.Value != null)
+            DocumentReference docRef = firestore
+                .Collection("users")
+                .Document(userId)
+                .Collection("information")
+                .Document("profile");
+
+            DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
+
+            if (snapshot.Exists && snapshot.ContainsField("avatarName"))
             {
-                string avatarName = snapshot.Value.ToString();
+                string avatarName = snapshot.GetValue<string>("avatarName");
                 Debug.Log($"Avatar found: {avatarName}");
                 return avatarName;
             }
             else
             {
-                Debug.LogWarning($"Avatar not found for userId: {userId}. Using default.");
+                Debug.LogWarning("Avatar not found. Using default.");
                 return "Capybara Avatar";
             }
         }
@@ -71,29 +75,30 @@ public class AvatarDisplay : MonoBehaviour
         }
     }
 
-    public void LoadUserData()
+    void LoadUserDataFromFirestore()
     {
-        string userPath = $"users/{userId}";
+        DocumentReference docRef = firestore
+            .Collection("users")
+            .Document(userId)
+            .Collection("information")
+            .Document("profile");
 
-        dbReference.Child(userPath).GetValueAsync().ContinueWithOnMainThread(task =>
+        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompleted)
+            if (task.IsCompletedSuccessfully)
             {
-                DataSnapshot snapshot = task.Result;
+                DocumentSnapshot snapshot = task.Result;
 
                 if (snapshot.Exists)
                 {
-                    string firstName = snapshot.Child("firstName").Value.ToString();
-                    string lastName = snapshot.Child("lastName").Value.ToString();
+                    string firstName = snapshot.ContainsField("firstName") ? snapshot.GetValue<string>("firstName") : "";
+                    string lastName = snapshot.ContainsField("lastName") ? snapshot.GetValue<string>("lastName") : "";
 
-                    string fullName = firstName + " " + lastName;
-
-
-                    Fullname.text = fullName;
+                    Fullname.text = $"{firstName} {lastName}";
                 }
                 else
                 {
-                    Debug.LogError("User data not found!");
+                    Debug.LogError("User profile document not found.");
                 }
             }
             else
@@ -106,14 +111,13 @@ public class AvatarDisplay : MonoBehaviour
     void LoadAvatarImage(string avatarName)
     {
         string path = $"Avatars/{avatarName}";
-
         Debug.Log($"Attempting to load avatar from: {path}");
 
         Sprite avatarSprite = Resources.Load<Sprite>(path);
 
         if (avatarImage == null)
         {
-            Debug.LogError("avatarImage is not assigned! Drag the UI Image into the script in Inspector.");
+            Debug.LogError("avatarImage is not assigned in the inspector.");
             return;
         }
 
@@ -124,7 +128,7 @@ public class AvatarDisplay : MonoBehaviour
         }
         else
         {
-            avatarImage.sprite = Resources.Load<Sprite>("Avatars/placeholder"); // Load fallback
+            avatarImage.sprite = Resources.Load<Sprite>("Avatars/placeholder"); // fallback
         }
     }
 }

@@ -1,15 +1,15 @@
-using Firebase.Database;
+using Firebase.Firestore;
 using Firebase.Extensions;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CoinManager : MonoBehaviour
 {
-    private DatabaseReference dbReference;
+    private FirebaseFirestore db;
 
     void Start()
     {
-        string databaseUrl = "https://navigaze-448413-default-rtdb.asia-southeast1.firebasedatabase.app/";
-        dbReference = FirebaseDatabase.GetInstance(databaseUrl).RootReference;
+        db = FirebaseFirestore.DefaultInstance;
     }
 
     public void AddCoinsToUser(int coins, string rewardName)
@@ -20,27 +20,31 @@ public class CoinManager : MonoBehaviour
             return;
         }
 
-        DatabaseReference userRef = dbReference.Child("users").Child(UserSession.UserId);
+        DocumentReference rewardRef = db.Collection("users").Document(UserSession.UserId)
+            .Collection("information").Document("rewardsClaimed");
 
-        userRef.Child("badgesCollected").Child(rewardName).GetValueAsync().ContinueWithOnMainThread(task =>
+        rewardRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCompletedSuccessfully)
             {
-                bool rewardClaimed = task.Result.Exists && bool.Parse(task.Result.Value.ToString());
+                DocumentSnapshot snapshot = task.Result;
+                bool rewardClaimed = snapshot.ContainsField(rewardName) && snapshot.GetValue<bool>(rewardName);
 
                 if (!rewardClaimed)
                 {
-                    // Get current coins balance
-                    userRef.Child("userCoins").GetValueAsync().ContinueWithOnMainThread(coinTask =>
+                    DocumentReference profileRef = db.Collection("users").Document(UserSession.UserId)
+                        .Collection("information").Document("profile");
+
+                    profileRef.GetSnapshotAsync().ContinueWithOnMainThread(coinTask =>
                     {
                         if (coinTask.IsCompletedSuccessfully)
                         {
-                            int currentCoins = coinTask.Result.Exists ? int.Parse(coinTask.Result.Value.ToString()) : 0;
+                            int currentCoins = coinTask.Result.ContainsField("userCoins") ? coinTask.Result.GetValue<int>("userCoins") : 0;
                             int newCoinBalance = currentCoins + coins;
 
-                            // Update the user's coin balance and set the reward as claimed
-                            userRef.Child("userCoins").SetValueAsync(newCoinBalance);
-                            userRef.Child("rewardsClaimed").Child(rewardName).SetValueAsync(true); // Mark the reward as claimed
+                            profileRef.UpdateAsync("userCoins", newCoinBalance);
+                            rewardRef.UpdateAsync(rewardName, true);
+
                             Debug.Log($"Reward '{rewardName}' claimed. New coin balance: {newCoinBalance}");
                         }
                     });
@@ -52,13 +56,12 @@ public class CoinManager : MonoBehaviour
             }
             else
             {
-                // Initialize rewardClaimed if it does not exist
-                userRef.Child("rewardsClaimed").Child(rewardName).SetValueAsync(false);
+                // Initialize rewardClaimed if not existing
+                rewardRef.SetAsync(new Dictionary<string, object> { { rewardName, false } }, SetOptions.MergeAll);
             }
         });
     }
 
-    // New function to directly add coins to the user
     public void AddCoinsDirectly(int coins)
     {
         if (string.IsNullOrEmpty(UserSession.UserId))
@@ -67,16 +70,17 @@ public class CoinManager : MonoBehaviour
             return;
         }
 
-        DatabaseReference userRef = dbReference.Child("users").Child(UserSession.UserId);
+        DocumentReference profileRef = db.Collection("users").Document(UserSession.UserId)
+            .Collection("information").Document("profile");
 
-        userRef.Child("userCoins").GetValueAsync().ContinueWithOnMainThread(coinTask =>
+        profileRef.GetSnapshotAsync().ContinueWithOnMainThread(coinTask =>
         {
             if (coinTask.IsCompletedSuccessfully)
             {
-                int currentCoins = coinTask.Result.Exists ? int.Parse(coinTask.Result.Value.ToString()) : 0;
+                int currentCoins = coinTask.Result.ContainsField("userCoins") ? coinTask.Result.GetValue<int>("userCoins") : 0;
                 int newCoinBalance = currentCoins + coins;
 
-                userRef.Child("userCoins").SetValueAsync(newCoinBalance).ContinueWithOnMainThread(updateTask =>
+                profileRef.UpdateAsync("userCoins", newCoinBalance).ContinueWithOnMainThread(updateTask =>
                 {
                     if (updateTask.IsCompletedSuccessfully)
                     {
@@ -103,16 +107,17 @@ public class CoinManager : MonoBehaviour
             return;
         }
 
-        DatabaseReference userRef = dbReference.Child("users").Child(UserSession.UserId);
+        DocumentReference profileRef = db.Collection("users").Document(UserSession.UserId)
+            .Collection("information").Document("profile");
 
-        userRef.Child("exp").GetValueAsync().ContinueWithOnMainThread(expTask =>
+        profileRef.GetSnapshotAsync().ContinueWithOnMainThread(expTask =>
         {
             if (expTask.IsCompletedSuccessfully)
             {
-                int currentExp = expTask.Result.Exists ? int.Parse(expTask.Result.Value.ToString()) : 0;
+                int currentExp = expTask.Result.ContainsField("exp") ? expTask.Result.GetValue<int>("exp") : 0;
                 int newExpBalance = currentExp + experience;
 
-                userRef.Child("exp").SetValueAsync(newExpBalance).ContinueWithOnMainThread(updateTask =>
+                profileRef.UpdateAsync("exp", newExpBalance).ContinueWithOnMainThread(updateTask =>
                 {
                     if (updateTask.IsCompletedSuccessfully)
                     {
@@ -130,5 +135,4 @@ public class CoinManager : MonoBehaviour
             }
         });
     }
-
 }

@@ -1,15 +1,15 @@
 using UnityEngine;
-using Firebase.Database;
+using Firebase.Firestore;
 using Firebase.Extensions;
 using System.Collections.Generic;
 
 public class NavigationScheduleManager : MonoBehaviour
 {
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
 
     void Start()
     {
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        firestore = FirebaseFirestore.DefaultInstance;
         RetrieveUserSchedules();
     }
 
@@ -21,18 +21,16 @@ public class NavigationScheduleManager : MonoBehaviour
             return;
         }
 
-        DatabaseReference userSchedulesRef = dbReference.Child("users").Child(UserSession.UserId).Child("schedules");
+        CollectionReference userSchedulesRef = firestore
+            .Collection("users")
+            .Document(UserSession.UserId)
+            .Collection("schedules");
 
-        userSchedulesRef.GetValueAsync().ContinueWithOnMainThread(task =>
+        userSchedulesRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompletedSuccessfully && task.Result.Exists)
+            if (task.IsCompletedSuccessfully && task.Result.Count > 0)
             {
-                int scheduleCount = 0;
-
-                foreach (var schedule in task.Result.Children)
-                {
-                    scheduleCount++; // Count total schedules
-                }
+                int scheduleCount = task.Result.Count;
 
                 // Divide schedules into streak categories
                 int bronzeStreak, silverStreak, goldStreak;
@@ -56,7 +54,6 @@ public class NavigationScheduleManager : MonoBehaviour
 
         int remainder = totalSchedules % 3; 
 
-       
         if (remainder == 1)
         {
             goldStreak += 1; 
@@ -67,5 +64,4 @@ public class NavigationScheduleManager : MonoBehaviour
             goldStreak += 1; 
         }
     }
-
 }

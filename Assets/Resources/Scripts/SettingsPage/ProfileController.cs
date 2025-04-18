@@ -1,13 +1,13 @@
+using System.Collections.Generic;
 using Firebase;
-using Firebase.Database;
 using Firebase.Extensions;
+using Firebase.Firestore;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class ProfileController : MonoBehaviour
 {
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
 
     public InputField firstNameInputField;
     public InputField lastNameInputField;
@@ -20,79 +20,114 @@ public class ProfileController : MonoBehaviour
     public Dropdown programDropdown;
     public Button saveButton;
     public Button editButton;
-     public Text editButtonText;
+    public Text editButtonText;
 
     private string userId;
     private bool isEditing = false;
 
     void Start()
     {
+        userId = UserSession.UserId;
+        Debug.Log("User ID: " + userId);
+        
+        if (editButtonText == null)
+        {
+            editButtonText = editButton.GetComponentInChildren<Text>(); // Automatically assign the button's text
+        }
 
-         if (editButtonText == null) 
-    {
-        editButtonText = editButton.GetComponentInChildren<Text>(); // Automatically assign the button's text
-    }
-
-    editButtonText.text = "Edit Profile";
-         
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-
-        // Disable editing at start
+        editButtonText.text = "Edit Profile";
+        InitializeFirebase();
         ToggleEditing(false);
 
-        // Load user profile
-        userId = PlayerPrefs.GetString("LoggedInUserID", "");
-        if (!string.IsNullOrEmpty(userId))
-        {
-            LoadUserProfile(userId);
-        }
+        
 
         DisplayFullName();
     }
 
-
-    private void LoadUserProfile(string userId)
+    private void InitializeFirebase()
     {
-        dbReference.Child("users").Child(userId).GetValueAsync().ContinueWithOnMainThread(task =>
+        // Firebase initialization
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompletedSuccessfully)
-            {
-                DataSnapshot snapshot = task.Result;
+            FirebaseApp app = FirebaseApp.DefaultInstance;
+            firestore = FirebaseFirestore.GetInstance(app);
+            LoadUserProfile(userId);
+            Debug.Log("Firebase Initialized!");
+        });
+    }
 
+private void LoadUserProfile(string userId)
+{
+    DocumentReference docRef = firestore
+        .Collection("users")
+        .Document(userId)
+        .Collection("information")
+        .Document("profile");
+
+    docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+    {
+        if (task.IsCompletedSuccessfully)
+        {
+            DocumentSnapshot snapshot = task.Result;
+
+            if (snapshot.Exists)
+            {
                 // Populate input fields
-                firstNameInputField.text = snapshot.Child("firstName").Value.ToString();
-                lastNameInputField.text = snapshot.Child("lastName").Value.ToString();
-                emailInputField.text = snapshot.Child("email").Value.ToString();
-                collegeDepartmentInputField.text = snapshot.Child("department").Value.ToString();
-                programInputField.text = snapshot.Child("program").Value.ToString();
-                yearAndSectionInputField.text = snapshot.Child("yearSection").Value.ToString();
+                string firstName = snapshot.GetValue<string>("firstName");
+                string lastName = snapshot.GetValue<string>("lastName");
+                string email = snapshot.GetValue<string>("email");
+                string department = snapshot.GetValue<string>("department");
+                string program = snapshot.GetValue<string>("program");
+                string yearSection = snapshot.GetValue<string>("yearSection");
+
+                firstNameInputField.text = firstName;
+                lastNameInputField.text = lastName;
+                emailInputField.text = email;
+                collegeDepartmentInputField.text = department;
+                programInputField.text = program;
+                yearAndSectionInputField.text = yearSection;
+
+                Debug.Log($"User Profile Loaded: \n" +
+                          $"First Name: {firstName}\n" +
+                          $"Last Name: {lastName}\n" +
+                          $"Email: {email}\n" +
+                          $"Department: {department}\n" +
+                          $"Program: {program}\n" +
+                          $"Year & Section: {yearSection}");
+                Debug.Log("Profile loaded successfully!");
+                // Update Full Name
+                DisplayFullName();
             }
             else
             {
-                Debug.LogError("Failed to load profile data: " + task.Exception);
+                Debug.LogError("Profile does not exist for userId: " + userId);
             }
-        });
-    }
+        }
+        else
+        {
+            Debug.LogError("Failed to load profile data: " + task.Exception);
+        }
+    });
+}
 
     public void OnEditButtonClicked()
     {
         isEditing = !isEditing;
         ToggleEditing(isEditing);
 
-    if (editButtonText != null)
-    {
-        editButtonText.text = isEditing ? "Cancel" : "Edit Profile  ";
-        Debug.Log("Button Text Changed to: " + editButtonText.text);
-    }
-    else
-    {
-        Debug.LogError("editButtonText is NULL! Make sure it is assigned in the Inspector.");
-    }
+        if (editButtonText != null)
+        {
+            editButtonText.text = isEditing ? "Cancel" : "Edit Profile";
+            Debug.Log("Button Text Changed to: " + editButtonText.text);
+        }
+        else
+        {
+            Debug.LogError("editButtonText is NULL! Make sure it is assigned in the Inspector.");
+        }
     }
 
     private void ToggleEditing(bool enable)
     {
-
         firstNameInputField.gameObject.SetActive(enable);
         lastNameInputField.gameObject.SetActive(enable);
 
@@ -118,15 +153,21 @@ public class ProfileController : MonoBehaviour
         string selectedDepartment = collegeDepartmentDropdown.options[collegeDepartmentDropdown.value].text;
         string selectedProgram = programDropdown.options[programDropdown.value].text;
 
-        // Update Firebase with new data
-        dbReference.Child("users").Child(userId).UpdateChildrenAsync(new System.Collections.Generic.Dictionary<string, object>
+        // Update Firestore with new data
+        DocumentReference docRef = firestore
+            .Collection("users")
+            .Document(userId)
+            .Collection("information")
+            .Document("profile");
+
+        docRef.UpdateAsync(new Dictionary<string, object>
         {
             { "firstName", firstNameInputField.text },
             { "lastName", lastNameInputField.text },
             { "email", emailInputField.text },
-            { "department", selectedDepartment},
-            { "program", selectedProgram},
-            { "yearSection", yearAndSectionInputField.text}
+            { "department", selectedDepartment },
+            { "program", selectedProgram },
+            { "yearSection", yearAndSectionInputField.text }
         }).ContinueWithOnMainThread(task =>
         {
             if (task.IsCompletedSuccessfully)
@@ -150,5 +191,4 @@ public class ProfileController : MonoBehaviour
         fullNameInputField.text = fullName;  // Display combined name in Full Name InputField
         fullNameInputField.interactable = false;
     }
-
 }

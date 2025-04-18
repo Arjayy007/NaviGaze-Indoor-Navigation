@@ -1,30 +1,27 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Firebase.Database;
-using SchedulesModel.Models;
-using System.Threading.Tasks;
+using Firebase.Firestore;
 using Firebase.Extensions;
+using SchedulesModel.Models;
 
 public class ClassNavigationManager : MonoBehaviour
 {
-    private DatabaseReference dbReference;
+    private FirebaseFirestore firestore;
     private string userId;
     private List<ScheduleData> userSchedules = new List<ScheduleData>();
     public CoinManager coinManager;
 
 
-    void Start()
+   void Start()
     {
         InitializeFirebase();
-        
     }
 
     void InitializeFirebase()
     {
-        dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+        firestore = FirebaseFirestore.DefaultInstance;
         userId = UserSession.UserId;
-       
 
         if (!string.IsNullOrEmpty(userId))
         {
@@ -38,34 +35,37 @@ public class ClassNavigationManager : MonoBehaviour
 
     void LoadUserSchedules()
     {
-        Debug.Log($"Fetching schedules for user: {userId}");
-        dbReference.Child("users").Child(userId).Child("schedules").GetValueAsync().ContinueWith(task =>
+        Debug.Log($"[Firestore] Fetching schedules for user: {userId}");
+
+        CollectionReference scheduleRef = firestore.Collection("users").Document(userId).Collection("schedules");
+        scheduleRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompleted && task.Result.Exists)
+            if (task.IsCompleted)
             {
-                DataSnapshot snapshot = task.Result;
+                QuerySnapshot snapshot = task.Result;
                 userSchedules.Clear();
 
-                foreach (var schedule in snapshot.Children)
+                foreach (DocumentSnapshot document in snapshot.Documents)
                 {
-                    string subjectCode = schedule.Child("subjectCode").Value.ToString();
-                    string subjectName = schedule.Child("subjectName").Value.ToString();
-                    string room = schedule.Child("room").Value.ToString();
-                    string dayOfTheWeek = schedule.Child("dayOfTheWeek").Value.ToString();
-                    string startTime = schedule.Child("startTime").Value.ToString();
-                    string endTime = schedule.Child("endTime").Value.ToString();
-                    string campus = schedule.Child("campus").Value.ToString();
+                    Dictionary<string, object> data = document.ToDictionary();
+
+                    string subjectCode = data["subjectCode"].ToString();
+                    string subjectName = data["subjectName"].ToString();
+                    string room = data["room"].ToString();
+                    string dayOfTheWeek = data["dayOfTheWeek"].ToString();
+                    string startTime = data["startTime"].ToString();
+                    string endTime = data["endTime"].ToString();
+                    string campus = data["campus"].ToString();
 
                     ScheduleData sched = new ScheduleData(subjectCode, subjectName, room, dayOfTheWeek, startTime, endTime, campus);
                     userSchedules.Add(sched);
                 }
 
-                Debug.Log($"Loaded {userSchedules.Count} schedules.");
-
+                Debug.Log($"[Firestore] Loaded {userSchedules.Count} schedules.");
             }
             else
             {
-                Debug.LogWarning("No schedules found in Firebase.");
+                Debug.LogWarning("[Firestore] Failed to fetch schedules.");
             }
         });
     }
@@ -74,7 +74,7 @@ public class ClassNavigationManager : MonoBehaviour
     {
         DateTime now = DateTime.Now;
         string dayInAWeek = now.DayOfWeek.ToString();
-        bool classFound = false;  // Tracks if at least one class navigation is detected
+        bool classFound = false;
 
         foreach (ScheduleData schedule in userSchedules)
         {
@@ -87,16 +87,7 @@ public class ClassNavigationManager : MonoBehaviour
                 DateTime validStartTime = classStartTime.Subtract(beforeClass);
                 DateTime validEndTime = classStartTime.Add(afterClass);
 
-                string status = "On Time";
-
-                if (now > classStartTime && now <= classStartTime.AddMinutes(15))
-                {
-                    status = "Late";
-                }
-                else if (now < classStartTime)
-                {
-                    status = "On Time";
-                }
+                string status = now > classStartTime && now <= classStartTime.AddMinutes(15) ? "Late" : "On Time";
 
                 if (now >= validStartTime && now <= validEndTime)
                 {
@@ -104,90 +95,96 @@ public class ClassNavigationManager : MonoBehaviour
                     Dictionary<string, object> classNavigation = NavigationHistoryData.ClassNavigation(startingPoint, destination, navigationType, status);
 
                     SaveNavigationHistory(classNavigation);
-                    SaveClassStreak(schedule.subjectName);
+                    SaveClassStreak();
+                    classFound = true;
 
-                    classFound = true;  // A valid class navigation was found
-                    Debug.Log($"Class navigation saved for {schedule.subjectName} at {schedule.startTime}");
+                    Debug.Log($"[Firestore] Class navigation saved for {schedule.subjectName} at {schedule.startTime}");
                 }
             }
         }
 
-        // If no class navigation was saved, save a normal navigation
         if (!classFound)
         {
             string navigationType = "Normal";
             Dictionary<string, object> normalNavigation = NavigationHistoryData.NormalNavigation(startingPoint, destination, navigationType);
-
             SaveNavigationHistory(normalNavigation);
-            Debug.Log("No class found, saving normal navigation.");
+
+            Debug.Log("[Firestore] No class found, saving normal navigation.");
         }
     }
 
-
     public void SaveNavigationHistory(Dictionary<string, object> navigationData)
     {
-        dbReference.Child("users").Child(userId).Child("navigationHistory").Push().SetValueAsync(navigationData).ContinueWith(Task =>
+        DocumentReference docRef = firestore
+            .Collection("users")
+            .Document(userId)
+            .Collection("navigationHistory")
+            .Document(); // Auto-generated ID
+
+        docRef.SetAsync(navigationData).ContinueWithOnMainThread(task =>
         {
-            if (Task.IsCompleted)
+            if (task.IsCompletedSuccessfully)
             {
-                Debug.Log("Navigation history saved.");
+                Debug.Log("[Firestore] Navigation history saved.");
 
                 if (coinManager != null)
                 {
                     coinManager.AddCoinsDirectly(10);
                     coinManager.AddExperienceDirectly(10);
-                    Debug.Log("10 coins added for completing navigation.");
-                    Debug.Log("10 experience added for completing navigation.");
+                    Debug.Log("[Rewards] 10 coins and 10 XP awarded.");
                 }
             }
             else
-            { 
-                Debug.LogWarning("Failed to save navigation history.");
+            {
+                Debug.LogWarning("[Firestore] Failed to save navigation history.");
             }
         });
     }
 
-    public void SaveClassStreak(string className)
+   public void SaveClassStreak()
+{
+    string currentWeekNumber = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+        DateTime.Now,
+        System.Globalization.CalendarWeekRule.FirstFourDayWeek,
+        DayOfWeek.Monday
+    ).ToString(); // Example: "8"
+
+    DocumentReference weekRef = firestore.Collection("users").Document(userId).Collection("streaks").Document("week");
+
+    weekRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
     {
-        string currentWeek = DateTime.Now.ToString("yyyy-'W'ww"); // Example: "2025-W10" (Year-Week)
-
-        DatabaseReference streakRef = dbReference.Child("users").Child(userId).Child("streaks").Child(className);
-
-        streakRef.GetValueAsync().ContinueWithOnMainThread(task =>
+        if (task.IsCompleted)
         {
-            if (task.IsCompleted && task.Result.Exists)
-            {
-                int currentStreak = int.Parse(task.Result.Value.ToString());
-                int newStreak = currentStreak + 1;
+            DocumentSnapshot snapshot = task.Result;
+            Dictionary<string, object> updateData = new Dictionary<string, object>();
 
-                streakRef.SetValueAsync(newStreak).ContinueWithOnMainThread(updateTask =>
-                {
-                    if (updateTask.IsCompletedSuccessfully)
-                    {
-                        Debug.Log($"Streak updated for {className}: {newStreak}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Failed to update streak.");
-                    }
-                });
+            if (snapshot.Exists && snapshot.ContainsField(currentWeekNumber))
+            {
+                int currentStreak = snapshot.GetValue<int>(currentWeekNumber);
+                updateData[currentWeekNumber] = currentStreak + 1;
             }
             else
             {
-                streakRef.SetValueAsync(1).ContinueWithOnMainThread(setTask =>
-                {
-                    if (setTask.IsCompletedSuccessfully)
-                    {
-                        Debug.Log($"New streak started for {className}: 1");
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Failed to start streak.");
-                    }
-                });
+                updateData[currentWeekNumber] = 1;
             }
-        });
-    }
 
+            weekRef.SetAsync(updateData, SetOptions.MergeAll).ContinueWithOnMainThread(setTask =>
+            {
+                if (setTask.IsCompletedSuccessfully)
+                {
+                    Debug.Log($"Streak for week {currentWeekNumber} updated.");
+                }
+                else
+                {
+                    Debug.LogWarning($"Failed to update streak for week {currentWeekNumber}.");
+                }
+            });
+        }
+        else
+        {
+            Debug.LogWarning("Failed to fetch streak document.");
+        }
+    });
 }
 
+}
