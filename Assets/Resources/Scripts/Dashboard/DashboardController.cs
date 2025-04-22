@@ -5,10 +5,11 @@ using Firebase.Extensions;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using TMPro;
 
 public class DashboardController : MonoBehaviour
 {
-    public Text UsernameText;
+    public TMP_Text UsernameText;
     public Text CoinsText;
 
     private FirebaseFirestore firestore;

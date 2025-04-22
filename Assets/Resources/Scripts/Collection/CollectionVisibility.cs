@@ -12,6 +12,8 @@ public class CollectionVisibility : MonoBehaviour
     public GameObject badgesPanel;
     public GameObject missionsPanel;
     public GameObject userAccessoriesPanel;
+    public GameObject badgesUnlockedScrollView;
+    public GameObject badgesLockedScrollView;  
 
 public TMP_Text Coins;
 public TMP_Text Exp;
@@ -116,4 +118,16 @@ public TMP_Text ProgramSection;
     {
         userAccessoriesPanel.SetActive(true);
     }
+
+    public void showUnlockedBadges()
+    {
+        badgesUnlockedScrollView.SetActive(true);
+        badgesLockedScrollView.SetActive(false);
+        }
+
+    public void showlockedBadges()
+    {
+        badgesUnlockedScrollView.SetActive(false);
+        badgesLockedScrollView.SetActive(true);
+        }
 }

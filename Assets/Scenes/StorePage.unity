@@ -795,7 +795,7 @@ MonoBehaviour:
   confirmationPanel: {fileID: 2022513440}
   successPanel: {fileID: 2103774427}
   failurePanel: {fileID: 693637958}
-  closeSuccessButton: {fileID: 28939630}
+  closeSuccessButton: {fileID: 1272341369}
   confirmationText: {fileID: 230860670}
   itemNameText: {fileID: 358060125}
   itemPriceText: {fileID: 1686572317}
@@ -4944,7 +4944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6511147868378175364, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1.08815
+      value: -1.0881348
       objectReference: {fileID: 0}
     - target: {fileID: 6511147868378175364, guid: 81143be78097ac544b3ec78cfe70f981, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
