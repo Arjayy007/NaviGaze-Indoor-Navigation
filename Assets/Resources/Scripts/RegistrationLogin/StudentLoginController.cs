@@ -2,11 +2,12 @@ using userDataModel.Models;
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
-using Firebase.Firestore;
+using Firebase.Database;
 using Firebase.Extensions;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine.SceneManagement;
+using System.Data;
 
 public class StudentLoginController : MonoBehaviour
 {
@@ -14,12 +15,12 @@ public class StudentLoginController : MonoBehaviour
 
     public InputField usernameInputField;
     public InputField passwordInputField;
+    private DatabaseReference dbReference;
     public UserData userData;
     public UIErrorHandler errorHandler;
+    public Button viewPassButton; 
 
     public bool switchScene = false;
-
-    private FirebaseFirestore firestore;
 
     void Start()
     {
@@ -28,8 +29,9 @@ public class StudentLoginController : MonoBehaviour
             if (task.Result == DependencyStatus.Available)
             {
                 FirebaseApp app = FirebaseApp.DefaultInstance;
-                firestore = FirebaseFirestore.DefaultInstance;
-                Debug.Log("Firestore Initialized Successfully");
+                string databaseUrl = "https://navigaze-448413-default-rtdb.asia-southeast1.firebasedatabase.app/";
+                dbReference = FirebaseDatabase.GetInstance(app, databaseUrl).RootReference;
+                Debug.Log("Firebase Initialized Successfully");
             }
             else
             {
@@ -40,77 +42,103 @@ public class StudentLoginController : MonoBehaviour
 
     public void OnLoginButtonClicked()
     {
-        if (string.IsNullOrEmpty(usernameInputField.text.Trim()) || string.IsNullOrEmpty(passwordInputField.text))
+        string email = usernameInputField.text.Trim();
+        string rawPassword = passwordInputField.text;
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(rawPassword))
         {
             errorHandler.ShowError("Please input email and password");
             return;
         }
 
-        string email = usernameInputField.text.Trim();
-        string password = HashPassword(passwordInputField.text);
-
-        AuthenticateUser(email, password);
-    }
-
-   private void AuthenticateUser(string email, string hashedPassword)
-{
-   firestore.CollectionGroup("information")
-    .WhereEqualTo("email", email.ToLower()) // Add ToLower if your emails are lowercase
-    .GetSnapshotAsync()
-    .ContinueWithOnMainThread(task =>
-{
-    if (task.IsCompletedSuccessfully)
-    {
-        var snapshot = task.Result;
-
-        if (snapshot.Count == 0)
+        if (!email.EndsWith("@gmail.com"))
         {
-            Debug.LogWarning($"No user found with email: {email}");
-            errorHandler.ShowError("Invalid Email or wrong password");
+            errorHandler.ShowError("Email should be valid");
             return;
         }
 
-        foreach (var doc in snapshot.Documents)
+        if (rawPassword.Length < 8)
         {
-            string fetchedPassword = doc.GetValue<string>("password");
-            string role = doc.GetValue<string>("role");
+            errorHandler.ShowError("Password should have 8 minimum characters");
+            return;
+        }
 
-            Debug.Log($"Fetched Password: {fetchedPassword}");
-            Debug.Log($"Entered Password: {hashedPassword}");
+        string hashedPassword = HashPassword(rawPassword);
+        AuthenticateUser(email, hashedPassword);
+    }
 
-            if (fetchedPassword == hashedPassword)
+    private void AuthenticateUser(string email, string hashedPassword)
+    {
+        if (dbReference == null)
+        {
+            Debug.LogError("Database reference is not initialized.");
+            return;
+        }
+
+        dbReference.Child("users").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompletedSuccessfully)
             {
-                // Get the userId from the document path
-                string path = doc.Reference.Path; // "users/{userId}/information/profile"
-                string[] parts = path.Split('/');
-                string userId = parts[1]; // parts[1] = userId
+                DataSnapshot snapshot = task.Result;
+                bool loginSuccess = false;
+                string userId = null;
+                string correctRole = null;
 
-                UserSession.UserId = userId;
+                foreach (DataSnapshot userSnapshot in snapshot.Children)
+                {
+                    var userJson = userSnapshot.GetRawJsonValue();
+                    UserData user = JsonUtility.FromJson<UserData>(userJson);
 
-                Debug.Log("Login successful. User ID: " + userId);
+                    if (user.email == email && user.password == hashedPassword)
+                    {
+                        loginSuccess = true;
+                        userId = userSnapshot.Key;
+                        correctRole = user.role;
 
-                if (role == "Student")
-                    SceneManager.LoadScene("DashboardPage");
-                else
-                    SceneManager.LoadScene("ProfessorDashboard");
+                        Debug.Log($"Login Success! UserID: {userId}, Role: {correctRole}");
 
-                return;
+                        PlayerPrefs.SetString("LoggedInUserID", userId);
+                        PlayerPrefs.Save();
+                        UserSession.UserId = userId;
+
+                        switchScene = true;
+                        break;
+                    }
+                }
+
+                if (loginSuccess)
+                {
+                    string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+
+                    if (correctRole != selectedRole)
+                    {
+                        Debug.Log($"Role mismatch detected! Correcting role to {correctRole}");
+                        PlayerPrefs.SetString("SelectedRole", correctRole);
+                        PlayerPrefs.Save();
+                    }
+
+                    switchScene = false;
+                    if (correctRole == "Student")
+                    {
+                        SceneManager.LoadScene("DashboardPage");
+                    }
+                    else if (correctRole == "Professor")
+                    {
+                        SceneManager.LoadScene("ProfessorDashboard");
+                    }
+                }
+
+                if (!loginSuccess)
+                {
+                    errorHandler.ShowError("Invalid Email or password");
+                }
             }
             else
             {
-                errorHandler.ShowError("Invalid Email or password");
+                Debug.LogError("Failed to retrieve user data: " + task.Exception);
             }
-        }
+        });
     }
-    else
-    {
-        Debug.LogError("Error while querying Firestore: " + task.Exception);
-        errorHandler.ShowError("An error occurred. Please try again.");
-    }
-});
-
-}
-
 
     private string HashPassword(string password)
     {
@@ -119,7 +147,9 @@ public class StudentLoginController : MonoBehaviour
             byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             StringBuilder builder = new StringBuilder();
             foreach (byte b in bytes)
+            {
                 builder.Append(b.ToString("x2"));
+            }
             return builder.ToString();
         }
     }
@@ -128,19 +158,18 @@ public class StudentLoginController : MonoBehaviour
     {
         SceneManager.LoadScene("TermsAndCondition");
     }
+    private bool isPasswordVisible = false;
 
-    public void OnBackButtonClicked()
-    {
-        SceneManager.LoadScene("LandingPage");
-    }
+public void OnViewPasswordButtonClicked()
+{
+    isPasswordVisible = !isPasswordVisible;
 
-    public void OnTogglePasswordVisibility()
-    {
-        if (passwordInputField.contentType == InputField.ContentType.Password)
-            passwordInputField.contentType = InputField.ContentType.Standard;
-        else
-            passwordInputField.contentType = InputField.ContentType.Password;
+    passwordInputField.contentType = isPasswordVisible 
+        ? InputField.ContentType.Standard 
+        : InputField.ContentType.Password;
 
-        passwordInputField.ForceLabelUpdate();
-    }
+    // Force the InputField to update its display
+    passwordInputField.ForceLabelUpdate();
+}
+
 }
