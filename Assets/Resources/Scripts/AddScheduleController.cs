@@ -10,6 +10,11 @@ using SchedulesModel.Models;
 
 public class AddScheduleController : MonoBehaviour
 {
+
+    public RectTransform panel; // The UI panel to move
+    private float originalY;
+    private bool keyboardVisible = false;
+
     public SceneManagerScript sceneManager;
     private FirebaseFirestore firestore;
 
@@ -31,6 +36,9 @@ public class AddScheduleController : MonoBehaviour
 
     void Start()
     {
+
+        originalY = panel.anchoredPosition.y;
+
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Result == DependencyStatus.Available)
@@ -52,6 +60,26 @@ public class AddScheduleController : MonoBehaviour
 
     void Update()
     {
+
+       if (TouchScreenKeyboard.visible)
+        {
+            if (!keyboardVisible)
+            {
+                keyboardVisible = true;
+                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY + 300); // Move up
+            }
+        }
+        else
+        {
+            if (keyboardVisible)
+            {
+                keyboardVisible = false;
+                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY); // Move back
+            }
+        }
+
+
+
         if (switchScene)
         {
             switchScene = false;

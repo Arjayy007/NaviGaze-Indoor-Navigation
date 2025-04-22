@@ -369,6 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7112b3a0265e1647a4682962047731e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panel: {fileID: 0}
   sceneManager: {fileID: 0}
   subjectCode: {fileID: 2126849585807750330}
   subjectName: {fileID: 5820313595666704278}
@@ -744,8 +745,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1223716953}
   - {fileID: 6193295464482344714}
+  - {fileID: 1223716953}
   m_Father: {fileID: 684932489}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
