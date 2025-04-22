@@ -130,6 +130,9 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
                         arrivedText.text = "Arrived";
                         classNavigationManager.CheckForClassNavigation(startingPoint.text, destinationPoint.text);
                         hasSavedToDatabase = true;
+                    }else{
+                        GetEstimatedArrival();
+                        arrivedText.text = "Arrived";
                     }
                 }
         }

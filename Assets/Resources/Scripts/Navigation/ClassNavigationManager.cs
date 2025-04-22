@@ -131,6 +131,7 @@ public class ClassNavigationManager : MonoBehaviour
                 {
                     coinManager.AddCoinsDirectly(10);
                     coinManager.AddExperienceDirectly(10);
+                    SaveClassStreak();
                     Debug.Log("[Rewards] 10 coins and 10 XP awarded.");
                 }
             }
