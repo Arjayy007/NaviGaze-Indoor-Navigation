@@ -167,10 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 3456}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7112b3a0265e1647a4682962047731e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panel: {fileID: 0}
   sceneManager: {fileID: 617425015}
   subjectCode: {fileID: 1630015039}
   subjectName: {fileID: 1630015038}
@@ -1471,7 +1472,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3799402514962736502, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0028381
+      value: -0.0028076172
       objectReference: {fileID: 0}
     - target: {fileID: 3799402514962736502, guid: 108f35287aa588d4d990fa59851adb43, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
