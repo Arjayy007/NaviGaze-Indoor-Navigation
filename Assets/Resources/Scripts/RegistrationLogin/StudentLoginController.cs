@@ -25,6 +25,8 @@ public class StudentLoginController : MonoBehaviour
     public UIErrorHandler errorHandler;
     public Button viewPassButton; 
 
+    public Button backButton;
+
     public bool switchScene = false;
 
     void Start()
@@ -206,4 +208,9 @@ public void OnViewPasswordButtonClicked()
         panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY);
     }
 }
+
+  public void OnClickBackButton() 
+    {
+        SceneManager.LoadScene("LandingPage");
+    }
 }
