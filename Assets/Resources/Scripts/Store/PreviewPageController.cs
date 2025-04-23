@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class PreviewPageController : MonoBehaviour
 {
 
-    // Reference to all item models in the Preview Page
     public GameObject CatHat;
     public GameObject CatGlasses;
 
@@ -26,7 +25,6 @@ public class PreviewPageController : MonoBehaviour
         CatHat.SetActive(false);
         CatGlasses.SetActive(false);
 
-        // Enable only the selected accessory on the Cat Character
         switch (itemName)
         {
             case "Cat Hat":

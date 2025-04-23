@@ -20,6 +20,8 @@ public class StudentLoginController : MonoBehaviour
     public bool switchScene = false;
 
     private FirebaseFirestore firestore;
+    public GameObject loadingPanel;
+    public Animator loadingAnimator;
 
     void Start()
     {
@@ -46,9 +48,11 @@ public class StudentLoginController : MonoBehaviour
             return;
         }
 
+        loadingPanel.SetActive(true);
+        loadingAnimator.SetTrigger("PlayLoading");
         string email = usernameInputField.text.Trim();
         string password = HashPassword(passwordInputField.text);
-
+        
         AuthenticateUser(email, password);
     }
 
