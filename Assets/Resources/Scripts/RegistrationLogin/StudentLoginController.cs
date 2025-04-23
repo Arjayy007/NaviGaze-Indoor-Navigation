@@ -10,6 +10,11 @@ using UnityEngine.SceneManagement;
 
 public class StudentLoginController : MonoBehaviour
 {
+
+    public RectTransform panel; // The UI panel to move
+    private float originalY;
+    private bool keyboardVisible = false;
+
     public SceneManagerScript sceneManager;
 
     public InputField usernameInputField;
@@ -25,6 +30,10 @@ public class StudentLoginController : MonoBehaviour
 
     void Start()
     {
+
+
+         originalY = panel.anchoredPosition.y;
+
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Result == DependencyStatus.Available)
@@ -147,4 +156,32 @@ public class StudentLoginController : MonoBehaviour
 
         passwordInputField.ForceLabelUpdate();
     }
+
+void Update()
+{
+    float targetY = originalY;
+
+    if (TouchScreenKeyboard.visible)
+    {
+        if (usernameInputField.isFocused)
+        {
+            targetY = originalY + 100;
+        }
+        else if (passwordInputField.isFocused)
+        {
+            targetY = originalY + 200;
+        }
+    }
+
+    if (panel.anchoredPosition.y != targetY)
+    {
+        panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, targetY);
+    }
+
+    if (!TouchScreenKeyboard.visible && panel.anchoredPosition.y != originalY)
+    {
+        panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY);
+    }
+}
+
 }
