@@ -66,7 +66,7 @@ public class AddScheduleController : MonoBehaviour
             if (!keyboardVisible)
             {
                 keyboardVisible = true;
-                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY + 300); // Move up
+                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY + 100); // Move up
             }
         }
         else
