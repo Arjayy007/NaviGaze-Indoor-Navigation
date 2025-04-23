@@ -131,12 +131,12 @@ GameObject:
   - component: {fileID: 55994630}
   - component: {fileID: 55994629}
   m_Layer: 5
-  m_Name: validation
+  m_Name: Password
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &55994628
 RectTransform:
   m_ObjectHideFlags: 0
@@ -448,19 +448,8 @@ MonoBehaviour:
   sceneManager: {fileID: 190293414}
   usernameInputField: {fileID: 2004232159}
   passwordInputField: {fileID: 828099753}
-  userData:
-    firstName: 
-    lastName: 
-    email: 
-    password: 
-    department: 
-    program: 
-    yearSection: 
-    role: 
-    avatarName: 
-    userCoins: 0
-    exp: 0
   errorHandler: {fileID: 190293417}
+  viewPassButton: {fileID: 0}
   switchScene: 0
 --- !u!114 &190293414
 MonoBehaviour:
@@ -528,12 +517,12 @@ GameObject:
   - component: {fileID: 199383012}
   - component: {fileID: 199383011}
   m_Layer: 5
-  m_Name: validation (1)
+  m_Name: Email
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &199383010
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3359,7 +3348,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 190293413}
         m_TargetAssemblyTypeName: StudentLoginController, Assembly-CSharp
-        m_MethodName: OnTogglePasswordVisibility
+        m_MethodName: OnViewPasswordButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

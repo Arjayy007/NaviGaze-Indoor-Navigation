@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class OfflineMapController : MonoBehaviour
 {
@@ -28,9 +29,6 @@ public class OfflineMapController : MonoBehaviour
 
     void Start()
     {
-        // Ensure second dropdown starts as disabled
-        
-
         // Initialize panel dictionary
         panelDictionary.Add("Congress: Ground Floor", congressGroundFloorPanel);
         panelDictionary.Add("Congress: 2nd Floor", congressSecondFloorPanel);
@@ -55,16 +53,12 @@ public class OfflineMapController : MonoBehaviour
 
     void UpdateSecondDropdown()
     {
-        // Enable second dropdown when first dropdown has a valid selection
         secondDropdown.interactable = true;
         secondDropdown.ClearOptions();
 
         List<string> secondDropdownOptions = new List<string>();
-
-        // Get selected option from first dropdown
         string selectedOption = firstDropdown.options[firstDropdown.value].text;
 
-        // Populate second dropdown based on first dropdown selection
         switch (selectedOption)
         {
             case "Congress":
@@ -81,28 +75,22 @@ public class OfflineMapController : MonoBehaviour
 
             default:
                 secondDropdown.interactable = false;
-                return; // No valid option selected
+                return;
         }
 
-        // Apply new options to second dropdown
         secondDropdown.AddOptions(secondDropdownOptions);
-
-        // Reset panel visibility
         HideAllPanels();
     }
 
     void UpdatePanelVisibility()
     {
-        // Hide all panels first
         HideAllPanels();
-
-        // Get selected option
         string selectedOption = secondDropdown.options[secondDropdown.value].text;
 
-        // Show only the selected panel
         if (panelDictionary.ContainsKey(selectedOption))
         {
-            panelDictionary[selectedOption].SetActive(true);
+            GameObject panel = panelDictionary[selectedOption];
+            panel.SetActive(true);
         }
     }
 
@@ -112,5 +100,51 @@ public class OfflineMapController : MonoBehaviour
         {
             panel.SetActive(false);
         }
+    }
+
+    // 🔽 DRAG AND ZOOM FEATURE BELOW 🔽
+
+    private Vector2 lastMousePosition;
+    private float zoomSpeed = 0.1f;
+    private float minZoom = 0.5f;
+    private float maxZoom = 2.5f;
+
+    void Update()
+    {
+        GameObject activePanel = GetActivePanel();
+        if (activePanel != null)
+        {
+            RectTransform rectTransform = activePanel.GetComponent<RectTransform>();
+
+            // Drag
+            if (Input.GetMouseButtonDown(0))
+            {
+                lastMousePosition = Input.mousePosition;
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                Vector2 delta = (Vector2)Input.mousePosition - lastMousePosition;
+                rectTransform.anchoredPosition += delta;
+                lastMousePosition = Input.mousePosition;
+            }
+
+            // Zoom
+            float scroll = Input.mouseScrollDelta.y;
+            if (scroll != 0)
+            {
+                float newScale = Mathf.Clamp(rectTransform.localScale.x + scroll * zoomSpeed, minZoom, maxZoom);
+                rectTransform.localScale = new Vector3(newScale, newScale, 1f);
+            }
+        }
+    }
+
+    private GameObject GetActivePanel()
+    {
+        foreach (var panel in panelDictionary.Values)
+        {
+            if (panel.activeSelf)
+                return panel;
+        }
+        return null;
     }
 }
