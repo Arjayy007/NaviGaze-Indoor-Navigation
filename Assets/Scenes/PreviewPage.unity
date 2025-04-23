@@ -148,8 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4388355f21dfa45901c5dfad36f84d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CatHat: {fileID: 0}
-  CatGlasses: {fileID: 0}
+  CatHat: {fileID: 697932161}
+  CatGlasses: {fileID: 1380769539}
 --- !u!4 &65840482
 Transform:
   m_ObjectHideFlags: 0
