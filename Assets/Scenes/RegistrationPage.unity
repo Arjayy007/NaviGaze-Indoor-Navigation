@@ -809,6 +809,7 @@ MonoBehaviour:
   confirmPasswordInput: {fileID: 216737086}
   dropdownController: {fileID: 1255274651}
   registerButton: {fileID: 384472034685681760}
+  backButton: {fileID: 0}
 --- !u!114 &762553549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -893,6 +894,7 @@ MonoBehaviour:
   confirmPasswordInput: {fileID: 216737086}
   dropdownController: {fileID: 1255274651}
   registerButton: {fileID: 0}
+  backButton: {fileID: 0}
 --- !u!114 &1255274653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -935,6 +937,7 @@ MonoBehaviour:
   passwordInputField: {fileID: 0}
   errorHandler: {fileID: 0}
   viewPassButton: {fileID: 0}
+  backButton: {fileID: 0}
   switchScene: 0
 --- !u!114 &1319758978 stripped
 MonoBehaviour:
@@ -1147,6 +1150,18 @@ PrefabInstance:
     - target: {fileID: 2130298103034686557, guid: ee813d33611cfef4f868465c91075346, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969345143782790963, guid: ee813d33611cfef4f868465c91075346, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1255274652}
+    - target: {fileID: 3969345143782790963, guid: ee813d33611cfef4f868465c91075346, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickBackButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969345143782790963, guid: ee813d33611cfef4f868465c91075346, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RegistrationPage, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 9046026908846048315, guid: ee813d33611cfef4f868465c91075346, type: 3}
       propertyPath: m_Name

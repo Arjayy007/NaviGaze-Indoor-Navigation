@@ -36,6 +36,9 @@ public class RegistrationPage : MonoBehaviour
     public UserData userData;
     [SerializeField] private Button registerButton;
 
+    public Button backButton;
+
+
 
     private bool switchScene = false;
 
@@ -276,5 +279,10 @@ public void OnConfirmTogglePasswordVisibility()
     }
     confirmPasswordInput.ForceLabelUpdate(); 
 }
+
+  public void OnClickBackButton() 
+    {
+        SceneManager.LoadScene("StudentLogin");
+    }
 
 }

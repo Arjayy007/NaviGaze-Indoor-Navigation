@@ -235,4 +235,5 @@ public class AddScheduleController : MonoBehaviour
     {
         subjectName.text = ClassCodeDictionary.GetSubjectName(input);
     }
+
 }

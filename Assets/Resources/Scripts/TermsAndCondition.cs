@@ -51,6 +51,6 @@ public class TermsAndCondition : MonoBehaviour
 
     public void OnClickBackButton() 
     {
-        SceneManager.LoadScene("LandingPage");
+        SceneManager.LoadScene("StudentLogin");
     }
 }
