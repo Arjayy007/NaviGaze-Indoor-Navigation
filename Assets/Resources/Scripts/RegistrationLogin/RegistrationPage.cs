@@ -92,22 +92,36 @@ public class RegistrationPage : MonoBehaviour
     {
 
 
-     if (TouchScreenKeyboard.visible)
-        {
-            if (!keyboardVisible)
-            {
-                keyboardVisible = true;
-                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY + 300); // Move up
-            }
-        }
-        else
-        {
-            if (keyboardVisible)
-            {
-                keyboardVisible = false;
-                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY); // Move back
-            }
-        }
+    float targetY = originalY;
+
+if (TouchScreenKeyboard.visible)
+{
+    if (firstNameInput.isFocused || lastNameInput.isFocused || yearSectionInput.isFocused)
+    {
+        targetY = originalY + 100;
+    }
+    else if (emailInput.isFocused)
+    {
+        targetY = originalY + 500;
+    }
+    else if (passwordInput.isFocused)
+    {
+        targetY = originalY + 500;
+    }
+    else if (confirmPasswordInput.isFocused)
+    {
+        targetY = originalY + 600;
+    }
+}
+else
+{
+    targetY = originalY; // reset when keyboard is hidden
+}
+
+if (panel.anchoredPosition.y != targetY)
+{
+    panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, targetY);
+}
 
 
 
