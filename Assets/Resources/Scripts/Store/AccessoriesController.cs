@@ -2,388 +2,77 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Firebase;
-using Firebase.Database;
+using Firebase.Firestore;
 using Firebase.Extensions;
-using System;
-using UnityEngine.SceneManagement;
-
-
+using TMPro;
 
 public class AccessoriesController : MonoBehaviour
 {
-
-    public GameObject itemPrefab; // Assign the prefab in the Inspector
-    public Transform contentParent; // Assign the Content object of the Scroll View
-    private DatabaseReference dbReference;
-    private int userCoins; 
-    private string userId; 
-    [SerializeField] private GameObject confirmationPanel; 
-    public GameObject successPanel;
-    public GameObject failurePanel;
-    public Button closeSuccessButton;  
-    [SerializeField] private Text confirmationText; 
-    [SerializeField] private Text itemNameText; 
-    [SerializeField] private Text itemPriceText; 
-    [SerializeField] private Image itemImage; 
-    [SerializeField] private Button yesButton; 
-    [SerializeField] private Button noButton; 
+    public GameObject itemPrefab; 
+    public Transform contentParent;
 
     void Start()
     {
-        userId = UserSession.UserId; 
-        if (string.IsNullOrEmpty(userId))
-        {
-            Debug.LogError("User ID is not set! Ensure the user is logged in or registered.");
-            return;
-        }
-
-        // Check if the button is assigned in the Inspector
-        if (closeSuccessButton != null)
-        {
-            closeSuccessButton.onClick.AddListener(OnCloseSuccessPanel);
-        }
-        else
-        {
-            Debug.LogError("CloseSuccessButton is not assigned in the Inspector.");
-        }
-
-        itemPrefab.SetActive(false);
-
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.Result == DependencyStatus.Available)
-            {
-                dbReference = FirebaseDatabase.DefaultInstance.RootReference;
-                LoadItemsFromDatabase(); 
-            }
-            else
-            {
-                Debug.LogError("Could not resolve Firebase dependencies.");
-            }
-        });
+        LoadItemsFromFirestore();
     }
 
-    void LoadItemsFromDatabase()
+    void LoadItemsFromFirestore()
     {
-        string userInventoryPath = $"users/{userId}/inventory";
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
 
-        // Clear the existing UI before loading new items
-        ClearExistingUI();
-
-        dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
+        db.Collection("items").GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.IsCompleted)
+            if (task.IsFaulted || task.IsCanceled)
             {
-                DataSnapshot snapshot = task.Result;
-
-                // Get a list of owned items
-                HashSet<string> ownedItems = new HashSet<string>();
-                if (snapshot.Child(userInventoryPath).Exists)
+                Debug.LogError("Failed to load items from Firestore.");
+                return;
+            }
+            QuerySnapshot snapshot = task.Result;
+            Debug.Log($"Total items retrieved: {snapshot.Count}");
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (!document.Exists)
                 {
-                    foreach (var item in snapshot.Child(userInventoryPath).Children)
-                    {
-                        ownedItems.Add(item.Key); // Extract item name from key
-                    }
+                    Debug.LogWarning("Document doesn't exist.");
+                    continue;
                 }
+                string itemName = document.GetValue<string>("itemName");
+                int itemPrice = document.GetValue<int>("itemPrice");
 
-                // Now fetch all shop items
-                dbReference.Child("items").GetValueAsync().ContinueWithOnMainThread(itemTask =>
+                Debug.Log($"Item Retrieved - ID: {document.Id}, Name: {itemName}, Price: ₱{itemPrice}");
+                GameObject itemObj = Instantiate(itemPrefab, contentParent);
+                Transform nameTextTransform = itemObj.transform.Find("itemName");
+                Transform priceTextTransform = itemObj.transform.Find("itemPrice");
+
+                if (nameTextTransform != null && priceTextTransform != null)
                 {
-                    if (itemTask.IsCompleted)
-                    {
-                        DataSnapshot itemsSnapshot = itemTask.Result;
-
-                        foreach (DataSnapshot item in itemsSnapshot.Children)
-                        {
-                            string itemName = item.Child("itemName").Value.ToString();
-                            string itemPrice = item.Child("itemPrice").Value.ToString();
-
-                            // Skip items that the user already owns
-                            if (!ownedItems.Contains(itemName))
-                            {
-                                CreateUIItem(itemName, itemPrice);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to fetch shop items from Firebase.");
-                    }
-                });
-            }
-            else
-            {
-                Debug.LogError("Failed to fetch user inventory from Firebase.");
-            }
-        });
-    }
-
-
-    void ClearExistingUI()
-{
-    foreach (Transform child in contentParent)
-    {
-        Destroy(child.gameObject);
-    }
-    Debug.Log("Cleared all existing UI items.");
-}
-
-
-    void CreateUIItem(string name, string price)
-    {
-        
-        GameObject newItem = Instantiate(itemPrefab, contentParent);
-
-        newItem.SetActive(true);
-
-        Text[] texts = newItem.GetComponentsInChildren<Text>();
-        foreach (Text text in texts)
-        {
-            if (text.name == "ItemName")
-            {
-                text.text = name; 
-            }
-            else if (text.name == "ItemPrice")
-            {
-                text.text = "$" + price; 
-            }
-        }
-
-        Sprite itemImage = Resources.Load<Sprite>($"Assets/{name}");  
-
-
-        Debug.Log($"Attempting to load image for {name} from path: {name}");
-
-
-        if (itemImage != null)
-        {
-            Image itemImageComponent = newItem.transform.Find("ItemImage").GetComponent<Image>();
-            itemImageComponent.sprite = itemImage; 
-        }
-        else
-        {
-            Debug.LogWarning($"Image for {name} not found. Using placeholder.");
-            Sprite placeholderImage = Resources.Load<Sprite>("placeholder"); // Assuming you have a placeholder image
-            if (placeholderImage != null)
-            {
-                Image itemImageComponent = newItem.transform.Find("ItemImage").GetComponent<Image>();
-                itemImageComponent.sprite = placeholderImage;
-            }
-        }
-
-        Button buyButton = newItem.transform.Find("BuyItem").GetComponent<Button>();
-        if (buyButton != null)
-        {
-            buyButton.onClick.RemoveAllListeners();
-            buyButton.onClick.AddListener(() => ShowConfirmationPanel(name, price, itemImage));
-        }
-
-        Button previewButton = newItem.transform.Find("Preview").GetComponent<Button>();
-        if (previewButton != null)
-        {
-            previewButton.onClick.AddListener(() => OpenPreviewPage(name, price));
-        }
-
-    }
-
-    void OpenPreviewPage(string itemName, string itemPrice)
-    {
-        Debug.Log($"Preview {itemName}");
-        // Store item data for the Preview Page
-        ItemPreviewData.itemName = itemName;
-        ItemPreviewData.itemPrice = itemPrice;
-        SceneManager.LoadScene("PreviewPage");
-    }
-
-
-    void ShowConfirmationPanel(string itemName, string itemPrice, Sprite itemSprite)
-    {
-        confirmationPanel.SetActive(true);
-
-        confirmationText.text = "Confirm Purchase?";
-        itemNameText.text = itemName;
-        itemPriceText.text = "$" + itemPrice;
-
-        if (itemSprite != null)
-        {
-            itemImage.sprite = itemSprite;
-        }
-        else
-        {
-            Debug.LogWarning("Item image is null. Using a placeholder.");
-            itemImage.sprite = Resources.Load<Sprite>("placeholder"); 
-        }
-
-        // Set up Yes button to confirm purchase
-        yesButton.onClick.RemoveAllListeners(); 
-        yesButton.onClick.AddListener(() => BuyItem(itemName));
-
-        // Set up No button to close the Confirmation Panel
-        noButton.onClick.RemoveAllListeners(); 
-        noButton.onClick.AddListener(() => confirmationPanel.SetActive(false));
-    }
-
-
-
-    public void BuyItem(string itemName)
-    {
-        // Define paths in the Firebase database
-        string itemsPath = "items";
-        string userCoinsPath = $"users/{userId}/userCoins"; 
-        string userInventoryPath = $"users/{userId}/inventory"; 
-
-        // Fetch item details and user coins
-        dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted && !task.IsFaulted)
-            {
-                DataSnapshot snapshot = task.Result;
-
-                // Find the item in the database based on itemName
-                DataSnapshot itemSnapshot = null;
-                foreach (var item in snapshot.Child(itemsPath).Children)
-                {
-                    if (item.Child("itemName").Value.ToString() == itemName)
-                    {
-                        itemSnapshot = item;
-                        break;
-                    }
-                }
-
-                if (itemSnapshot == null)
-                {
-                    Debug.LogError($"Item with name '{itemName}' not found in the database.");
-                    return;
-                }
-
-                int itemPrice = int.Parse(itemSnapshot.Child("itemPrice").Value.ToString());
-
-                // Retrieve the user's coins from the correct path
-                DataSnapshot userCoinsSnapshot = snapshot.Child("users").Child(userId).Child("userCoins");
-                if (!userCoinsSnapshot.Exists)
-                {
-                    Debug.LogError("User's coin balance not found in the database.");
-                    return;
-                }
-                int userCoins = int.Parse(userCoinsSnapshot.Value.ToString());
-
-                // Check if the user has enough coins
-                if (userCoins >= itemPrice)
-                {
-                    // Deduct the item's price from the user's coins
-                    int newCoinBalance = userCoins - itemPrice;
-                    dbReference.Child(userCoinsPath).SetValueAsync(newCoinBalance);
-
-                    // Update inventory
-                    UpdateInventory(snapshot, userInventoryPath, itemName);
-
-                    confirmationPanel.SetActive(false);
-                    successPanel.SetActive(true);
-                    Debug.Log("Purchase successful!");
+                    nameTextTransform.GetComponent<TMP_Text>().text = itemName;
+                    priceTextTransform.GetComponent<TMP_Text>().text = "₱" + itemPrice;
                 }
                 else
                 {
-                    confirmationPanel.SetActive(false);
-                    failurePanel.SetActive(true);
-                    Debug.Log("Insufficient Coins!");
+                    Debug.LogWarning("Text components not found in prefab. Check naming.");
+                }
+                Sprite itemSprite = Resources.Load<Sprite>("Assets/" + itemName);
+                Transform imageTransform = itemObj.transform.Find("Image");
+                if (imageTransform != null)
+                {
+                Image imageComponent = imageTransform.GetComponent<Image>();
+                if (imageComponent != null)
+                {
+                    imageComponent.sprite = itemSprite;
+                    Debug.Log($"Sprite set for '{itemName}'.");
+                }
+                else
+                {
+                Debug.LogWarning("Image component not found on 'Image' object.");
                 }
             }
-            else
+                else
             {
-                Debug.LogError("Error fetching data from Firebase: " + task.Exception);
+                Debug.LogWarning("Child named 'Image' not found in prefab.");
+            }
             }
         });
-    }
-
-    private void UpdateInventory(DataSnapshot snapshot, string userInventoryPath, string itemName)
-    {
-        DatabaseReference inventoryRef = dbReference.Child(userInventoryPath);
-
-        // Check if the inventory exists
-        inventoryRef.GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted && !task.IsFaulted)
-            {
-                DataSnapshot inventorySnapshot = task.Result;
-
-                // Check if the item already exists in inventory
-                if (inventorySnapshot.Child(itemName).Exists)
-                {
-                    Debug.Log($"Item '{itemName}' already exists in inventory.");
-                    return;
-                }
-
-                // Add the new item with isUsed = false
-                Dictionary<string, object> newItemData = new Dictionary<string, object>
-            {
-                { "isUsed", false }
-            };
-
-                inventoryRef.Child(itemName).SetValueAsync(newItemData).ContinueWithOnMainThread(setTask =>
-                {
-                    if (setTask.IsCompleted)
-                    {
-                        Debug.Log($"Item '{itemName}' added to inventory with isUsed = false.");
-                    }
-                    else
-                    {
-                        Debug.LogError($"Failed to add '{itemName}' to inventory: " + setTask.Exception);
-                    }
-                });
-            }
-            else
-            {
-                Debug.LogError("Error checking inventory: " + task.Exception);
-            }
-        });
-    }
-
-
-    void RemoveItemFromScrollView(string itemName)
-    {
-        foreach (Transform child in contentParent)
-        {
-            if (child.name == itemName)
-            {
-                Destroy(child.gameObject);
-                Debug.Log($"Removed item {itemName} from the ScrollView.");
-            }
-        }
-    }
-
-    void OnCloseSuccessPanel()
-    {
-        successPanel.SetActive(false);
-        RefreshInventory();
-    }
-
-    void RefreshInventory()
-    {
-        // Clear existing items in the Scroll View
-        foreach (Transform child in contentParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // Fetch the updated inventory again
-        LoadItemsFromDatabase();
-    }
-
-    public void CloseConfirmationPanel() 
-    {
-        confirmationPanel.SetActive(false);
-    }
-
-    public void CloseSuccessPanel() 
-    {
-        successPanel.SetActive(false);
-    }
-
-    public void CloseFailurePanel() 
-    {
-        failurePanel.SetActive(false);
     }
 }
-
-
