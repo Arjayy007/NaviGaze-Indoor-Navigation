@@ -24,8 +24,18 @@ public class Logout : MonoBehaviour
         UserSession.ClearSession();
         PlayerPrefs.DeleteAll(); 
         Debug.Log("Logging Out...");
-
+        DestroyPersistentObjects();
         //Go Back to Landing Scene
         SceneManager.LoadScene("LandingPage");
     }
+
+    void DestroyPersistentObjects()
+{
+    GameObject[] persistents = GameObject.FindGameObjectsWithTag("Persistent");
+    foreach (GameObject obj in persistents)
+    {
+        Destroy(obj);
+    }
+}
+
 }

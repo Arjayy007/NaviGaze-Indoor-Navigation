@@ -835,7 +835,6 @@ GameObject:
   - component: {fileID: 1255274652}
   - component: {fileID: 1255274653}
   - component: {fileID: 1255274654}
-  - component: {fileID: 1255274655}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -884,7 +883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c24c7e434c5b74ba73badad6e0dc51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel: {fileID: 0}
+  panel: {fileID: 5161720563326880625}
   sceneManager: {fileID: 1255274653}
   firstNameInput: {fileID: 1319758978}
   lastNameInput: {fileID: 1970603889}
@@ -893,8 +892,8 @@ MonoBehaviour:
   passwordInput: {fileID: 2012695104}
   confirmPasswordInput: {fileID: 216737086}
   dropdownController: {fileID: 1255274651}
-  registerButton: {fileID: 0}
-  backButton: {fileID: 0}
+  registerButton: {fileID: 384472034685681760}
+  backButton: {fileID: 1375945443}
 --- !u!114 &1255274653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -919,26 +918,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70965cf957f656c4593088473a92f5b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1255274655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255274648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d540d4e1a2f494e408a473b928bf85ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panel: {fileID: 0}
-  sceneManager: {fileID: 0}
-  usernameInputField: {fileID: 0}
-  passwordInputField: {fileID: 0}
-  errorHandler: {fileID: 0}
-  viewPassButton: {fileID: 0}
-  backButton: {fileID: 0}
-  switchScene: 0
 --- !u!114 &1319758978 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2090774529098617455, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
@@ -1177,6 +1156,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2130298103034686557, guid: ee813d33611cfef4f868465c91075346, type: 3}
   m_PrefabInstance: {fileID: 1375945441}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1375945443 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3969345143782790963, guid: ee813d33611cfef4f868465c91075346, type: 3}
+  m_PrefabInstance: {fileID: 1375945441}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1425945358 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2732253564264392176, guid: 2e3ce8d3accf93447992ca0273ac5105, type: 3}
