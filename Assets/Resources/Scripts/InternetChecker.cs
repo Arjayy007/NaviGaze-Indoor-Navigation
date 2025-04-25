@@ -7,7 +7,7 @@ public class InternetChecker : MonoBehaviour
     public static InternetChecker Instance;
 
     public GameObject noInternetPanel;
-    public float checkInterval = 5f;
+    public float checkInterval = 2f;
 
     private void Awake()
     {

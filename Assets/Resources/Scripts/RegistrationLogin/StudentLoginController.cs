@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class StudentLoginController : MonoBehaviour
 {
 
-    public RectTransform panel; // The UI panel to move
+    public RectTransform panel;
     private float originalY;
     private bool keyboardVisible = false;
 

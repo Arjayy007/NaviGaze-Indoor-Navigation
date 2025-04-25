@@ -55,7 +55,7 @@ public class NewIndoorNav : MonoBehaviour
     characterAnimator.Play("Breathing");
     selectedRole = PlayerPrefs.GetString("SelectedRole", "");
 
-    // ✅ Set custom XR Origin start position
+    
     Transform xrOrigin = player.transform.parent;
     if (xrOrigin != null)
     {
@@ -348,7 +348,7 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
         characterAgent.SetDestination(destinationCube.transform.position);
         characterAnimator.SetTrigger("StartWalking");
 
-        FaceCameraToPathDirection(); // 👈 Face the camera to the direction of the line
+        FaceCameraToPathDirection();
         StartCoroutine(checkIfCharacterArrived());
     }
     else
