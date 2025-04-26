@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class NewIndoorNav : MonoBehaviour
 {
@@ -130,6 +131,9 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
                         arrivedText.text = "Arrived";
                         classNavigationManager.CheckForClassNavigation(startingPoint.text, destinationPoint.text);
                         hasSavedToDatabase = true;
+                        isQRCodeScanned = false;
+                        CancelNavigation();
+
                     }else{
                         GetEstimatedArrival();
                         arrivedText.text = "Arrived";
@@ -143,6 +147,7 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
 
             if (!isQRCodeScanned)
             {
+
                 openHistory();
                 isQRCodeScanned = true;
             }
@@ -276,13 +281,14 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
 
     public void CancelNavigation()
     {
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        isQRCodeScanned = false;
+        hasSavedToDatabase = false;
         // Reset the dropdown to default
         dropdown.value = 0;
         dropdown.captionText.text = dropdown.options[0].text;
-
-        // Clear the line renderer
         line.positionCount = 0;
-
         // Hide navigation-related UI panels
         navigationPanel.SetActive(false);
         estimatedArrivalTimeAndDistancePanel.SetActive(false);
@@ -296,8 +302,7 @@ private void SetPlayerPositionFromQRCode(string qrCodeName)
         estimatedTime.text = "";
 
         // Reset QR scan flags
-        isQRCodeScanned = false;
-        hasSavedToDatabase = false;
+
 
         // Clear starting and destination texts
         startingPoint.text = "";

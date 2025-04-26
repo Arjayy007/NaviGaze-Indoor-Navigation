@@ -67,8 +67,8 @@ public class RegistrationPage : MonoBehaviour
     if (task.Result == DependencyStatus.Available)
     {
         FirebaseApp app = FirebaseApp.DefaultInstance;
-        firestore = FirebaseFirestore.DefaultInstance;
         Debug.Log("Firestore initialized successfully");
+        firestore = FirebaseFirestore.GetInstance(app);
 
         registerButton.interactable = true;
     }
@@ -136,7 +136,7 @@ if (panel.anchoredPosition.y != targetY)
         }
     }
 
-  public void SaveToDatabase()
+ public void SaveToDatabase()
 {
     if (firestore == null)
     {
@@ -189,18 +189,17 @@ if (panel.anchoredPosition.y != targetY)
     // Create userData object
     userData = new UserData(firstName, lastName, email, password, department, program, yearSection, selectedRole);
 
-    // Generate new user ID
-    string userId = firestore.Collection("users").Document().Id;
-    UserSession.UserId = userId;
-
-    // Save to: users > userId > information > profile
-    firestore.Collection("users").Document(userId)
+    // Sanitize email (replace '.' with '_' and make it lowercase)
+    string sanitizedEmail = email.Replace(".", "_").ToLower();
+    UserSession.UserId = sanitizedEmail;
+    // Save to: users > sanitizedEmail > information > profile
+    firestore.Collection("users").Document(sanitizedEmail)
         .Collection("information").Document("profile")
         .SetAsync(userData).ContinueWithOnMainThread(task =>
     {
         if (task.IsCompletedSuccessfully)
         {
-            Debug.Log("User profile saved to Firestore under users > userId > information > profile");
+            Debug.Log("User profile saved to Firestore under users > sanitizedEmail > information > profile");
             ClearPlayerPrefs();
             switchScene = true;
         }
@@ -210,6 +209,7 @@ if (panel.anchoredPosition.y != targetY)
         }
     });
 }
+
 
 
 private void ClearPlayerPrefs()

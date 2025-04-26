@@ -65,64 +65,60 @@ public class StudentLoginController : MonoBehaviour
         AuthenticateUser(email, password);
     }
 
-   private void AuthenticateUser(string email, string hashedPassword)
+ private void AuthenticateUser(string email, string hashedPassword)
 {
-   firestore.CollectionGroup("information")
-    .WhereEqualTo("email", email.ToLower()) // Add ToLower if your emails are lowercase
-    .GetSnapshotAsync()
-    .ContinueWithOnMainThread(task =>
-{
-    if (task.IsCompletedSuccessfully)
-    {
-        var snapshot = task.Result;
+    // Sanitize the email by replacing "." with "_" and converting to lowercase
+    string sanitizedEmail = email.Replace(".", "_").ToLower();
 
-        if (snapshot.Count == 0)
+    firestore.Collection("users")
+        .Document(sanitizedEmail) // Use sanitized email as document ID
+        .Collection("information")
+        .Document("profile")
+        .GetSnapshotAsync()
+        .ContinueWithOnMainThread(task =>
         {
-            Debug.LogWarning($"No user found with email: {email}");
-            errorHandler.ShowError("Invalid Email or wrong password");
-            return;
-        }
-
-        foreach (var doc in snapshot.Documents)
-        {
-            string fetchedPassword = doc.GetValue<string>("password");
-            string role = doc.GetValue<string>("role");
-
-            Debug.Log($"Fetched Password: {fetchedPassword}");
-            Debug.Log($"Entered Password: {hashedPassword}");
-
-            if (fetchedPassword == hashedPassword)
+            if (task.IsCompletedSuccessfully)
             {
-                // Get the userId from the document path
-                string path = doc.Reference.Path; // "users/{userId}/information/profile"
-                string[] parts = path.Split('/');
-                string userId = parts[1]; // parts[1] = userId
+                var document = task.Result;
 
-                UserSession.UserId = userId;
+                if (document.Exists)
+                {
+                    string fetchedPassword = document.GetValue<string>("password");
+                    string role = document.GetValue<string>("role");
 
-                Debug.Log("Login successful. User ID: " + userId);
+                    Debug.Log($"Fetched Password: {fetchedPassword}");
+                    Debug.Log($"Entered Password: {hashedPassword}");
 
-                if (role == "Student")
-                    SceneManager.LoadScene("DashboardPage");
+                    if (fetchedPassword == hashedPassword)
+                    {
+                        // Successfully authenticated, set User ID and role
+                        UserSession.UserId = sanitizedEmail; // Save the sanitized email as user ID
+                        Debug.Log("Login successful. User ID: " + sanitizedEmail);
+
+                        if (role == "Student")
+                            SceneManager.LoadScene("DashboardPage");
+                        else
+                            SceneManager.LoadScene("ProfessorDashboard");
+                    }
+                    else
+                    {
+                        errorHandler.ShowError("Invalid Email or password");
+                    }
+                }
                 else
-                    SceneManager.LoadScene("ProfessorDashboard");
-
-                return;
+                {
+                    Debug.LogWarning($"No user found with email: {sanitizedEmail}");
+                    errorHandler.ShowError("Invalid Email or wrong password");
+                }
             }
             else
             {
-                errorHandler.ShowError("Invalid Email or password");
+                Debug.LogError("Error while querying Firestore: " + task.Exception);
+                errorHandler.ShowError("An error occurred. Please try again.");
             }
-        }
-    }
-    else
-    {
-        Debug.LogError("Error while querying Firestore: " + task.Exception);
-        errorHandler.ShowError("An error occurred. Please try again.");
-    }
-});
-
+        });
 }
+
 
 
     private string HashPassword(string password)

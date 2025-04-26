@@ -10,13 +10,13 @@ using SchedulesModel.Models;
 
 public class AddScheduleController : MonoBehaviour
 {
-
     public RectTransform panel; // The UI panel to move
     private float originalY;
     private bool keyboardVisible = false;
 
     public SceneManagerScript sceneManager;
     private FirebaseFirestore firestore;
+    private bool firestoreInitialized = false;  // Flag to track Firestore initialization
 
     public InputField subjectCode;
     public InputField subjectName;
@@ -36,7 +36,6 @@ public class AddScheduleController : MonoBehaviour
 
     void Start()
     {
-
         originalY = panel.anchoredPosition.y;
 
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
@@ -46,8 +45,7 @@ public class AddScheduleController : MonoBehaviour
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 firestore = FirebaseFirestore.DefaultInstance;
                 Debug.Log("Firebase Firestore Initialized Successfully");
-
-                Debug.Log("User ID: " + userId);
+                firestoreInitialized = true;  // Set flag to true once Firestore is initialized
             }
             else
             {
@@ -60,8 +58,7 @@ public class AddScheduleController : MonoBehaviour
 
     void Update()
     {
-
-       if (TouchScreenKeyboard.visible)
+        if (TouchScreenKeyboard.visible)
         {
             if (!keyboardVisible)
             {
@@ -77,8 +74,6 @@ public class AddScheduleController : MonoBehaviour
                 panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, originalY); // Move back
             }
         }
-
-
 
         if (switchScene)
         {
@@ -157,7 +152,7 @@ public class AddScheduleController : MonoBehaviour
 
     private void SaveToDatabase(ScheduleData schedule)
     {
-        if (firestore == null)
+        if (!firestoreInitialized)  // Check if Firestore is ready
         {
             Debug.LogError("Firestore is not initialized.");
             return;
@@ -183,7 +178,6 @@ public class AddScheduleController : MonoBehaviour
             { "campus", schedule.campus}
         };
 
-    
         schedulesCollection.AddAsync(scheduleData).ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted)
@@ -235,5 +229,4 @@ public class AddScheduleController : MonoBehaviour
     {
         subjectName.text = ClassCodeDictionary.GetSubjectName(input);
     }
-
 }
